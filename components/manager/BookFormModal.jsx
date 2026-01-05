@@ -1,6 +1,6 @@
 
 import React, { useState, useRef } from 'react';
-import { X, Upload, Loader2, RotateCcw, Trash2, Camera, ImageIcon } from 'lucide-react';
+import { X, Upload, Loader2 } from 'lucide-react';
 import { api } from '../../services/api';
 import { CATEGORIES } from '../../constants';
 
@@ -14,7 +14,6 @@ const BookFormModal = ({ editingBook, onClose, onSaved }) => {
     category: editingBook?.categories?.[0] || CATEGORIES[0],
     coverImage: editingBook?.coverImage || ''
   });
-  const [errors, setErrors] = useState({});
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef(null);
 

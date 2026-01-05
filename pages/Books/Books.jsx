@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Search, Grid, List, ChevronDown } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { api } from '../../services/api';
 import BookCard from '../../components/BookCard/BookCard';
 import { CATEGORIES } from '../../constants';
