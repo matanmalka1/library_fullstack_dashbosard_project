@@ -19,13 +19,14 @@ import CheckoutPage from "./pages/Checkout/Checkout";
 import OrdersPage from "./pages/Orders/Orders";
 import AdminPage from "./pages/AdminDashboard/AdminDashboard";
 import ManagerPage from "./pages/ManagerDashboard/ManagerDashboard";
+import "./App.css";
 
 const App = () => (
   <AuthProvider>
     <CartProvider>
-      <div className="min-h-screen flex flex-col bg-slate-50">
+      <div className="app">
         <Navbar />
-        <main className="flex-grow">
+        <main className="app__main">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/books" element={<BooksPage />} />

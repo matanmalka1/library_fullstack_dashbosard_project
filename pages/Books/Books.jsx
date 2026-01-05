@@ -4,6 +4,7 @@ import { Search } from 'lucide-react';
 import { api } from '../../services/api';
 import BookCard from '../../components/BookCard/BookCard';
 import { CATEGORIES } from '../../constants';
+import './Books.css';
 
 const Books = () => {
   const [books, setBooks] = useState([]);
@@ -27,37 +28,37 @@ const Books = () => {
   }, [search, cat, sort, priceMax, books]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12 flex flex-col md:flex-row gap-8">
-      <aside className="w-full md:w-64 space-y-8 flex-shrink-0">
-        <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-          <h3 className="font-bold text-slate-800 mb-6 uppercase text-xs tracking-widest">Explore Library</h3>
-          <div className="space-y-6">
-            <div className="relative">
-              <Search className="absolute left-3 top-3 w-4 h-4 text-slate-300" />
-              <input value={search} onChange={e => setSearch(e.target.value)} className="w-full pl-10 pr-4 py-2 bg-slate-50 border-none rounded-xl text-sm outline-none" placeholder="Find books..." />
+    <div className="books">
+      <aside className="books__sidebar">
+        <div className="books__panel">
+          <h3 className="books__panel-title">Explore Library</h3>
+          <div className="books__panel-body">
+            <div className="books__search">
+              <Search className="books__search-icon" />
+              <input value={search} onChange={e => setSearch(e.target.value)} className="books__search-input" placeholder="Find books..." />
             </div>
             <div>
-              <p className="text-[10px] font-bold text-slate-400 uppercase mb-3 tracking-widest">Categories</p>
-              <div className="space-y-1">
+              <p className="books__label">Categories</p>
+              <div className="books__categories">
                 {['All', ...CATEGORIES].map(c => (
-                  <button key={c} onClick={() => setCat(c)} className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-all ${cat === c ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50'}`}>{c}</button>
+                  <button key={c} onClick={() => setCat(c)} className={`books__category ${cat === c ? 'is-active' : ''}`}>{c}</button>
                 ))}
               </div>
             </div>
           </div>
         </div>
       </aside>
-      <div className="flex-grow">
-        <div className="flex justify-between items-center mb-8 bg-white p-4 rounded-2xl border border-slate-50 shadow-sm">
-          <p className="text-slate-500 text-xs">Total results: <span className="font-bold text-slate-900">{filtered.length}</span></p>
-          <select value={sort} onChange={e => setSort(e.target.value)} className="bg-transparent border-none text-xs font-bold outline-none cursor-pointer">
+      <div className="books__content">
+        <div className="books__toolbar">
+          <p className="books__results">Total results: <span className="books__results-count">{filtered.length}</span></p>
+          <select value={sort} onChange={e => setSort(e.target.value)} className="books__sort">
             <option value="latest">Sort: Recently Added</option>
             <option value="price-low">Sort: Price Low-High</option>
             <option value="price-high">Sort: Price High-Low</option>
             <option value="rating">Sort: Top Rated</option>
           </select>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="books__grid">
           {filtered.map(b => <BookCard key={b.id} book={b} />)}
         </div>
       </div>

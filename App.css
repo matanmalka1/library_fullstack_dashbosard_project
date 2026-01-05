@@ -1,0 +1,11 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.app__main {
+  flex: 1;
+}

@@ -1,0 +1,73 @@
+.book-details {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 64px 16px;
+  animation: book-details-fade 0.4s ease;
+}
+
+.book-details__reviews {
+  margin-top: 96px;
+}
+
+.book-details__loading {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.book-details__spinner {
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  border: 4px solid #4f46e5;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+}
+
+.book-details__empty {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 128px 16px;
+  text-align: center;
+}
+
+.book-details__empty-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 16px;
+}
+
+.book-details__empty-link {
+  color: #4f46e5;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.book-details__empty-link:hover {
+  text-decoration: underline;
+}
+
+@keyframes book-details-fade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (min-width: 1024px) {
+  .book-details {
+    padding: 64px 32px;
+  }
+}

@@ -6,6 +6,7 @@ import { api } from '../../services/api';
 import InventoryStats from '../../components/manager/InventoryStats';
 import InventoryTable from '../../components/manager/InventoryTable';
 import BookFormModal from '../../components/manager/BookFormModal';
+import './ManagerDashboard.css';
 
 const ManagerDashboard = () => {
   const [books, setBooks] = useState([]);
@@ -34,44 +35,44 @@ const ManagerDashboard = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
-      <div className="flex justify-between items-center mb-10">
+    <div className="manager-dashboard">
+      <div className="manager-dashboard__header">
         <div>
-          <h1 className="text-4xl font-serif font-bold text-slate-900 mb-2">Inventory</h1>
-          <p className="text-slate-500">Track stock and fulfill orders.</p>
+          <h1 className="manager-dashboard__title">Inventory</h1>
+          <p className="manager-dashboard__subtitle">Track stock and fulfill orders.</p>
         </div>
         <button 
           onClick={() => { setEditingBook(null); setIsModalOpen(true); }}
-          className="bg-indigo-600 text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-indigo-700 shadow-lg transition-all"
+          className="manager-dashboard__action"
         >
-          <Plus className="w-5 h-5" /> New Book
+          <Plus className="manager-dashboard__action-icon" /> New Book
         </button>
       </div>
 
       <InventoryStats books={books} orders={orders} />
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-        <div className="lg:col-span-2">
+      <div className="manager-dashboard__layout">
+        <div className="manager-dashboard__table">
           <InventoryTable books={books} onEdit={handleEdit} onDelete={handleDelete} />
         </div>
-        <div className="bg-slate-900 rounded-[40px] p-8 text-white shadow-xl h-fit">
-          <h2 className="text-xl font-bold mb-6">Order Status</h2>
-          <div className="space-y-6">
+        <div className="manager-dashboard__status">
+          <h2 className="manager-dashboard__status-title">Order Status</h2>
+          <div className="manager-dashboard__status-list">
             {orders.slice(0, 5).map(o => (
-              <div key={o.id} className="border-b border-white/10 pb-4 last:border-0">
-                <div className="flex justify-between text-xs mb-1">
-                  <span className="text-indigo-400 font-bold">#{o.id}</span>
+              <div key={o.id} className="manager-dashboard__status-item">
+                <div className="manager-dashboard__status-row">
+                  <span className="manager-dashboard__status-id">#{o.id}</span>
                   <select 
                     value={o.status}
                     onChange={(e) => { api.updateOrderStatus(o.id, e.target.value); fetchData(); }}
-                    className="bg-transparent border-none text-white text-[10px] uppercase font-bold outline-none cursor-pointer"
+                    className="manager-dashboard__status-select"
                   >
-                    {Object.values(OrderStatus).map(s => <option key={s} value={s} className="bg-slate-800">{s}</option>)}
+                    {Object.values(OrderStatus).map(s => <option key={s} value={s} className="manager-dashboard__status-option">{s}</option>)}
                   </select>
                 </div>
-                <div className="flex justify-between font-medium">
-                  <span className="text-[10px] text-slate-400 truncate max-w-[120px]">{o.shippingAddress}</span>
-                  <span className="text-sm font-bold">${o.total.toFixed(2)}</span>
+                <div className="manager-dashboard__status-row manager-dashboard__status-row--meta">
+                  <span className="manager-dashboard__status-address">{o.shippingAddress}</span>
+                  <span className="manager-dashboard__status-total">${o.total.toFixed(2)}</span>
                 </div>
               </div>
             ))}

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Star, CheckCircle2, XCircle, Shield, User as UserIcon, MessageSquare, Book as BookIcon } from 'lucide-react';
 import { UserRole } from '../../types';
 import { api } from '../../services/api';
+import './AdminDashboard.css';
 
 const AdminDashboard = () => {
   const [books, setBooks] = useState([]);
@@ -41,110 +42,112 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
-      <div className="bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden min-h-[600px] flex flex-col md:flex-row">
+    <div className="admin-dashboard">
+      <div className="admin-dashboard__layout">
         {/* Left Nav */}
-        <aside className="w-full md:w-64 border-r border-slate-50 p-8 space-y-2 flex-shrink-0">
-          <h1 className="text-2xl font-serif font-bold text-slate-900 mb-10">Admin Control</h1>
+        <aside className="admin-dashboard__nav">
+          <h1 className="admin-dashboard__nav-title">Admin Control</h1>
           <button 
             onClick={() => setActiveTab('reviews')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-sm transition-all ${activeTab === 'reviews' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50'}`}
+            className={`admin-dashboard__nav-button ${activeTab === 'reviews' ? 'is-active' : ''}`}
           >
-            <MessageSquare className="w-4 h-4" /> Pending Reviews
+            <MessageSquare className="admin-dashboard__nav-icon" /> Pending Reviews
           </button>
           <button 
             onClick={() => setActiveTab('users')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-sm transition-all ${activeTab === 'users' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50'}`}
+            className={`admin-dashboard__nav-button ${activeTab === 'users' ? 'is-active' : ''}`}
           >
-            <Shield className="w-4 h-4" /> User Controls
+            <Shield className="admin-dashboard__nav-icon" /> User Controls
           </button>
         </aside>
 
         {/* Main Area */}
-        <main className="flex-grow p-8 bg-slate-50/30">
+        <main className="admin-dashboard__main">
           {activeTab === 'reviews' ? (
-            <div className="space-y-6">
-              <div className="flex justify-between items-center mb-8">
-                <h2 className="text-xl font-bold text-slate-800">Review Moderation</h2>
-                <span className="bg-amber-100 text-amber-600 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">{pendingReviews.length} Pending</span>
+            <div className="admin-dashboard__reviews">
+              <div className="admin-dashboard__section-header">
+                <h2 className="admin-dashboard__section-title">Review Moderation</h2>
+                <span className="admin-dashboard__badge">{pendingReviews.length} Pending</span>
               </div>
 
               {pendingReviews.length > 0 ? (
-                <div className="grid grid-cols-1 gap-6">
+                <div className="admin-dashboard__review-list">
                   {pendingReviews.map(({ bookId, bookTitle, review }) => (
-                    <div key={review.id} className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-indigo-50 rounded-full flex items-center justify-center font-bold text-indigo-600 uppercase">{review.userName.charAt(0)}</div>
+                    <div key={review.id} className="admin-dashboard__review-card">
+                      <div className="admin-dashboard__review-header">
+                        <div className="admin-dashboard__review-user">
+                          <div className="admin-dashboard__review-avatar">{review.userName.charAt(0)}</div>
                           <div>
-                            <h4 className="font-bold text-slate-800 text-sm">{review.userName} <span className="text-slate-400 font-normal">on</span> <span className="text-indigo-600 italic">{bookTitle}</span></h4>
-                            <div className="flex items-center gap-1.5 mt-1">
-                              {[1,2,3,4,5].map(i => <Star key={i} className={`w-3 h-3 ${i <= review.rating ? 'text-amber-400 fill-amber-400' : 'text-slate-200'}`} />)}
+                            <h4 className="admin-dashboard__review-title">{review.userName} <span>on</span> <span className="admin-dashboard__review-book">{bookTitle}</span></h4>
+                            <div className="admin-dashboard__review-stars">
+                              {[1,2,3,4,5].map(i => <Star key={i} className={`admin-dashboard__star ${i <= review.rating ? 'is-active' : ''}`} />)}
                             </div>
                           </div>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="admin-dashboard__review-actions">
                           <button 
                             onClick={() => handleApprove(bookId, review.id)}
-                            className="bg-green-50 text-green-600 p-2 rounded-xl hover:bg-green-600 hover:text-white transition-all"
+                            className="admin-dashboard__review-action admin-dashboard__review-action--approve"
                           >
-                            <CheckCircle2 className="w-5 h-5" />
+                            <CheckCircle2 className="admin-dashboard__review-action-icon" />
                           </button>
                           <button 
                             onClick={() => handleDelete(bookId, review.id)}
-                            className="bg-red-50 text-red-600 p-2 rounded-xl hover:bg-red-600 hover:text-white transition-all"
+                            className="admin-dashboard__review-action admin-dashboard__review-action--delete"
                           >
-                            <XCircle className="w-5 h-5" />
+                            <XCircle className="admin-dashboard__review-action-icon" />
                           </button>
                         </div>
                       </div>
-                      <p className="text-slate-600 text-sm italic border-l-2 border-slate-100 pl-4">"{review.comment}"</p>
-                      <p className="mt-4 text-[10px] text-slate-400 font-bold uppercase tracking-widest">{new Date(review.date).toLocaleString()}</p>
+                      <p className="admin-dashboard__review-text">"{review.comment}"</p>
+                      <p className="admin-dashboard__review-date">{new Date(review.date).toLocaleString()}</p>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-20">
-                  <CheckCircle2 className="w-16 h-16 text-green-100 mx-auto mb-4" />
-                  <h3 className="text-lg font-bold text-slate-400">Queue is empty. Great job!</h3>
+                <div className="admin-dashboard__empty">
+                  <CheckCircle2 className="admin-dashboard__empty-icon" />
+                  <h3 className="admin-dashboard__empty-text">Queue is empty. Great job!</h3>
                 </div>
               )}
             </div>
           ) : (
             <div>
-              <h2 className="text-xl font-bold text-slate-800 mb-8">User Management</h2>
-              <div className="bg-white rounded-3xl border border-slate-100 overflow-hidden">
-                <table className="w-full text-left">
-                  <thead className="bg-slate-50 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+              <h2 className="admin-dashboard__section-title">User Management</h2>
+              <div className="admin-dashboard__table-card">
+                <table className="admin-dashboard__table">
+                  <thead className="admin-dashboard__table-head">
                     <tr>
-                      <th className="px-8 py-4">Name & Email</th>
-                      <th className="px-8 py-4">Role</th>
-                      <th className="px-8 py-4">Status</th>
-                      <th className="px-8 py-4 text-right">Actions</th>
+                      <th className="admin-dashboard__table-cell">Name & Email</th>
+                      <th className="admin-dashboard__table-cell">Role</th>
+                      <th className="admin-dashboard__table-cell">Status</th>
+                      <th className="admin-dashboard__table-cell admin-dashboard__table-cell--right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-50">
+                  <tbody className="admin-dashboard__table-body">
                     {[
                       { name: 'Admin User', email: 'admin@gmail.com', role: UserRole.ADMIN },
                       { name: 'Manager User', email: 'manager@gmail.com', role: UserRole.MANAGER },
                       { name: 'John Doe', email: 'user@gmail.com', role: UserRole.USER }
                     ].map((u, i) => (
-                      <tr key={i} className="text-sm">
-                        <td className="px-8 py-5">
-                          <p className="font-bold text-slate-800">{u.name}</p>
-                          <p className="text-xs text-slate-400">{u.email}</p>
+                      <tr key={i}>
+                        <td className="admin-dashboard__table-cell">
+                          <p className="admin-dashboard__user-name">{u.name}</p>
+                          <p className="admin-dashboard__user-email">{u.email}</p>
                         </td>
-                        <td className="px-8 py-5">
-                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${u.role === UserRole.ADMIN ? 'bg-indigo-50 text-indigo-600' : 'bg-slate-50 text-slate-600'}`}>
+                        <td className="admin-dashboard__table-cell">
+                          <span className={`admin-dashboard__role ${u.role === UserRole.ADMIN ? 'is-admin' : ''}`}>
                             {u.role}
                           </span>
                         </td>
-                        <td className="px-8 py-5">
-                          <span className="flex items-center gap-1.5 text-green-600 font-bold text-[10px]">
-                            <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" /> Active
+                        <td className="admin-dashboard__table-cell">
+                          <span className="admin-dashboard__status">
+                            <span className="admin-dashboard__status-dot" /> Active
                           </span>
                         </td>
-                        <td className="px-8 py-5 text-right font-bold text-indigo-600 hover:underline cursor-pointer">Edit Permissions</td>
+                        <td className="admin-dashboard__table-cell admin-dashboard__table-cell--right">
+                          <span className="admin-dashboard__action">Edit Permissions</span>
+                        </td>
                       </tr>
                     ))}
                   </tbody>

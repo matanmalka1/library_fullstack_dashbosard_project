@@ -4,6 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 import { api } from '../../services/api';
 import BookInfo from '../../components/details/BookInfo';
 import ReviewSection from '../../components/details/ReviewSection';
+import './BookDetails.css';
 
 const DetailsPage = () => {
   const { id } = useParams();
@@ -20,22 +21,22 @@ const DetailsPage = () => {
   useEffect(() => { fetchBook(); }, [id]);
 
   if (loading) return (
-    <div className="min-h-[60vh] flex items-center justify-center">
-      <div className="animate-spin h-12 w-12 border-4 border-indigo-600 border-t-transparent rounded-full" />
+    <div className="book-details__loading">
+      <div className="book-details__spinner" />
     </div>
   );
 
   if (!book) return (
-    <div className="max-w-7xl mx-auto px-4 py-32 text-center">
-      <h2 className="text-3xl font-serif font-bold mb-4">Book Not Found</h2>
-      <Link to="/books" className="text-indigo-600 font-bold hover:underline">Return to Library</Link>
+    <div className="book-details__empty">
+      <h2 className="book-details__empty-title">Book Not Found</h2>
+      <Link to="/books" className="book-details__empty-link">Return to Library</Link>
     </div>
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-16 animate-in fade-in duration-500">
+    <div className="book-details">
       <BookInfo book={book} />
-      <div className="mt-24">
+      <div className="book-details__reviews">
         <ReviewSection book={book} onUpdate={fetchBook} />
       </div>
     </div>
