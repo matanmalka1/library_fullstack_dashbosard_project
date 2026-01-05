@@ -38,7 +38,7 @@ const BookCard = ({ book, isWishlisted, onToggleWishlist }) => {
       <div className="p-5 flex flex-col flex-grow">
         <div className="flex items-center gap-1 mb-2">
           <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-          <span className="text-xs font-bold text-slate-700">{book.rating || 'New'}</span>
+          <span className="text-xs font-bold text-slate-700">{book.rating > 0 ? book.rating.toFixed(1) : 'New'}</span>
           <span className="text-slate-300 mx-1">•</span>
           <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
             {book.categories[0]}

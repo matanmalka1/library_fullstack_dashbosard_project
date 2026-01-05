@@ -33,6 +33,13 @@ const AdminDashboard = () => {
     fetchData();
   };
 
+  const handleDelete = async (bookId, reviewId) => {
+    if (confirm('Delete this review permanently?')) {
+      await api.deleteReview(bookId, reviewId);
+      fetchData();
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
       <div className="bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden min-h-[600px] flex flex-col md:flex-row">
@@ -83,7 +90,10 @@ const AdminDashboard = () => {
                           >
                             <CheckCircle2 className="w-5 h-5" />
                           </button>
-                          <button className="bg-red-50 text-red-600 p-2 rounded-xl hover:bg-red-600 hover:text-white transition-all">
+                          <button 
+                            onClick={() => handleDelete(bookId, review.id)}
+                            className="bg-red-50 text-red-600 p-2 rounded-xl hover:bg-red-600 hover:text-white transition-all"
+                          >
                             <XCircle className="w-5 h-5" />
                           </button>
                         </div>

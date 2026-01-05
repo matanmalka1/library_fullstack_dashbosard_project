@@ -30,7 +30,7 @@ const BookInfo = ({ book }) => {
         <div>
           <div className="flex items-center gap-2 mb-4">
             <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
-            <span className="font-bold text-amber-700">{book.rating || 'New'}</span>
+            <span className="font-bold text-amber-700">{book.rating > 0 ? book.rating.toFixed(1) : 'New'}</span>
             <span className="text-slate-300">•</span>
             <span className="text-slate-500 text-sm">Verified Selection</span>
           </div>

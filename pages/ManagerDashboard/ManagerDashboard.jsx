@@ -27,7 +27,7 @@ const ManagerDashboard = () => {
   };
 
   const handleDelete = async (id) => {
-    if (confirm('Delete this book?')) {
+    if (confirm('Delete this book? This action cannot be undone.')) {
       await api.deleteBook(id);
       fetchData();
     }

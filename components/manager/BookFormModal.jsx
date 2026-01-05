@@ -67,6 +67,13 @@ const BookFormModal = ({ editingBook, onClose, onSaved }) => {
               <input className="px-4 py-3 bg-slate-50 rounded-xl outline-none" placeholder="ISBN" value={form.isbn} onChange={e => setForm({...form, isbn: e.target.value})} />
               <input type="number" className="px-4 py-3 bg-slate-50 rounded-xl outline-none" placeholder="Price" value={form.price} onChange={e => setForm({...form, price: Number(e.target.value)})} />
               <input type="number" className="px-4 py-3 bg-slate-50 rounded-xl outline-none" placeholder="Stock" value={form.stock} onChange={e => setForm({...form, stock: Number(e.target.value)})} />
+              <select 
+                className="col-span-2 px-4 py-3 bg-slate-50 rounded-xl outline-none cursor-pointer" 
+                value={form.category} 
+                onChange={e => setForm({...form, category: e.target.value})}
+              >
+                {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+              </select>
             </div>
           </div>
           <button className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-xl hover:bg-indigo-700 transition-all">Save Changes</button>

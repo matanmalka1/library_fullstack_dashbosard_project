@@ -72,5 +72,16 @@ export const api = {
       b.rating = approved.length ? Number((approved.reduce((a, c) => a + c.rating, 0) / approved.length).toFixed(1)) : 0;
     }
     setStore(KEYS.BOOKS, books);
+  },
+
+  deleteReview: async (bid, rid) => {
+    const books = await api.getBooks();
+    const b = books.find(x => x.id === bid);
+    if (b) {
+      b.reviews = b.reviews.filter(r => r.id !== rid);
+      const approved = b.reviews.filter(x => x.approved);
+      b.rating = approved.length ? Number((approved.reduce((a, c) => a + c.rating, 0) / approved.length).toFixed(1)) : 0;
+    }
+    setStore(KEYS.BOOKS, books);
   }
 };
