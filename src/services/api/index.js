@@ -24,6 +24,8 @@ export class ApiService {
     this.register = authService.register.bind(authService);
     this.logout = authService.logout.bind(authService);
     this.getStoredAuth = authService.getStoredAuth.bind(authService);
+    this.getUsers = authService.getUsers.bind(authService);
+    this.updateUserRole = authService.updateUserRole.bind(authService);
   }
 
   /* -------- Orders -------- */

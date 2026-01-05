@@ -10,20 +10,25 @@ import {
 } from "lucide-react";
 import { UserRole } from "../../types";
 import { api } from "../../services/api";
+import { useAuth } from "../../context/auth/AuthContext";
 import "./AdminDashboard.css";
 
 export const AdminDashboard = () => {
   const [books, setBooks] = useState([]);
   const [pendingReviews, setPendingReviews] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [roleChanges, setRoleChanges] = useState({});
   const [activeTab, setActiveTab] = useState("reviews");
+  const { user: currentUser } = useAuth();
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
-    const b = await api.getBooks();
+    const [b, u] = await Promise.all([api.getBooks(), api.getUsers()]);
     setBooks(b);
+    setUsers(u);
 
     const pending = [];
     b.forEach((book) => {
@@ -46,6 +51,22 @@ export const AdminDashboard = () => {
       await api.deleteReview(bookId, reviewId);
       fetchData();
     }
+  };
+
+  const handleRoleChange = (userId, role) => {
+    setRoleChanges((prev) => ({ ...prev, [userId]: role }));
+  };
+
+  const handleSaveRole = async (userId) => {
+    const role = roleChanges[userId];
+    if (!role) return;
+    await api.updateUserRole(userId, role);
+    setRoleChanges((prev) => {
+      const next = { ...prev };
+      delete next[userId];
+      return next;
+    });
+    fetchData();
   };
 
   return (
@@ -170,52 +191,69 @@ export const AdminDashboard = () => {
                     </tr>
                   </thead>
                   <tbody className="admin-dashboard__table-body">
-                    {[
-                      {
-                        name: "Admin User",
-                        email: "admin@gmail.com",
-                        role: UserRole.ADMIN,
-                      },
-                      {
-                        name: "Manager User",
-                        email: "manager@gmail.com",
-                        role: UserRole.MANAGER,
-                      },
-                      {
-                        name: "John Doe",
-                        email: "user@gmail.com",
-                        role: UserRole.USER,
-                      },
-                    ].map((u, i) => (
-                      <tr key={i}>
-                        <td className="admin-dashboard__table-cell">
-                          <p className="admin-dashboard__user-name">{u.name}</p>
-                          <p className="admin-dashboard__user-email">
-                            {u.email}
-                          </p>
-                        </td>
-                        <td className="admin-dashboard__table-cell">
-                          <span
-                            className={`admin-dashboard__role ${
-                              u.role === UserRole.ADMIN ? "is-admin" : ""
-                            }`}
-                          >
-                            {u.role}
-                          </span>
-                        </td>
-                        <td className="admin-dashboard__table-cell">
-                          <span className="admin-dashboard__status">
-                            <span className="admin-dashboard__status-dot" />{" "}
-                            Active
-                          </span>
-                        </td>
-                        <td className="admin-dashboard__table-cell admin-dashboard__table-cell--right">
-                          <span className="admin-dashboard__action">
-                            Edit Permissions
-                          </span>
+                    {users.length ? (
+                      users.map((u) => {
+                        const isSelf = currentUser?.id === u.id;
+                        const selectedRole = roleChanges[u.id] ?? u.role;
+                        const canSave =
+                          !isSelf && roleChanges[u.id] && roleChanges[u.id] !== u.role;
+
+                        return (
+                          <tr key={u.id}>
+                            <td className="admin-dashboard__table-cell">
+                              <p className="admin-dashboard__user-name">
+                                {u.name}
+                              </p>
+                              <p className="admin-dashboard__user-email">
+                                {u.email}
+                              </p>
+                            </td>
+                            <td className="admin-dashboard__table-cell">
+                              <select
+                                value={selectedRole}
+                                onChange={(e) =>
+                                  handleRoleChange(u.id, e.target.value)
+                                }
+                                className="admin-dashboard__role-select"
+                                disabled={isSelf}
+                              >
+                                {Object.values(UserRole).map((role) => (
+                                  <option key={role} value={role}>
+                                    {role}
+                                  </option>
+                                ))}
+                              </select>
+                            </td>
+                            <td className="admin-dashboard__table-cell">
+                              <span className="admin-dashboard__status">
+                                <span className="admin-dashboard__status-dot" />{" "}
+                                Active
+                              </span>
+                            </td>
+                            <td className="admin-dashboard__table-cell admin-dashboard__table-cell--right">
+                              <button
+                                className="admin-dashboard__action-btn"
+                                onClick={() => handleSaveRole(u.id)}
+                                disabled={!canSave}
+                                title={isSelf ? "Cannot edit your own role" : ""}
+                                type="button"
+                              >
+                                Save
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    ) : (
+                      <tr>
+                        <td
+                          className="admin-dashboard__table-cell admin-dashboard__table-cell--empty"
+                          colSpan={4}
+                        >
+                          No users found yet.
                         </td>
                       </tr>
-                    ))}
+                    )}
                   </tbody>
                 </table>
               </div>

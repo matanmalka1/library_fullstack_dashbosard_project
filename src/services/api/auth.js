@@ -4,6 +4,7 @@ import { getStore, setStore, KEYS } from "./core";
 const UserRole = {
   USER: "USER",
   ADMIN: "ADMIN",
+  MANAGER: "MANAGER",
 };
 
 export class AuthService {
@@ -59,6 +60,33 @@ export class AuthService {
 
     setStore(KEYS.AUTH, auth);
     return auth;
+  }
+
+  async getUsers() {
+    return getStore(KEYS.USERS) || [];
+  }
+
+  async updateUserRole(userId, role) {
+    const users = getStore(KEYS.USERS) || [];
+    const index = users.findIndex((u) => u.id === userId);
+
+    if (index === -1) return null;
+
+    users[index] = { ...users[index], role };
+    setStore(KEYS.USERS, users);
+
+    const rawAuth = localStorage.getItem(KEYS.AUTH);
+    if (rawAuth) {
+      const auth = JSON.parse(rawAuth);
+      if (auth?.user?.id === userId) {
+        setStore(KEYS.AUTH, {
+          ...auth,
+          user: { ...auth.user, role },
+        });
+      }
+    }
+
+    return users[index];
   }
 
   logout() {
