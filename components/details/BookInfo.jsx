@@ -1,13 +1,12 @@
 
 import React from 'react';
 import { Star, ShoppingCart, Heart, Truck, Shield, RotateCcw } from 'lucide-react';
-import { Book } from '../../types';
 import { useCart } from '../../context/CartContext';
 
-const BookInfo = ({ book }: { book: Book }) => {
+const BookInfo = ({ book }) => {
   const { addToCart } = useCart();
   
-  const Feature = ({ icon: Icon, label, value }: any) => (
+  const Feature = ({ icon: Icon, label, value }) => (
     <div className="bg-white p-4 rounded-2xl border flex flex-col items-center gap-1">
       <Icon className="text-indigo-500 w-5 h-5 mb-1" />
       <span className="text-[10px] font-bold text-slate-400 uppercase">{label}</span>

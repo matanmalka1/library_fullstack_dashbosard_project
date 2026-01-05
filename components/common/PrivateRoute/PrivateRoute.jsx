@@ -3,12 +3,7 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import { UserRole } from "../../../types";
 
-interface Props {
-  children: React.ReactNode;
-  role?: UserRole;
-}
-
-const PrivateRoute = ({ children, role }: Props) => {
+const PrivateRoute = ({ children, role }) => {
   const { isAuthenticated, user } = useAuth();
 
   if (!isAuthenticated) {

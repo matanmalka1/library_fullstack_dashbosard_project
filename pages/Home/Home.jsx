@@ -2,12 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, BookOpen, Star, ShieldCheck, Zap } from 'lucide-react';
-import { Book } from '../../types';
 import { api } from '../../services/api';
 import BookCard from '../../components/BookCard/BookCard';
 
-const Home: React.FC = () => {
-  const [featuredBooks, setFeaturedBooks] = useState<Book[]>([]);
+const Home = () => {
+  const [featuredBooks, setFeaturedBooks] = useState([]);
 
   useEffect(() => {
     api.getBooks().then(books => {

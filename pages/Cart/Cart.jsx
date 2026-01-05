@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, Info } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 
-const Cart: React.FC = () => {
+const Cart = () => {
   const { items, removeFromCart, updateQuantity, totalPrice, totalItems } = useCart();
 
   if (items.length === 0) {

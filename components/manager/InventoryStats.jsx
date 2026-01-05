@@ -1,18 +1,13 @@
 
 import React from 'react';
 import { Package, AlertTriangle, DollarSign, Users, TrendingUp } from 'lucide-react';
-import { Book, Order, OrderStatus } from '../../types';
+import { OrderStatus } from '../../types';
 
-interface Props {
-  books: Book[];
-  orders: Order[];
-}
-
-const InventoryStats = ({ books, orders }: Props) => {
+const InventoryStats = ({ books, orders }) => {
   const lowStock = books.filter(b => b.stockQuantity <= 5).length;
   const revenue = orders.reduce((acc, o) => o.status !== OrderStatus.CANCELLED ? acc + o.total : acc, 0);
 
-  const Stat = ({ icon: Icon, color, value, label, trend }: any) => (
+  const Stat = ({ icon: Icon, color, value, label, trend }) => (
     <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
       <div className="flex justify-between items-start mb-4">
         <div className={`w-10 h-10 ${color} rounded-xl flex items-center justify-center`}>

@@ -1,17 +1,17 @@
 
 import React, { useEffect, useState } from 'react';
 import { Plus } from 'lucide-react';
-import { Book, Order, OrderStatus } from '../../types';
+import { OrderStatus } from '../../types';
 import { api } from '../../services/api';
 import InventoryStats from '../../components/manager/InventoryStats';
 import InventoryTable from '../../components/manager/InventoryTable';
 import BookFormModal from '../../components/manager/BookFormModal';
 
 const ManagerDashboard = () => {
-  const [books, setBooks] = useState<Book[]>([]);
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [books, setBooks] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingBook, setEditingBook] = useState<Book | null>(null);
+  const [editingBook, setEditingBook] = useState(null);
 
   const fetchData = async () => {
     const [b, o] = await Promise.all([api.getBooks(), api.getOrders()]);
@@ -21,12 +21,12 @@ const ManagerDashboard = () => {
 
   useEffect(() => { fetchData(); }, []);
 
-  const handleEdit = (book: Book) => {
+  const handleEdit = (book) => {
     setEditingBook(book);
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id) => {
     if (confirm('Delete this book?')) {
       await api.deleteBook(id);
       fetchData();
@@ -63,7 +63,7 @@ const ManagerDashboard = () => {
                   <span className="text-indigo-400 font-bold">#{o.id}</span>
                   <select 
                     value={o.status}
-                    onChange={(e) => { api.updateOrderStatus(o.id, e.target.value as OrderStatus); fetchData(); }}
+                    onChange={(e) => { api.updateOrderStatus(o.id, e.target.value); fetchData(); }}
                     className="bg-transparent border-none text-white text-[10px] uppercase font-bold outline-none cursor-pointer"
                   >
                     {Object.values(OrderStatus).map(s => <option key={s} value={s} className="bg-slate-800">{s}</option>)}

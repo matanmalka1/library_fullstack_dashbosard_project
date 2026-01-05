@@ -13,7 +13,7 @@ import {
 import { useAuth } from "../../../context/AuthContext";
 import { useCart } from "../../../context/CartContext";
 
-const Navbar: React.FC = () => {
+const Navbar = () => {
   const { user, isAuthenticated, logout, isAdmin, isManager } = useAuth();
   const { totalItems } = useCart();
   const [isMenuOpen, setIsMenuOpen] = useState(false);

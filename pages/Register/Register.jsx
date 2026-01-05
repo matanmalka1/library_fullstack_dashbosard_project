@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, User, ArrowRight, BookOpen } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
-const Register: React.FC = () => {
+const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -12,14 +12,14 @@ const Register: React.FC = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
     try {
       await register(name, email, password);
       navigate("/");
-    } catch (err: any) {
+    } catch (err) {
       setError(err.message || "Registration failed");
     } finally {
       setLoading(false);

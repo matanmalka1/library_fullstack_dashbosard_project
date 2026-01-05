@@ -1,20 +1,12 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { AuthState, User, UserRole } from '../types';
+import { UserRole } from '../types';
 import { api } from '../services/api';
 
-interface AuthContextType extends AuthState {
-  login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string) => Promise<void>;
-  logout: () => void;
-  isAdmin: boolean;
-  isManager: boolean;
-}
+const AuthContext = createContext(null);
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [authState, setAuthState] = useState<AuthState>({
+export const AuthProvider = ({ children }) => {
+  const [authState, setAuthState] = useState({
     user: null,
     token: null,
     isAuthenticated: false
@@ -25,12 +17,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (stored) setAuthState(stored);
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email, password) => {
     const auth = await api.login(email, password);
     setAuthState(auth);
   };
 
-  const register = async (name: string, email: string, password: string) => {
+  const register = async (name, email, password) => {
     const auth = await api.register(name, email, password);
     setAuthState(auth);
   };

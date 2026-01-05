@@ -1,14 +1,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { Heart, Search, ArrowRight } from 'lucide-react';
-import { Book } from '../../types';
 import { api } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import BookCard from '../../components/BookCard/BookCard';
 import { Link } from 'react-router-dom';
 
-const Wishlist: React.FC = () => {
-  const [wishlist, setWishlist] = useState<Book[]>([]);
+const Wishlist = () => {
+  const [wishlist, setWishlist] = useState([]);
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
 
@@ -28,7 +27,7 @@ const Wishlist: React.FC = () => {
     setLoading(false);
   };
 
-  const handleToggle = (id: string) => {
+  const handleToggle = (id) => {
     if (user) {
       api.toggleWishlist(user.id, id);
       fetchWishlist();

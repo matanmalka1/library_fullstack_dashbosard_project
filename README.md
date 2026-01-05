@@ -1,6 +1,6 @@
 ## Gemini Library
 
-Frontend-only bookstore experience built with React, TypeScript, and Vite. All data lives in `localStorage`, and the catalog is seeded from `constants.ts` on first run.
+Frontend-only bookstore experience built with React, JavaScript, and Vite. All data lives in `localStorage`, and the catalog is seeded from `constants.js` on first run.
 
 ## Features
 
@@ -11,7 +11,7 @@ Frontend-only bookstore experience built with React, TypeScript, and Vite. All d
 
 ## Tech Stack
 
-- React 19 + TypeScript
+- React 19 + JavaScript
 - Vite 6
 - React Router 7
 - lucide-react icons
@@ -36,14 +36,14 @@ npm run preview
 ## Data and Storage
 
 - The app uses `localStorage` for books, users, auth sessions, carts, wishlists, and orders.
-- Seeded books live in `constants.ts` (`INITIAL_BOOKS`) and are loaded if no books exist.
+- Seeded books live in `constants.js` (`INITIAL_BOOKS`) and are loaded if no books exist.
 - To reset the app to a clean state, clear your browser `localStorage`.
 
 ## Project Structure
 
-- `App.tsx` defines routes and layout
+- `App.jsx` defines routes and layout
 - `pages/` contains route-level screens
 - `components/` contains reusable UI
 - `context/` provides auth and cart state
 - `services/` is a localStorage-backed API layer
-- `types.ts` and `constants.ts` define shared types and seed data
+- `types.js` and `constants.js` define shared enums and seed data

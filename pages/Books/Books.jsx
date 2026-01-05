@@ -1,14 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { Search, Grid, List, ChevronDown } from 'lucide-react';
-import { Book } from '../../types';
 import { api } from '../../services/api';
 import BookCard from '../../components/BookCard/BookCard';
 import { CATEGORIES } from '../../constants';
 
 const Books = () => {
-  const [books, setBooks] = useState<Book[]>([]);
-  const [filtered, setFiltered] = useState<Book[]>([]);
+  const [books, setBooks] = useState([]);
+  const [filtered, setFiltered] = useState([]);
   const [search, setSearch] = useState('');
   const [cat, setCat] = useState('All');
   const [sort, setSort] = useState('latest');

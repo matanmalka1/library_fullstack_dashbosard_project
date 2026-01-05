@@ -1,11 +1,10 @@
 
 import React, { useState, useRef } from 'react';
 import { X, Upload, Loader2, RotateCcw, Trash2, Camera, ImageIcon } from 'lucide-react';
-import { Book } from '../../types';
 import { api } from '../../services/api';
 import { CATEGORIES } from '../../constants';
 
-const BookFormModal = ({ editingBook, onClose, onSaved }: any) => {
+const BookFormModal = ({ editingBook, onClose, onSaved }) => {
   const [form, setForm] = useState({
     title: editingBook?.title || '',
     author: editingBook?.author || '',
@@ -15,24 +14,24 @@ const BookFormModal = ({ editingBook, onClose, onSaved }: any) => {
     category: editingBook?.categories?.[0] || CATEGORIES[0],
     coverImage: editingBook?.coverImage || ''
   });
-  const [errors, setErrors] = useState<any>({});
+  const [errors, setErrors] = useState({});
   const [isUploading, setIsUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e) => {
     const file = e.target.files?.[0];
     if (file && file.size < 2 * 1024 * 1024) {
       setIsUploading(true);
       const reader = new FileReader();
       reader.onloadend = () => {
-        setForm(f => ({ ...f, coverImage: reader.result as string }));
+        setForm(f => ({ ...f, coverImage: reader.result }));
         setIsUploading(false);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.title || !form.author || !form.isbn) return;
     await api.saveBook({

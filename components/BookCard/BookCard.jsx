@@ -2,16 +2,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Star, ShoppingCart, Heart, AlertCircle } from 'lucide-react';
-import { Book } from '../../types';
 import { useCart } from '../../context/CartContext';
 
-interface BookCardProps {
-  book: Book;
-  isWishlisted?: boolean;
-  onToggleWishlist?: (id: string) => void;
-}
-
-const BookCard: React.FC<BookCardProps> = ({ book, isWishlisted, onToggleWishlist }) => {
+const BookCard = ({ book, isWishlisted, onToggleWishlist }) => {
   const { addToCart } = useCart();
 
   const isLowStock = book.stockQuantity > 0 && book.stockQuantity <= 5;

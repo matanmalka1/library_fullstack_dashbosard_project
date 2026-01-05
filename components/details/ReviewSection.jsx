@@ -1,17 +1,16 @@
 
 import React, { useState } from 'react';
 import { Star, MessageCircle } from 'lucide-react';
-import { Book } from '../../types';
 import { api } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 
-const ReviewSection = ({ book, onUpdate }: { book: Book, onUpdate: () => void }) => {
+const ReviewSection = ({ book, onUpdate }) => {
   const { user, isAuthenticated } = useAuth();
   const [comment, setComment] = useState('');
   const [rating, setRating] = useState(5);
   const approved = book.reviews.filter(r => r.approved);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!user || !comment) return;
     await api.addReview(book.id, { userId: user.id, userName: user.name, rating, comment, date: new Date().toISOString() });

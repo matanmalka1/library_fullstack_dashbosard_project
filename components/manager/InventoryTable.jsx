@@ -1,15 +1,8 @@
 
 import React from 'react';
 import { Edit, Trash2 } from 'lucide-react';
-import { Book } from '../../types';
 
-interface Props {
-  books: Book[];
-  onEdit: (b: Book) => void;
-  onDelete: (id: string) => void;
-}
-
-const InventoryTable = ({ books, onEdit, onDelete }: Props) => (
+const InventoryTable = ({ books, onEdit, onDelete }) => (
   <div className="bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden">
     <div className="p-8 border-b border-slate-50 flex justify-between items-center">
       <h2 className="text-xl font-bold text-slate-800">Master Catalog</h2>

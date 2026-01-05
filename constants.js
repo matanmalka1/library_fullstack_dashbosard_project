@@ -1,12 +1,10 @@
 
-import { Book, UserRole } from './types';
-
 export const CATEGORIES = [
   'Fiction', 'Non-Fiction', 'Science', 'Technology', 'History', 
   'Biography', 'Fantasy', 'Mystery', 'Romance', 'Self-Help'
 ];
 
-export const INITIAL_BOOKS: Book[] = [
+export const INITIAL_BOOKS = [
   {
     id: '1',
     title: 'The Great Gatsby',

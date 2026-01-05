@@ -1,24 +1,13 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { CartItem, Book } from '../types';
 import { useAuth } from './AuthContext';
 import { api } from '../services/api';
 
-interface CartContextType {
-  items: CartItem[];
-  addToCart: (book: Book, quantity?: number) => void;
-  removeFromCart: (bookId: string) => void;
-  updateQuantity: (bookId: string, quantity: number) => void;
-  clearCart: () => void;
-  totalItems: number;
-  totalPrice: number;
-}
+const CartContext = createContext(null);
 
-const CartContext = createContext<CartContextType | undefined>(undefined);
-
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const CartProvider = ({ children }) => {
   const { user } = useAuth();
-  const [items, setItems] = useState<CartItem[]>([]);
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
     if (user) {
@@ -34,7 +23,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [items, user]);
 
-  const addToCart = (book: Book, quantity = 1) => {
+  const addToCart = (book, quantity = 1) => {
     setItems(prev => {
       const existing = prev.find(i => i.bookId === book.id);
       if (existing) {
@@ -44,11 +33,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
-  const removeFromCart = (bookId: string) => {
+  const removeFromCart = (bookId) => {
     setItems(prev => prev.filter(i => i.bookId !== bookId));
   };
 
-  const updateQuantity = (bookId: string, quantity: number) => {
+  const updateQuantity = (bookId, quantity) => {
     if (quantity < 1) return;
     setItems(prev => prev.map(i => i.bookId === bookId ? { ...i, quantity } : i));
   };

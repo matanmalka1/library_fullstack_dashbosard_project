@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, BookOpen, ArrowRight, Github } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
-const Login: React.FC = () => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -11,14 +11,14 @@ const Login: React.FC = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
     try {
       await login(email, password);
       navigate("/");
-    } catch (err: any) {
+    } catch (err) {
       setError(err.message || "Login failed");
     } finally {
       setLoading(false);

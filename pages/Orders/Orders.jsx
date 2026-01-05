@@ -1,13 +1,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { Package, Truck, Calendar, ChevronRight, CheckCircle2, Clock, XCircle, ShoppingBag } from 'lucide-react';
-import { Order, OrderStatus } from '../../types';
+import { OrderStatus } from '../../types';
 import { api } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
 
-const Orders: React.FC = () => {
-  const [orders, setOrders] = useState<Order[]>([]);
+const Orders = () => {
+  const [orders, setOrders] = useState([]);
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
 
@@ -20,7 +20,7 @@ const Orders: React.FC = () => {
     }
   }, [user]);
 
-  const getStatusStyle = (status: OrderStatus) => {
+  const getStatusStyle = (status) => {
     switch (status) {
       case OrderStatus.DELIVERED: return { bg: 'bg-green-50', text: 'text-green-600', icon: <CheckCircle2 className="w-4 h-4" /> };
       case OrderStatus.PENDING: return { bg: 'bg-amber-50', text: 'text-amber-600', icon: <Clock className="w-4 h-4" /> };

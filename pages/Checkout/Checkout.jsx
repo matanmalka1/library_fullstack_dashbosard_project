@@ -6,7 +6,7 @@ import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../services/api';
 
-const Checkout: React.FC = () => {
+const Checkout = () => {
   const { items, totalPrice, clearCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ const Checkout: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const handlePlaceOrder = async (e: React.FormEvent) => {
+  const handlePlaceOrder = async (e) => {
     e.preventDefault();
     if (!user) return;
     

@@ -2,13 +2,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { api } from '../../services/api';
-import { Book } from '../../types';
 import BookInfo from '../../components/details/BookInfo';
 import ReviewSection from '../../components/details/ReviewSection';
 
 const DetailsPage = () => {
   const { id } = useParams();
-  const [book, setBook] = useState<Book | null>(null);
+  const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const fetchBook = () => {

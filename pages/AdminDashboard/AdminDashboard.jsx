@@ -1,13 +1,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { Star, CheckCircle2, XCircle, Shield, User as UserIcon, MessageSquare, Book as BookIcon } from 'lucide-react';
-import { Book, Review, User, UserRole } from '../../types';
+import { UserRole } from '../../types';
 import { api } from '../../services/api';
 
-const AdminDashboard: React.FC = () => {
-  const [books, setBooks] = useState<Book[]>([]);
-  const [pendingReviews, setPendingReviews] = useState<{bookId: string, bookTitle: string, review: Review}[]>([]);
-  const [activeTab, setActiveTab] = useState<'reviews' | 'users'>('reviews');
+const AdminDashboard = () => {
+  const [books, setBooks] = useState([]);
+  const [pendingReviews, setPendingReviews] = useState([]);
+  const [activeTab, setActiveTab] = useState('reviews');
 
   useEffect(() => {
     fetchData();
@@ -17,7 +17,7 @@ const AdminDashboard: React.FC = () => {
     const b = await api.getBooks();
     setBooks(b);
     
-    const pending: any[] = [];
+    const pending = [];
     b.forEach(book => {
       book.reviews.forEach(review => {
         if (!review.approved) {
@@ -28,7 +28,7 @@ const AdminDashboard: React.FC = () => {
     setPendingReviews(pending);
   };
 
-  const handleApprove = async (bookId: string, reviewId: string) => {
+  const handleApprove = async (bookId, reviewId) => {
     await api.approveReview(bookId, reviewId);
     fetchData();
   };
