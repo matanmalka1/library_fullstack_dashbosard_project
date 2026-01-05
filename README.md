@@ -1,20 +1,49 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+## Gemini Library
 
-# Run and deploy your AI Studio app
+Frontend-only bookstore experience built with React, TypeScript, and Vite. All data lives in `localStorage`, and the catalog is seeded from `constants.ts` on first run.
 
-This contains everything you need to run your app locally.
+## Features
 
-View your app in AI Studio: https://ai.studio/apps/drive/1L8cckL20Ey1PQ9khD7dCVUJ8oNgJe6El
+- Browse books, view details, and search/filter through the catalog
+- Cart, wishlist, and checkout flow
+- Auth with user sessions stored in `localStorage`
+- Orders history and admin/manager dashboards (role-gated routes)
 
-## Run Locally
+## Tech Stack
 
-**Prerequisites:**  Node.js
+- React 19 + TypeScript
+- Vite 6
+- React Router 7
+- lucide-react icons
 
+## Getting Started
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+```bash
+npm install
+npm run dev
+```
+
+Open the printed local URL in your browser.
+
+## Scripts
+
+```bash
+npm run dev
+npm run build
+npm run preview
+```
+
+## Data and Storage
+
+- The app uses `localStorage` for books, users, auth sessions, carts, wishlists, and orders.
+- Seeded books live in `constants.ts` (`INITIAL_BOOKS`) and are loaded if no books exist.
+- To reset the app to a clean state, clear your browser `localStorage`.
+
+## Project Structure
+
+- `App.tsx` defines routes and layout
+- `pages/` contains route-level screens
+- `components/` contains reusable UI
+- `context/` provides auth and cart state
+- `services/` is a localStorage-backed API layer
+- `types.ts` and `constants.ts` define shared types and seed data
