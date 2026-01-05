@@ -1,7 +1,0 @@
-{
-  "name": "Books - Premium Bookstore Experience",
-  "description": "A comprehensive bookstore application featuring role-based access, inventory management, persistent shopping cart, and order tracking with a modern UI.",
-  "requestFramePermissions": [
-    "camera"
-  ]
-}
