@@ -4,7 +4,6 @@ import { Search } from 'lucide-react';
 import { api } from '../../services/api';
 import { BookCard } from '../../components/book/BookCard/BookCard/BookCard';
 import { CATEGORIES } from '../../Utils/constants';
-import './Books.css';
 
 export const Books = () => {
   const [books, setBooks] = useState([]);
@@ -28,37 +27,55 @@ export const Books = () => {
   }, [search, cat, sort, priceMax, books]);
 
   return (
-    <div className="books">
-      <aside className="books__sidebar">
-        <div className="books__panel">
-          <h3 className="books__panel-title">Explore Library</h3>
-          <div className="books__panel-body">
-            <div className="books__search">
-              <Search className="books__search-icon" />
-              <input value={search} onChange={e => setSearch(e.target.value)} className="books__search-input" placeholder="Find books..." />
+    <div className="max-w-[1120px] mx-auto px-4 lg:px-8 py-12 flex flex-col gap-8 md:flex-row">
+      <aside className="w-full md:w-[260px] md:shrink-0">
+        <div className="bg-white border border-slate-200 rounded-[24px] p-6 shadow-[0_8px_20px_rgba(15,23,42,0.05)]">
+          <h3 className="text-[11px] uppercase tracking-[0.18em] font-bold text-slate-800 mb-6">Explore Library</h3>
+          <div className="grid gap-6">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
+              <input
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 rounded-[14px] bg-slate-50 text-sm outline-none"
+                placeholder="Find books..."
+              />
             </div>
             <div>
-              <p className="books__label">Categories</p>
-              <div className="books__categories">
+              <p className="text-[10px] uppercase tracking-[0.16em] font-bold text-slate-400 mb-3">Categories</p>
+              <div className="grid gap-1.5">
                 {['All', ...CATEGORIES].map(c => (
-                  <button key={c} onClick={() => setCat(c)} className={`books__category ${cat === c ? 'is-active' : ''}`}>{c}</button>
+                  <button
+                    key={c}
+                    onClick={() => setCat(c)}
+                    className={`w-full text-left border-0 bg-transparent px-3 py-2 rounded-[12px] text-sm font-medium cursor-pointer transition ${
+                      cat === c
+                        ? "bg-indigo-600 text-white shadow-[0_12px_20px_rgba(79,70,229,0.2)]"
+                        : "text-slate-500 hover:bg-slate-50"
+                    }`}
+                    type="button"
+                  >
+                    {c}
+                  </button>
                 ))}
               </div>
             </div>
           </div>
         </div>
       </aside>
-      <div className="books__content">
-        <div className="books__toolbar">
-          <p className="books__results">Total results: <span className="books__results-count">{filtered.length}</span></p>
-          <select value={sort} onChange={e => setSort(e.target.value)} className="books__sort">
+      <div className="flex-1">
+        <div className="flex items-center justify-between bg-white border border-slate-100 rounded-[18px] p-4 mb-8 shadow-[0_8px_20px_rgba(15,23,42,0.04)]">
+          <p className="text-xs text-slate-500">
+            Total results: <span className="font-bold text-slate-900">{filtered.length}</span>
+          </p>
+          <select value={sort} onChange={e => setSort(e.target.value)} className="bg-transparent border-0 text-xs font-bold text-slate-800 outline-none cursor-pointer">
             <option value="latest">Sort: Recently Added</option>
             <option value="price-low">Sort: Price Low-High</option>
             <option value="price-high">Sort: Price High-Low</option>
             <option value="rating">Sort: Top Rated</option>
           </select>
         </div>
-        <div className="books__grid">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {filtered.map(b => <BookCard key={b.id} book={b} />)}
         </div>
       </div>

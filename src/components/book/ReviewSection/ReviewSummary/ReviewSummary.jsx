@@ -1,6 +1,5 @@
 import React from "react";
 import { Star } from "lucide-react";
-import "./ReviewSummary.css";
 
 export const ReviewSummary = ({
   ratingValue,
@@ -12,38 +11,38 @@ export const ReviewSummary = ({
   onCommentChange,
   onSubmit,
 }) => (
-  <div className="review-section__summary">
-    <h2 className="review-section__title">Insights</h2>
-    <div className="review-section__card">
-      <div className="review-section__rating">
-        <span className="review-section__rating-value">{ratingValue}</span>
-        <div className="review-section__rating-stars">
+  <div className="w-full md:w-[35%]">
+    <h2 className="font-serif text-2xl md:text-[32px] font-bold mb-6 text-slate-900">Insights</h2>
+    <div className="bg-slate-50 border border-slate-200 rounded-[24px] p-8">
+      <div className="grid gap-2 justify-items-start mb-6">
+        <span className="text-4xl font-bold text-slate-900">{ratingValue}</span>
+        <div className="flex gap-1">
           {[1, 2, 3, 4, 5].map((i) => (
             <Star
               key={i}
-              className={`review-section__star ${
-                i <= ratingValue ? "is-active" : ""
+              className={`w-4 h-4 ${
+                i <= ratingValue ? "text-amber-400 fill-amber-400" : "text-slate-200"
               }`}
             />
           ))}
         </div>
-        <span className="review-section__rating-count">
+        <span className="text-xs text-slate-500">
           {reviewCount} reviews
         </span>
       </div>
       {isAuthenticated ? (
-        <form onSubmit={onSubmit} className="review-section__form">
-          <div className="review-section__picker">
+        <form onSubmit={onSubmit} className="grid gap-4">
+          <div className="flex gap-1.5">
             {[1, 2, 3, 4, 5].map((i) => (
               <button
                 key={i}
                 type="button"
                 onClick={() => onPickRating(i)}
-                className="review-section__picker-btn"
+                className="border-0 bg-transparent p-0 cursor-pointer"
               >
                 <Star
-                  className={`review-section__picker-star ${
-                    i <= rating ? "is-active" : ""
+                  className={`w-5 h-5 ${
+                    i <= rating ? "text-amber-400 fill-amber-400" : "text-slate-200"
                   }`}
                 />
               </button>
@@ -52,13 +51,15 @@ export const ReviewSummary = ({
           <textarea
             value={comment}
             onChange={(e) => onCommentChange(e.target.value)}
-            className="review-section__textarea"
+            className="w-full min-h-[120px] p-4 border border-slate-200 rounded-[16px] text-sm resize-y outline-none"
             placeholder="Your thoughts..."
           />
-          <button className="review-section__submit">Submit Review</button>
+          <button className="border-0 rounded-[14px] px-4 py-3 bg-slate-900 text-white font-bold cursor-pointer transition-colors hover:bg-slate-800">
+            Submit Review
+          </button>
         </form>
       ) : (
-        <p className="review-section__signin">Sign in to leave a review.</p>
+        <p className="text-center text-slate-400 py-4">Sign in to leave a review.</p>
       )}
     </div>
   </div>

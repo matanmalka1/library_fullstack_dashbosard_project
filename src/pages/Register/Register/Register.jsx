@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/auth/AuthContext";
 import { RegisterFormPanel } from "../RegisterFormPanel/RegisterFormPanel";
 import { RegisterVisual } from "../RegisterVisual/RegisterVisual";
-import "./Register.css";
 
 export const Register = () => {
   const [name, setName] = useState("");
@@ -29,7 +28,7 @@ export const Register = () => {
   };
 
   return (
-    <div className="register">
+    <div className="min-h-[calc(100vh-64px)] flex bg-slate-50">
       <RegisterFormPanel
         name={name}
         email={email}

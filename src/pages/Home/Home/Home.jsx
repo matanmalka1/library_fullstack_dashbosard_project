@@ -5,7 +5,6 @@ import { HomeHero } from '../HomeHero/HomeHero';
 import { HomeFeatures } from '../HomeFeatures/HomeFeatures';
 import { HomeFeatured } from '../HomeFeatured/HomeFeatured';
 import { HomeCTA } from '../HomeCTA/HomeCTA';
-import './Home.css';
 
 export const Home = () => {
   const [featuredBooks, setFeaturedBooks] = useState([]);
@@ -17,7 +16,7 @@ export const Home = () => {
   }, []);
 
   return (
-    <div className="home">
+    <div className="flex flex-col gap-20 pb-20">
       <HomeHero />
       <HomeFeatures />
       <HomeFeatured featuredBooks={featuredBooks} />

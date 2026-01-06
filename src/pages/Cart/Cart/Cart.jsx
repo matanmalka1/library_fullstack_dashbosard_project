@@ -4,7 +4,6 @@ import { useCart } from '../../../context/cart/CartContext';
 import { CartEmpty } from '../CartEmpty/CartEmpty';
 import { CartItems } from '../CartItems/CartItems';
 import { CartSummary } from '../CartSummary/CartSummary';
-import './Cart.css';
 
 export const Cart = () => {
   const { items, removeFromCart, updateQuantity, totalPrice, totalItems } = useCart();
@@ -14,12 +13,12 @@ export const Cart = () => {
   }
 
   return (
-    <div className="cart">
-      <h1 className="cart__title">
-        Shopping Bag <span className="cart__title-count">({totalItems})</span>
+    <div className="max-w-[1120px] mx-auto px-4 lg:px-8 py-12">
+      <h1 className="font-serif text-4xl font-bold text-slate-900 mb-10">
+        Shopping Bag <span className="text-slate-300 ml-2">({totalItems})</span>
       </h1>
       
-      <div className="cart__layout">
+      <div className="flex flex-col gap-12 lg:flex-row">
         <CartItems
           items={items}
           onRemove={removeFromCart}

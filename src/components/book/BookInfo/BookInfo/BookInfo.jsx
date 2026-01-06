@@ -2,7 +2,6 @@ import React from "react";
 import { useCart } from "../../../../context/cart/CartContext";
 import { BookInfoMedia } from "../BookInfoMedia/BookInfoMedia";
 import { BookInfoDetails } from "../BookInfoDetails/BookInfoDetails";
-import "./BookInfo.css";
 
 export const BookInfo = ({ book }) => {
   const { addToCart } = useCart();
@@ -26,7 +25,7 @@ export const BookInfo = ({ book }) => {
   };
 
   return (
-    <article className="book-info">
+    <article className="flex flex-col gap-16 lg:flex-row">
       <BookInfoMedia coverImage={coverImage} safeTitle={safeTitle} />
       <BookInfoDetails
         safeTitle={safeTitle}

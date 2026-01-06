@@ -3,7 +3,6 @@ import { api } from "../../../../services/api";
 import { useAuth } from "../../../../context/auth/AuthContext";
 import { ReviewSummary } from "../ReviewSummary/ReviewSummary";
 import { ReviewList } from "../ReviewList/ReviewList";
-import "./ReviewSection.css";
 
 export const ReviewSection = ({ book, onUpdate }) => {
   const { user, isAuthenticated } = useAuth();
@@ -27,7 +26,7 @@ export const ReviewSection = ({ book, onUpdate }) => {
   };
 
   return (
-    <div className="review-section">
+    <div className="flex flex-col gap-16 md:flex-row">
       <ReviewSummary
         ratingValue={book.rating || 0}
         reviewCount={approved.length}

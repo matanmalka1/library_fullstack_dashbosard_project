@@ -8,7 +8,6 @@ import { api } from '../../../services/api';
 import { CheckoutSuccess } from '../CheckoutSuccess/CheckoutSuccess';
 import { CheckoutForm } from '../CheckoutForm/CheckoutForm';
 import { CheckoutSummary } from '../CheckoutSummary/CheckoutSummary';
-import './Checkout.css';
 
 export const Checkout = () => {
   const { items, totalPrice, clearCart } = useCart();
@@ -42,12 +41,16 @@ export const Checkout = () => {
   }
 
   return (
-    <div className="checkout">
-      <button onClick={() => navigate('/cart')} className="checkout__back">
-        <ChevronLeft className="checkout__back-icon" /> Back to Bag
+    <div className="max-w-[1120px] mx-auto px-4 lg:px-8 py-12">
+      <button
+        onClick={() => navigate('/cart')}
+        className="border-0 bg-transparent text-slate-400 font-bold text-sm inline-flex items-center gap-2 mb-10 cursor-pointer"
+        type="button"
+      >
+        <ChevronLeft className="w-4 h-4" /> Back to Bag
       </button>
 
-      <div className="checkout__layout">
+      <div className="flex flex-col gap-16 lg:flex-row">
         <CheckoutForm
           userName={user?.name}
           address={address}

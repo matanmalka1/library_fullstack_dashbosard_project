@@ -6,7 +6,6 @@ import { api } from '../../services/api';
 import { InventoryStats } from '../../components/manager/InventoryStats/InventoryStats';
 import { InventoryTable } from '../../components/manager/InventoryTable/InventoryTable';
 import { BookFormModal } from '../../components/manager/BookFormModal/BookFormModal/BookFormModal';
-import './ManagerDashboard.css';
 
 export const ManagerDashboard = () => {
   const [books, setBooks] = useState([]);
@@ -35,44 +34,51 @@ export const ManagerDashboard = () => {
   };
 
   return (
-    <div className="manager-dashboard">
-      <div className="manager-dashboard__header">
+    <div className="max-w-[1120px] mx-auto px-4 lg:px-8 py-12">
+      <div className="flex items-center justify-between gap-6 mb-10 flex-wrap">
         <div>
-          <h1 className="manager-dashboard__title">Inventory</h1>
-          <p className="manager-dashboard__subtitle">Track stock and fulfill orders.</p>
+          <h1 className="font-serif text-4xl text-slate-900 mb-2">Inventory</h1>
+          <p className="text-slate-500 m-0">Track stock and fulfill orders.</p>
         </div>
         <button 
           onClick={() => { setEditingBook(null); setIsModalOpen(true); }}
-          className="manager-dashboard__action"
+          className="border-0 bg-indigo-600 text-white px-6 py-3 rounded-2xl font-bold inline-flex items-center gap-2 cursor-pointer shadow-[0_12px_20px_rgba(79,70,229,0.2)]"
+          type="button"
         >
-          <Plus className="manager-dashboard__action-icon" /> New Book
+          <Plus className="w-5 h-5" /> New Book
         </button>
       </div>
 
       <InventoryStats books={books} orders={orders} />
       
-      <div className="manager-dashboard__layout">
-        <div className="manager-dashboard__table">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[2fr_1fr]">
+        <div>
           <InventoryTable books={books} onEdit={handleEdit} onDelete={handleDelete} />
         </div>
-        <div className="manager-dashboard__status">
-          <h2 className="manager-dashboard__status-title">Order Status</h2>
-          <div className="manager-dashboard__status-list">
+        <div className="bg-slate-900 text-white rounded-[32px] p-8 shadow-[0_20px_40px_rgba(15,23,42,0.3)] h-fit">
+          <h2 className="text-xl font-bold mb-6">Order Status</h2>
+          <div className="grid gap-6">
             {orders.slice(0, 5).map(o => (
-              <div key={o.id} className="manager-dashboard__status-item">
-                <div className="manager-dashboard__status-row">
-                  <span className="manager-dashboard__status-id">#{o.id}</span>
+              <div key={o.id} className="border-b border-white/10 pb-4">
+                <div className="flex items-center justify-between gap-4 mb-2 text-xs">
+                  <span className="text-indigo-300 font-bold">#{o.id}</span>
                   <select 
                     value={o.status}
                     onChange={(e) => { api.updateOrderStatus(o.id, e.target.value); fetchData(); }}
-                    className="manager-dashboard__status-select"
+                    className="bg-transparent border-0 text-white text-[10px] uppercase font-bold cursor-pointer outline-none"
                   >
-                    {Object.values(OrderStatus).map(s => <option key={s} value={s} className="manager-dashboard__status-option">{s}</option>)}
+                    {Object.values(OrderStatus).map(s => (
+                      <option key={s} value={s} className="bg-slate-900">
+                        {s}
+                      </option>
+                    ))}
                   </select>
                 </div>
-                <div className="manager-dashboard__status-row manager-dashboard__status-row--meta">
-                  <span className="manager-dashboard__status-address">{o.shippingAddress}</span>
-                  <span className="manager-dashboard__status-total">${o.total.toFixed(2)}</span>
+                <div className="flex items-center justify-between gap-4 text-sm">
+                  <span className="text-[10px] text-slate-400 max-w-[140px] truncate">
+                    {o.shippingAddress}
+                  </span>
+                  <span className="font-bold text-sm">${o.total.toFixed(2)}</span>
                 </div>
               </div>
             ))}

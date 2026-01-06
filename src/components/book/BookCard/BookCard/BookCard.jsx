@@ -2,7 +2,6 @@ import React, { memo } from "react";
 import { useCart } from "../../../../context/cart/CartContext";
 import { BookCardMedia } from "../BookCardMedia/BookCardMedia";
 import { BookCardBody } from "../BookCardBody/BookCardBody";
-import "./BookCard.css";
 
 export const BookCard = memo(({ book, isWishlisted, onToggleWishlist }) => {
   const { addToCart } = useCart();
@@ -38,7 +37,7 @@ export const BookCard = memo(({ book, isWishlisted, onToggleWishlist }) => {
   };
 
   return (
-    <article className="book-card">
+    <article className="group bg-white border border-slate-200 rounded-[20px] overflow-hidden flex flex-col h-full transition-all hover:shadow-[0_20px_40px_rgba(15,23,42,0.12)] hover:-translate-y-0.5">
       <BookCardMedia
         id={id}
         safeTitle={safeTitle}

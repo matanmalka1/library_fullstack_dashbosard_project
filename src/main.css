@@ -1,3 +1,100 @@
+@import "tailwindcss";
+
+@layer base {
+  *, ::before, ::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    background: #f8fafc;
+    color: #0f172a;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font-family: inherit;
+  }
+}
+
+@keyframes navbar-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes home-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes book-details-fade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes checkout-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes login-shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(4px); }
+  75% { transform: translateX(-2px); }
+  100% { transform: translateX(0); }
+}
+
+@layer utilities {
+  .font-serif {
+    font-family: "Playfair Display", serif;
+  }
+}
+
+/*
 * {
   box-sizing: border-box;
 }
@@ -20,3 +117,4 @@ textarea,
 select {
   font-family: inherit;
 }
+*/

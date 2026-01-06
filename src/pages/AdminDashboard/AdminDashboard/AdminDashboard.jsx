@@ -4,7 +4,6 @@ import { useAuth } from "../../../context/auth/AuthContext";
 import { AdminDashboardNav } from "../AdminDashboardNav/AdminDashboardNav";
 import { AdminReviewsPanel } from "../AdminReviewsPanel/AdminReviewsPanel";
 import { AdminUsersPanel } from "../AdminUsersPanel/AdminUsersPanel";
-import "./AdminDashboard.css";
 
 export const AdminDashboard = () => {
   const [books, setBooks] = useState([]);
@@ -63,12 +62,12 @@ export const AdminDashboard = () => {
   };
 
   return (
-    <div className="admin-dashboard">
-      <div className="admin-dashboard__layout">
+    <div className="max-w-[1120px] mx-auto px-4 lg:px-8 py-12">
+      <div className="bg-white border border-slate-200 rounded-[32px] overflow-hidden min-h-[600px] flex flex-col md:flex-row">
         <AdminDashboardNav activeTab={activeTab} onChangeTab={setActiveTab} />
 
         {/* Main Area */}
-        <main className="admin-dashboard__main">
+        <main className="flex-1 p-8 bg-slate-50/60">
           {activeTab === "reviews" ? (
             <AdminReviewsPanel
               pendingReviews={pendingReviews}

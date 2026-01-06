@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/auth/AuthContext";
 import { LoginFormPanel } from "../LoginFormPanel/LoginFormPanel";
 import { LoginVisual } from "../LoginVisual/LoginVisual";
-import "./Login.css";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
@@ -28,7 +27,7 @@ export const Login = () => {
   };
 
   return (
-    <div className="login">
+    <div className="min-h-[calc(100vh-64px)] flex bg-slate-50">
       <LoginFormPanel
         email={email}
         password={password}
