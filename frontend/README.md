@@ -1,12 +1,12 @@
 ## Library
 
-Frontend-only bookstore experience built with React, JavaScript, and Vite. All data lives in `localStorage`, and the catalog is seeded from `constants.js` on first run.
+Bookstore experience built with React, JavaScript, and Vite. Auth and user management are backed by the Express API, while the catalog and shopping data still live in `localStorage` for now.
 
 ## Features
 
 - Browse books, view details, and search/filter through the catalog
 - Cart, wishlist, and checkout flow
-- Auth with user sessions stored in `localStorage`
+- Auth and user management via the backend API
 - Orders history and admin/manager dashboards (role-gated routes)
 
 ## Tech Stack
@@ -17,6 +17,11 @@ Frontend-only bookstore experience built with React, JavaScript, and Vite. All d
 - lucide-react icons
 
 ## Getting Started
+
+Set the API base URL (defaults to `http://localhost:3000/api/v1`):
+```bash
+VITE_API_BASE_URL=http://localhost:3000/api/v1
+```
 
 ```bash
 npm install
@@ -35,19 +40,13 @@ npm run preview
 
 ## Data and Storage
 
-- The app uses `localStorage` for books, users, auth sessions, carts, wishlists, and orders.
+- The app uses `localStorage` for books, carts, wishlists, and orders.
 - Seeded books live in `constants.js` (`INITIAL_BOOKS`) and are loaded if no books exist.
 - To reset the app to a clean state, clear your browser `localStorage`.
 
 ## Default User Accounts
 
-For testing purposes, you can create these accounts or use the registration flow:
-
-- **Admin**: admin@gmail.com / password (must be created via registration)
-- **Manager**: manager@gmail.com / password (must be created via registration)
-- **User**: user@gmail.com / password (must be created via registration)
-
-Note: Role assignment is manual in this demo. By default, all registered users have USER role.
+Use the backend seed users (see backend README) or register a new account from the UI.
 
 ## Project Structure
 

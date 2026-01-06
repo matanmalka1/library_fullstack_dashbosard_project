@@ -2,6 +2,13 @@ import { setStore, KEYS } from "./core";
 import { buildAuth, normalizeRole } from "./auth.utils";
 import { http } from "./http";
 
+const getApiErrorMessage = (error, fallback) => {
+  if (error?.response?.data?.message) {
+    return error.response.data.message;
+  }
+  return error?.message || fallback;
+};
+
 export class AuthService {
   constructor() {
     this.roleNameToId = new Map();
@@ -36,57 +43,73 @@ export class AuthService {
   }
 
   async login(email, password) {
-    const { data } = await http.post("/auth/login", { email, password });
-    const user = data?.data?.user;
-    const token = data?.data?.accessToken;
+    try {
+      const { data } = await http.post("/auth/login", { email, password });
+      const user = data?.data?.user;
+      const token = data?.data?.accessToken;
 
-    const auth = buildAuth(user, token);
-    setStore(KEYS.AUTH, auth);
-    return auth;
+      const auth = buildAuth(user, token);
+      setStore(KEYS.AUTH, auth);
+      return auth;
+    } catch (error) {
+      throw new Error(getApiErrorMessage(error, "Login failed"));
+    }
   }
 
   async register(name, email, password) {
-    const { firstName, lastName } = this.splitName(name);
-    await http.post("/auth/register", {
-      email,
-      password,
-      firstName,
-      lastName,
-    });
-    return this.login(email, password);
+    try {
+      const { firstName, lastName } = this.splitName(name);
+      await http.post("/auth/register", {
+        email,
+        password,
+        firstName,
+        lastName,
+      });
+      return await this.login(email, password);
+    } catch (error) {
+      throw new Error(getApiErrorMessage(error, "Registration failed"));
+    }
   }
 
   async getUsers() {
-    const { data } = await http.get("/users", { params: { limit: 100 } });
-    const users = data?.data?.users || [];
-    this.syncRoleMap(users);
+    try {
+      const { data } = await http.get("/users", { params: { limit: 100 } });
+      const users = data?.data?.users || [];
+      this.syncRoleMap(users);
 
-    return users.map((user) => ({
-      id: user._id,
-      name: `${user.firstName} ${user.lastName}`.trim(),
-      email: user.email,
-      role: normalizeRole(user.role?.name || user.role),
-    }));
+      return users.map((user) => ({
+        id: user._id,
+        name: `${user.firstName} ${user.lastName}`.trim(),
+        email: user.email,
+        role: normalizeRole(user.role?.name || user.role),
+      }));
+    } catch (error) {
+      throw new Error(getApiErrorMessage(error, "Unable to load users"));
+    }
   }
 
   async updateUserRole(userId, role) {
-    const roleId = await this.getRoleIdByName(role);
-    if (!roleId) {
-      throw new Error(`Role mapping not found for ${role}`);
+    try {
+      const roleId = await this.getRoleIdByName(role);
+      if (!roleId) {
+        throw new Error(`Role mapping not found for ${role}`);
+      }
+
+      const { data } = await http.put(`/users/${userId}`, { roleId });
+      const user = data?.data?.user;
+      if (user) this.syncRoleMap([user]);
+
+      return user
+        ? {
+            id: user._id,
+            name: `${user.firstName} ${user.lastName}`.trim(),
+            email: user.email,
+            role: normalizeRole(user.role?.name || user.role),
+          }
+        : null;
+    } catch (error) {
+      throw new Error(getApiErrorMessage(error, "Unable to update user role"));
     }
-
-    const { data } = await http.put(`/users/${userId}`, { roleId });
-    const user = data?.data?.user;
-    if (user) this.syncRoleMap([user]);
-
-    return user
-      ? {
-          id: user._id,
-          name: `${user.firstName} ${user.lastName}`.trim(),
-          email: user.email,
-          role: normalizeRole(user.role?.name || user.role),
-        }
-      : null;
   }
 
   logout() {

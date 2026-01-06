@@ -13,9 +13,14 @@ export const app = express();
 
 app.use(helmet());
 
+const corsOrigins = (process.env.CORS_ORIGIN || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: corsOrigins.length ? corsOrigins : undefined,
     credentials: true,
   })
 );
