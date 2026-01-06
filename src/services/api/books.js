@@ -14,7 +14,6 @@ export class BookService {
   }
 
   async getBookById(id) {
-    // Removed ': string'
     return (await this.getBooks()).find((b) => b.id === id);
   }
 

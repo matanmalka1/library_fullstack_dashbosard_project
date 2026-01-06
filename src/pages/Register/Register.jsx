@@ -1,0 +1,46 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/auth/AuthContext";
+import { RegisterFormPanel } from "../RegisterFormPanel/RegisterFormPanel";
+import { RegisterVisual } from "./RegisterVisual";
+
+export const Register = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { register } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      await register(name, email, password);
+      navigate("/");
+    } catch (err) {
+      setError(err.message || "Registration failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-[calc(100vh-64px)] flex bg-slate-50">
+      <RegisterFormPanel
+        name={name}
+        email={email}
+        password={password}
+        error={error}
+        loading={loading}
+        onNameChange={setName}
+        onEmailChange={setEmail}
+        onPasswordChange={setPassword}
+        onSubmit={handleSubmit}
+      />
+      <RegisterVisual />
+    </div>
+  );
+};
