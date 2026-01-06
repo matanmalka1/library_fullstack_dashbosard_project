@@ -1,14 +1,6 @@
 import { http } from "./http";
-
-const getApiErrorMessage = (error, fallback) => {
-  if (error?.response?.data?.message) {
-    return error.response.data.message;
-  }
-  return error?.message || fallback;
-};
-
-const normalizeIds = (items = []) =>
-  items.map((id) => id?.toString?.() || id);
+import { getApiErrorMessage } from "./error";
+import { normalizeIds } from "./normalize";
 
 export const attachWishlistMethods = (service) => {
   service.getWishlist = async () => {

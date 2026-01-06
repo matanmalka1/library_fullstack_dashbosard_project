@@ -1,13 +1,7 @@
 import { requireRole } from "./auth.utils";
 import { UserRole } from "../../types";
 import { http } from "./http";
-
-const getApiErrorMessage = (error, fallback) => {
-  if (error?.response?.data?.message) {
-    return error.response.data.message;
-  }
-  return error?.message || fallback;
-};
+import { getApiErrorMessage } from "./error";
 
 export const attachReviewMethods = (service) => {
   service.addReview = async (bookId, review) => {

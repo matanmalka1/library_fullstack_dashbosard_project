@@ -1,21 +1,10 @@
 import { UserRole } from "../../types";
 import { requireRole, requireUser } from "./auth.utils";
 import { http } from "./http";
+import { getApiErrorMessage } from "./error";
+import { normalizeItem } from "./normalize";
 
 export const attachOrderMethods = (service) => {
-  const getApiErrorMessage = (error, fallback) => {
-    if (error?.response?.data?.message) {
-      return error.response.data.message;
-    }
-    return error?.message || fallback;
-  };
-
-  const normalizeItem = (item) => ({
-    bookId: item.bookId || item.book?._id || item.book,
-    quantity: item.quantity,
-    book: item.book,
-  });
-
   const normalizeOrder = (order) => ({
     ...order,
     id: order._id || order.id,
