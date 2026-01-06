@@ -19,6 +19,7 @@ Bookstore experience built with React, JavaScript, and Vite. Auth and user manag
 ## Getting Started
 
 Set the API base URL (defaults to `http://localhost:3000/api/v1`):
+
 ```bash
 VITE_API_BASE_URL=http://localhost:3000/api/v1
 ```
@@ -40,9 +41,8 @@ npm run preview
 
 ## Data and Storage
 
-- The app uses `localStorage` for books, carts, wishlists, and orders.
-- Seeded books live in `constants.js` (`INITIAL_BOOKS`) and are loaded if no books exist.
-- To reset the app to a clean state, clear your browser `localStorage`.
+- The app now uses the backend API for books, carts, wishlists, and orders.
+- `localStorage` is used primarily for auth state and small client-side caches.
 
 ## Default User Accounts
 
@@ -54,9 +54,10 @@ Use the backend seed users (see backend README) or register a new account from t
 - `pages/` contains route-level screens
 - `components/` contains reusable UI
 - `context/` provides auth and cart state
-- `services/api/` is a modular localStorage-backed API layer
-  - `core.js` - Storage utilities
+- `services/api/` is a modular API layer that talks to the Express backend via `http.js`
+  - `http.js` - Axios HTTP client configured with `VITE_API_BASE_URL`
+  - `core.js` - Storage helpers for auth and small caches
   - `auth.js` - Authentication services
   - `books.js` - Book management
-  - `index.js` - Main API export
-- `types.js` and `constants.js` define shared enums and seed data
+  - `index.js` - Main API export (`api`)
+- `types.js` defines shared enums and `constants.js` defines shared UI constants (e.g., categories)

@@ -29,16 +29,23 @@ export const getAllBooks = async (query) => {
   const page = Math.max(1, parseInt(query.page, 10) || 1);
   const limit = Math.min(200, Math.max(1, parseInt(query.limit, 10) || 20));
   const skip = (page - 1) * limit;
+  const includeReviews = query.includeReviews !== "false";
 
   const filter = buildSearchFilter(query);
 
+  const booksQuery = Book.find(filter)
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
+
+  if (includeReviews) {
+    booksQuery.populate(populateReviews());
+  } else {
+    booksQuery.select("-reviews");
+  }
+
   const [books, count] = await Promise.all([
-    Book.find(filter)
-      .populate(populateReviews())
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit)
-      .lean(),
+    booksQuery.lean(),
     Book.countDocuments(filter),
   ]);
 
@@ -69,7 +76,10 @@ export const createBook = async (data) => {
 };
 
 export const updateBook = async (id, data) => {
-  const book = await Book.findById(id);
+  const book = await Book.findByIdAndUpdate(id, data, {
+    new: true,
+    runValidators: true,
+  });
   if (!book) {
     throw new ApiError(
       API_ERROR_CODES.RESOURCE_NOT_FOUND,
@@ -77,9 +87,6 @@ export const updateBook = async (id, data) => {
       404
     );
   }
-
-  Object.assign(book, data);
-  await book.save();
 
   return book;
 };

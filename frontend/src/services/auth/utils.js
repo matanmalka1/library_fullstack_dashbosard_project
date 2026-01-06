@@ -1,5 +1,4 @@
-import { setStore, KEYS } from "./core";
-import { normalizeId } from "./normalize";
+import { getAuthState, setAuthState } from "./store";
 
 export const normalizeRole = (role) => {
   if (!role) return null;
@@ -23,11 +22,12 @@ export const buildAuth = (user, token) => {
 };
 
 export const getStoredAuth = () => {
-  const rawAuth = localStorage.getItem(KEYS.AUTH);
-  if (!rawAuth) return null;
-  const parsed = JSON.parse(rawAuth);
-  parsed.user = normalizeUser(parsed.user);
-  return parsed;
+  const stored = getAuthState();
+  if (!stored?.user && !stored?.token) return null;
+  return {
+    ...stored,
+    user: normalizeUser(stored.user),
+  };
 };
 
 export const requireUser = () => {
@@ -52,10 +52,36 @@ export const syncStoredAuthRole = (userId, role) => {
   if (!auth) return;
   if (auth?.user?.id !== userId) return;
 
-  setStore(KEYS.AUTH, {
+  setAuthState({
     ...auth,
     user: { ...auth.user, role },
   });
+};
+
+export const isTokenExpired = (token, skewSeconds = 30) => {
+  if (!token) return true;
+  const exp = getTokenExpiry(token);
+  if (!exp) return true;
+  return Date.now() >= exp - skewSeconds * 1000;
+};
+
+export const getTokenExpiry = (token) => {
+  const payload = parseJwtPayload(token);
+  if (!payload || !payload.exp) return null;
+  return payload.exp * 1000;
+};
+
+const parseJwtPayload = (token) => {
+  const parts = token.split(".");
+  if (parts.length < 2) return null;
+  try {
+    const base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+    const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), "=");
+    const decoded = atob(padded);
+    return JSON.parse(decoded);
+  } catch {
+    return null;
+  }
 };
 
 const normalizeUser = (user) => {
@@ -72,3 +98,4 @@ const normalizeUser = (user) => {
   }
   return normalized;
 };
+

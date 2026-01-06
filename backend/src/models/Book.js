@@ -11,6 +11,7 @@ const bookSchema = new mongoose.Schema(
       type: String,
       required: [true, "Author is required"],
       trim: true,
+      index: true,
     },
     isbn: {
       type: String,
@@ -39,6 +40,7 @@ const bookSchema = new mongoose.Schema(
     categories: {
       type: [String],
       default: [],
+      index: true,
     },
     publisher: {
       type: String,

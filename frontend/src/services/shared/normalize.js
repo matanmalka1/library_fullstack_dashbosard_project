@@ -10,3 +10,4 @@ export const normalizeId = (value) => {
 };
 
 export const normalizeIds = (items = []) => items.map(normalizeId);
+

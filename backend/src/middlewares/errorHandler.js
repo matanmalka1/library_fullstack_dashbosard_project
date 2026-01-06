@@ -13,11 +13,13 @@ export const errorHandler = (err, req, res, _next) => {
       API_ERROR_CODES.SERVER_ERROR,
       message,
       statusCode,
-      err.stack
+      err instanceof Error ? err.stack : undefined
     );
   }
 
   const { code, message, statusCode, details } = error;
+  const stack = error.stack || (err instanceof Error ? err.stack : undefined);
+  const userId = req.user ? (req.user.id || req.user._id) : undefined;
 
   // Log the error
   const logMessage = {
@@ -28,11 +30,11 @@ export const errorHandler = (err, req, res, _next) => {
     path: req.path,
     ip: req.ip,
     userAgent: req.get('user-agent'),
-    userId: req.user?._id || req.user?.id,
+    userId,
   };
 
   if (statusCode >= 500) {
-    logger.error('Server Error', { ...logMessage, stack: err.stack });
+    logger.error('Server Error', { ...logMessage, stack });
   } else if (statusCode >= 400) {
     logger.warn('Client Error', logMessage);
   }

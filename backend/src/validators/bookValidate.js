@@ -70,5 +70,16 @@ export const validateUpdateBook = (req, _res, next) => {
     });
   }
 
+  if (Array.isArray(categories)) {
+    categories.forEach((category, index) => {
+      if (!isNonEmptyString(category)) {
+        errors.push({
+          field: `categories[${index}]`,
+          message: "categories must contain non-empty strings",
+        });
+      }
+    });
+  }
+
   return errors.length ? next(buildValidationError(errors)) : next();
 };

@@ -43,7 +43,6 @@ export const authenticate = async (req, _res, next) => {
   }
 };
 
-
 // Check authenticated user's role against allowed roles.
 export const authorize = (...roles) => {
   return async (req, _res, next) => {
@@ -72,7 +71,6 @@ export const authorize = (...roles) => {
     }
   };
 };
-
 
 // Check authenticated user's permissions for a resource/action pair.
 export const checkPermission = (resource, action) => {

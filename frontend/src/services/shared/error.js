@@ -7,3 +7,4 @@ export const getApiErrorMessage = (error, fallback) => {
   }
   return error?.message || fallback;
 };
+

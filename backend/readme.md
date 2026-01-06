@@ -512,6 +512,7 @@ GET /api/v1/health
 | `FILE_UPLOAD_ERROR` | File upload failed | 400 |
 | `FILE_TOO_LARGE` | File exceeds size limit | 400 |
 | `INVALID_FILE_TYPE` | File type not allowed | 400 |
+| `RATE_LIMIT_EXCEEDED` | Rate limit exceeded | 429 |
 | `SERVER_ERROR` | Internal server error | 500 |
 
 ## Project Structure
