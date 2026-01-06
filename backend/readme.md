@@ -5,6 +5,9 @@ Production-ready REST API built with Express.js and MongoDB/Mongoose.
 ## Features
 
 - **Authentication & Authorization**: JWT-based auth with refresh token rotation
+- **Catalog & Reviews**: Book CRUD and review approval workflow
+- **Cart & Wishlist**: Persistent cart and wishlist per user
+- **Orders**: Order placement, status updates, and cancellation
 - **Database**: MongoDB with Mongoose ODM
 - **Security**: Helmet, CORS, rate limiting, input validation
 - **File Upload**: Multer with file type and size validation
@@ -267,6 +270,172 @@ Content-Type: application/json
 #### Delete User (Admin only)
 ```http
 DELETE /api/v1/users/:id
+Authorization: Bearer <access_token>
+```
+
+### Book Endpoints
+
+#### List Books (with pagination/filtering)
+```http
+GET /api/v1/books?page=1&limit=20&search=gatsby&category=Fiction
+```
+
+#### Get Book by ID
+```http
+GET /api/v1/books/:id
+```
+
+#### Create Book (Admin/Manager)
+```http
+POST /api/v1/books
+Authorization: Bearer <access_token>
+Content-Type: application/json
+
+{
+  "title": "New Book",
+  "author": "Jane Doe",
+  "price": 19.99,
+  "stockQuantity": 10,
+  "categories": ["Fiction"],
+  "coverImage": "https://example.com/cover.jpg",
+  "description": "Short description",
+  "isbn": "978-0000000000"
+}
+```
+
+#### Update Book (Admin/Manager)
+```http
+PUT /api/v1/books/:id
+Authorization: Bearer <access_token>
+Content-Type: application/json
+```
+
+#### Delete Book (Admin/Manager)
+```http
+DELETE /api/v1/books/:id
+Authorization: Bearer <access_token>
+```
+
+### Review Endpoints
+
+#### Submit Review (Authenticated)
+```http
+POST /api/v1/books/:id/reviews
+Authorization: Bearer <access_token>
+Content-Type: application/json
+
+{
+  "rating": 5,
+  "comment": "Excellent read!"
+}
+```
+
+#### Approve Review (Admin)
+```http
+PATCH /api/v1/books/:id/reviews/:reviewId/approve
+Authorization: Bearer <access_token>
+```
+
+#### Delete Review (Admin)
+```http
+DELETE /api/v1/books/:id/reviews/:reviewId
+Authorization: Bearer <access_token>
+```
+
+### Cart Endpoints
+
+All cart endpoints require authentication.
+
+#### Get Cart
+```http
+GET /api/v1/cart
+Authorization: Bearer <access_token>
+```
+
+#### Save Cart (replace)
+```http
+PUT /api/v1/cart
+Authorization: Bearer <access_token>
+Content-Type: application/json
+
+{
+  "items": [
+    { "bookId": "507f1f77bcf86cd799439011", "quantity": 2 }
+  ]
+}
+```
+
+#### Clear Cart
+```http
+DELETE /api/v1/cart
+Authorization: Bearer <access_token>
+```
+
+### Wishlist Endpoints
+
+All wishlist endpoints require authentication.
+
+#### Get Wishlist
+```http
+GET /api/v1/wishlist
+Authorization: Bearer <access_token>
+```
+
+#### Toggle Wishlist Item
+```http
+POST /api/v1/wishlist/toggle
+Authorization: Bearer <access_token>
+Content-Type: application/json
+
+{
+  "bookId": "507f1f77bcf86cd799439011"
+}
+```
+
+#### Clear Wishlist
+```http
+DELETE /api/v1/wishlist
+Authorization: Bearer <access_token>
+```
+
+### Order Endpoints
+
+All order endpoints require authentication.
+
+#### List Orders (Admin/Manager can filter by user)
+```http
+GET /api/v1/orders?userId=507f1f77bcf86cd799439011
+Authorization: Bearer <access_token>
+```
+
+#### Place Order
+```http
+POST /api/v1/orders
+Authorization: Bearer <access_token>
+Content-Type: application/json
+
+{
+  "items": [
+    { "bookId": "507f1f77bcf86cd799439011", "quantity": 1 }
+  ],
+  "shippingAddress": "123 Main St, NY 10001"
+}
+```
+
+#### Update Order Status (Admin/Manager)
+```http
+PATCH /api/v1/orders/:id/status
+Authorization: Bearer <access_token>
+Content-Type: application/json
+
+{
+  "status": "SHIPPED"
+}
+```
+
+#### Cancel Order
+```http
+PATCH /api/v1/orders/:id/cancel
 Authorization: Bearer <access_token>
 ```
 

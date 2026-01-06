@@ -1,11 +1,38 @@
-import { OrderStatus, UserRole } from "../../types";
-import { getStore, setStore, KEYS } from "./core";
+import { UserRole } from "../../types";
 import { requireRole, requireUser } from "./auth.utils";
+import { http } from "./http";
 
 export const attachOrderMethods = (service) => {
+  const getApiErrorMessage = (error, fallback) => {
+    if (error?.response?.data?.message) {
+      return error.response.data.message;
+    }
+    return error?.message || fallback;
+  };
+
+  const normalizeItem = (item) => ({
+    bookId: item.bookId || item.book?._id || item.book,
+    quantity: item.quantity,
+    book: item.book,
+  });
+
+  const normalizeOrder = (order) => ({
+    ...order,
+    id: order._id || order.id,
+    userId: order.user?._id || order.user || order.userId,
+    date: order.placedAt || order.createdAt || order.date,
+    items: (order.items || []).map(normalizeItem),
+  });
+
   service.getOrders = async (userId) => {
-    const orders = getStore(KEYS.ORDERS) || [];
-    return userId ? orders.filter((o) => o.userId === userId) : orders;
+    try {
+      const params = userId ? { userId } : undefined;
+      const { data } = await http.get("/orders", { params });
+      const orders = data?.data?.orders || [];
+      return orders.map(normalizeOrder);
+    } catch (error) {
+      throw new Error(getApiErrorMessage(error, "Unable to load orders"));
+    }
   };
 
   service.placeOrder = async (userId, items, total, address) => {
@@ -13,88 +40,44 @@ export const attachOrderMethods = (service) => {
     if (authUser.id !== userId && authUser.role !== UserRole.ADMIN) {
       throw new Error("Not authorized.");
     }
-    const orders = await service.getOrders();
-    const books = await service.getBooks();
-
-    for (const item of items) {
-      const book = books.find((b) => b.id === item.bookId);
-      if (!book) {
-        throw new Error("One or more items are no longer available.");
-      }
-      if (book.stockQuantity < item.quantity) {
-        throw new Error(`Not enough stock for "${book.title}".`);
-      }
+    try {
+      const payload = {
+        items: items.map((item) => ({
+          bookId: item.bookId,
+          quantity: item.quantity,
+        })),
+        total,
+        shippingAddress: address,
+      };
+      const { data } = await http.post("/orders", payload);
+      return normalizeOrder(data?.data?.order);
+    } catch (error) {
+      throw new Error(getApiErrorMessage(error, "Unable to place order"));
     }
-
-    const newOrder = {
-      id: `ORD-${Math.random().toString(36).slice(2, 11).toUpperCase()}`,
-      userId,
-      items,
-      total,
-      shippingAddress: address,
-      status: OrderStatus.PENDING,
-      date: new Date().toISOString(),
-      statusHistory: [
-        { status: OrderStatus.PENDING, date: new Date().toISOString() },
-      ],
-    };
-
-    orders.push(newOrder);
-    setStore(KEYS.ORDERS, orders);
-
-    items.forEach((item) => {
-      const book = books.find((b) => b.id === item.bookId);
-      if (book) book.stockQuantity -= item.quantity;
-    });
-    setStore(KEYS.BOOKS, books);
-
-    return newOrder;
   };
 
   service.updateOrderStatus = async (id, status) => {
     requireRole([UserRole.ADMIN, UserRole.MANAGER]);
-    const orders = await service.getOrders();
-    const order = orders.find((o) => o.id === id);
-    if (order) {
-      order.status = status;
-      order.statusHistory = order.statusHistory || [];
-      order.statusHistory.push({ status, date: new Date().toISOString() });
+    try {
+      const { data } = await http.patch(`/orders/${id}/status`, { status });
+      return normalizeOrder(data?.data?.order);
+    } catch (error) {
+      throw new Error(getApiErrorMessage(error, "Unable to update order"));
     }
-    setStore(KEYS.ORDERS, orders);
   };
 
   service.cancelOrder = async (id) => {
     const authUser = requireUser();
-    const orders = await service.getOrders();
-    const order = orders.find((o) => o.id === id);
-    if (!order) return null;
     const canCancelAny =
       authUser.role === UserRole.ADMIN || authUser.role === UserRole.MANAGER;
-    if (!canCancelAny && order.userId !== authUser.id) {
-      throw new Error("Not authorized.");
+    if (!canCancelAny) {
+      // Backend will still enforce ownership for non-privileged users.
     }
-    if (order.status === OrderStatus.DELIVERED || order.status === OrderStatus.CANCELLED) {
-      return order;
+    try {
+      const { data } = await http.patch(`/orders/${id}/cancel`);
+      return normalizeOrder(data?.data?.order);
+    } catch (error) {
+      throw new Error(getApiErrorMessage(error, "Unable to cancel order"));
     }
-
-    order.status = OrderStatus.CANCELLED;
-    order.statusHistory = order.statusHistory || [];
-    order.statusHistory.push({
-      status: OrderStatus.CANCELLED,
-      date: new Date().toISOString(),
-      note: "Refund initiated",
-    });
-
-    const books = await service.getBooks();
-    order.items.forEach((item) => {
-      const book = books.find((b) => b.id === item.bookId);
-      if (book) {
-        book.stockQuantity += item.quantity;
-      }
-    });
-    setStore(KEYS.BOOKS, books);
-    setStore(KEYS.ORDERS, orders);
-
-    return order;
   };
 };
