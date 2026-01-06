@@ -1,6 +1,6 @@
-## Gemini Library
+## Library
 
-Frontend-only bookstore experience built with React, JavaScript, Vite, and Tailwind CSS. All data lives in `localStorage`, and the catalog is seeded from `constants.js` on first run.
+Frontend-only bookstore experience built with React, JavaScript, and Vite. All data lives in `localStorage`, and the catalog is seeded from `constants.js` on first run.
 
 ## Features
 
@@ -13,7 +13,6 @@ Frontend-only bookstore experience built with React, JavaScript, Vite, and Tailw
 
 - React 19 + JavaScript
 - Vite 6
-- Tailwind CSS 4
 - React Router 7
 - lucide-react icons
 
@@ -33,11 +32,6 @@ npm run dev
 npm run build
 npm run preview
 ```
-
-## Styling
-
-- Tailwind utilities are used across the UI; global styles and keyframes live in `src/main.css`.
-- Theme tokens are configured in `tailwind.config.js`.
 
 ## Data and Storage
 
