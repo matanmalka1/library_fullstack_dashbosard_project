@@ -20,7 +20,6 @@ export class AuthService {
   }
 
   async register(name, email, password) {
-    // Removed ': string' type annotations
     const users = getStore(KEYS.USERS) || [];
 
     if (users.some((u) => u.email === email)) {
