@@ -13,7 +13,7 @@ export const stripPassword = (user) => {
 };
 
 export const buildAuth = (user, token) => {
-  const normalizedUser = user?._id && !user.id ? { ...user, id: user._id } : user;
+  const normalizedUser = normalizeUser(user);
   return {
     user: normalizedUser,
     token: token || null,
@@ -25,9 +25,7 @@ export const getStoredAuth = () => {
   const rawAuth = localStorage.getItem(KEYS.AUTH);
   if (!rawAuth) return null;
   const parsed = JSON.parse(rawAuth);
-  if (parsed?.user?._id && !parsed.user.id) {
-    parsed.user.id = parsed.user._id;
-  }
+  parsed.user = normalizeUser(parsed.user);
   return parsed;
 };
 
@@ -57,4 +55,19 @@ export const syncStoredAuthRole = (userId, role) => {
     ...auth,
     user: { ...auth.user, role },
   });
+};
+
+const normalizeUser = (user) => {
+  if (!user) return user;
+  const normalized = { ...user };
+  if (normalized._id && !normalized.id) {
+    normalized.id = normalized._id;
+  }
+  if (normalized.role && typeof normalized.role === "object") {
+    normalized.role = normalized.role.name || normalized.role;
+  }
+  if (!normalized.name && (normalized.firstName || normalized.lastName)) {
+    normalized.name = `${normalized.firstName || ""} ${normalized.lastName || ""}`.trim();
+  }
+  return normalized;
 };

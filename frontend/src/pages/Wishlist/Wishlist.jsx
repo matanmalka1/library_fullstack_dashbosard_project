@@ -21,14 +21,14 @@ export const Wishlist = () => {
       return;
     }
     const allBooks = await api.getBooks();
-    const ids = api.getWishlist(user.id);
+    const ids = await api.getWishlist(user.id);
     setWishlist(allBooks.filter((b) => ids.includes(b.id)));
     setLoading(false);
   };
 
-  const handleToggle = (id) => {
+  const handleToggle = async (id) => {
     if (user) {
-      api.toggleWishlist(user.id, id);
+      await api.toggleWishlist(user.id, id);
       fetchWishlist();
     }
   };

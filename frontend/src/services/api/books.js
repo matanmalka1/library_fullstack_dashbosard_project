@@ -1,57 +1,79 @@
-import { INITIAL_BOOKS } from "../../Utils/constants";
 import { getStore, setStore, KEYS } from "./core";
 import { requireRole } from "./auth.utils";
 import { UserRole } from "../../types";
+import { http } from "./http";
+
+const getApiErrorMessage = (error, fallback) => {
+  if (error?.response?.data?.message) {
+    return error.response.data.message;
+  }
+  return error?.message || fallback;
+};
+
+const normalizeReview = (review) => {
+  if (!review) return review;
+  return {
+    ...review,
+    id: review._id || review.id,
+    userId: review.user?._id || review.user || review.userId,
+  };
+};
+
+const normalizeBook = (book) => {
+  if (!book) return book;
+  const normalized = {
+    ...book,
+    id: book._id || book.id,
+    reviews: (book.reviews || []).map(normalizeReview),
+  };
+  return normalized;
+};
 
 export class BookService {
   async getBooks() {
-    const books = getStore(KEYS.BOOKS) || [];
-
-    if (books.length === 0) {
-      setStore(KEYS.BOOKS, INITIAL_BOOKS);
-      return INITIAL_BOOKS;
+    try {
+      const { data } = await http.get("/books", { params: { limit: 200 } });
+      const books = data?.data?.books || [];
+      return books.map(normalizeBook);
+    } catch (error) {
+      throw new Error(getApiErrorMessage(error, "Unable to load books"));
     }
-
-    return books;
   }
 
   async getBookById(id) {
-    return (await this.getBooks()).find((b) => b.id === id);
+    try {
+      const { data } = await http.get(`/books/${id}`);
+      return normalizeBook(data?.data?.book);
+    } catch (error) {
+      if (error?.response?.status === 404) return null;
+      throw new Error(getApiErrorMessage(error, "Unable to load book"));
+    }
   }
 
   async saveBook(book) {
     requireRole([UserRole.ADMIN, UserRole.MANAGER]);
-    const books = await this.getBooks();
+    try {
+      if (book.id) {
+        const payload = { ...book };
+        delete payload.id;
+        const { data } = await http.put(`/books/${book.id}`, payload);
+        return normalizeBook(data?.data?.book);
+      }
 
-    if (book.id) {
-      const index = books.findIndex((b) => b.id === book.id);
-      if (index === -1) return null;
-
-      books[index] = { ...books[index], ...book };
-      setStore(KEYS.BOOKS, books);
-      return books[index];
+      const { data } = await http.post("/books", book);
+      return normalizeBook(data?.data?.book);
+    } catch (error) {
+      throw new Error(getApiErrorMessage(error, "Unable to save book"));
     }
-
-    const newBook = {
-      ...book,
-      id: Date.now().toString(),
-      reviews: [],
-      rating: 0,
-    };
-
-    books.push(newBook);
-    setStore(KEYS.BOOKS, books);
-    return newBook;
   }
 
   async deleteBook(id) {
-    // Removed ': string'
     requireRole([UserRole.ADMIN, UserRole.MANAGER]);
-    const books = await this.getBooks();
-    setStore(
-      KEYS.BOOKS,
-      books.filter((b) => b.id !== id)
-    );
+    try {
+      await http.delete(`/books/${id}`);
+    } catch (error) {
+      throw new Error(getApiErrorMessage(error, "Unable to delete book"));
+    }
 
     const carts = getStore(KEYS.CART) || {};
     Object.keys(carts).forEach((uid) => {

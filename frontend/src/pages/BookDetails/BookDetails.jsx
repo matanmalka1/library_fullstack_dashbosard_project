@@ -22,26 +22,26 @@ export const DetailsPage = () => {
     });
   };
 
-  const fetchWishlist = () => {
+  const fetchWishlist = async () => {
     if (!user || !id) {
       setIsWishlisted(false);
       return;
     }
-    const ids = api.getWishlist(user.id);
+    const ids = await api.getWishlist(user.id);
     setIsWishlisted(ids.includes(id));
   };
 
   useEffect(() => { fetchBook(); }, [id]);
   useEffect(() => { fetchWishlist(); }, [user, id]);
 
-  const handleToggleWishlist = () => {
+  const handleToggleWishlist = async () => {
     if (!user) {
       if (confirm("Sign in to save items to your wishlist?")) {
         navigate("/login");
       }
       return;
     }
-    const next = api.toggleWishlist(user.id, id);
+    const next = await api.toggleWishlist(user.id, id);
     setIsWishlisted(next.includes(id));
   };
 

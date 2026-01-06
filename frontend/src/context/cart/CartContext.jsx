@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useRef } from "react";
 import { useAuth } from "../auth/AuthContext";
 import { api } from "../../services/api";
 
@@ -7,19 +7,42 @@ const CartContext = createContext(null);
 export const CartProvider = ({ children }) => {
   const { user } = useAuth();
   const [items, setItems] = useState([]);
+  const hasLoadedRef = useRef(false);
 
   useEffect(() => {
-    if (user) {
-      setItems(api.getCart(user.id));
-    } else {
-      setItems([]);
-    }
+    let isActive = true;
+    const loadCart = async () => {
+      if (!user) {
+        hasLoadedRef.current = false;
+        setItems([]);
+        return;
+      }
+      try {
+        const cartItems = await api.getCart(user.id);
+        if (isActive) {
+          setItems(cartItems);
+          hasLoadedRef.current = true;
+        }
+      } catch {
+        if (isActive) {
+          setItems([]);
+          hasLoadedRef.current = true;
+        }
+      }
+    };
+
+    loadCart();
+
+    return () => {
+      isActive = false;
+    };
   }, [user]);
 
   useEffect(() => {
-    if (user) {
-      api.saveCart(user.id, items);
-    }
+    if (!user || !hasLoadedRef.current) return;
+    api.saveCart(user.id, items).catch(() => {
+      // Ignore sync errors; cart will retry on next change.
+    });
   }, [items, user]);
 
   const addToCart = (book, quantity = 1) => {

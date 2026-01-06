@@ -15,9 +15,22 @@ export const isValidPassword = (value) => {
   return typeof value === "string" && passwordRegex.test(value);
 };
 
+// Validate non-empty strings.
+export const isNonEmptyString = (value) =>
+  typeof value === "string" && value.trim().length > 0;
+
+// Validate non-negative numeric values.
+export const isPositiveNumber = (value) =>
+  typeof value === "number" && Number.isFinite(value) && value >= 0;
+
 // Validate positive integer values.
-// export const isPositiveInteger = (value) =>
-//   Number.isInteger(value) && value > 0;
+export const isPositiveInteger = (value) =>
+  Number.isInteger(value) && value > 0;
+
+// Validate rating between 1 and 5.
+export const isValidRating = (value) =>
+  typeof value === "number" && value >= 1 && value <= 5;
+
 
 // Wrap validation errors in ApiError payload.
 export const buildValidationError = (details) =>

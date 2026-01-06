@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { ShoppingCart, Heart, LogOut } from "lucide-react";
+import { normalizeRole } from "../../../services/api/auth.utils";
 
 export const NavbarActions = ({
   isAuthenticated,
@@ -25,7 +26,7 @@ export const NavbarActions = ({
         <div className="flex flex-col items-end gap-0.5">
           <span className="text-xs font-semibold text-slate-800">{user?.name}</span>
           <span className="text-[10px] uppercase tracking-[0.08em] text-slate-400">
-            {user?.role}
+            {normalizeRole(user?.role)}
           </span>
         </div>
         <button

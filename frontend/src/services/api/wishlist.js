@@ -1,20 +1,31 @@
-import { setStore, KEYS } from "./core";
+import { http } from "./http";
+
+const getApiErrorMessage = (error, fallback) => {
+  if (error?.response?.data?.message) {
+    return error.response.data.message;
+  }
+  return error?.message || fallback;
+};
+
+const normalizeIds = (items = []) =>
+  items.map((id) => id?.toString?.() || id);
 
 export const attachWishlistMethods = (service) => {
-  service.getWishlist = (uid) => {
-    return JSON.parse(localStorage.getItem(KEYS.WISHLIST) || "{}")[uid] || [];
+  service.getWishlist = async () => {
+    try {
+      const { data } = await http.get("/wishlist");
+      return normalizeIds(data?.data?.items || []);
+    } catch (error) {
+      throw new Error(getApiErrorMessage(error, "Unable to load wishlist"));
+    }
   };
 
-  service.toggleWishlist = (uid, bookId) => {
-    const wishlists = JSON.parse(localStorage.getItem(KEYS.WISHLIST) || "{}");
-    const list = wishlists[uid] || [];
-
-    const index = list.indexOf(bookId);
-    index > -1 ? list.splice(index, 1) : list.push(bookId);
-
-    wishlists[uid] = list;
-    setStore(KEYS.WISHLIST, wishlists);
-
-    return list;
+  service.toggleWishlist = async (_uid, bookId) => {
+    try {
+      const { data } = await http.post("/wishlist/toggle", { bookId });
+      return normalizeIds(data?.data?.items || []);
+    } catch (error) {
+      throw new Error(getApiErrorMessage(error, "Unable to update wishlist"));
+    }
   };
 };

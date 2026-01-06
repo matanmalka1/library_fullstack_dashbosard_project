@@ -2,3 +2,8 @@ export { User } from "./User.js";
 export { Role } from "./Role.js";
 export { Permission } from "./Permission.js";
 export { RefreshToken } from "./RefreshToken.js";
+export { Book } from "./Book.js";
+export { Review } from "./Review.js";
+export { Cart } from "./Cart.js";
+export { Wishlist } from "./Wishlist.js";
+export { Order } from "./Order.js";

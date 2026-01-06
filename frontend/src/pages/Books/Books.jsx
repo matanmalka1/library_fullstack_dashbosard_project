@@ -32,21 +32,29 @@ export const Books = () => {
   }, [search, cat, sort, priceMax, books]);
 
   useEffect(() => {
-    if (!user) {
-      setWishlistIds([]);
-      return;
-    }
-    setWishlistIds(api.getWishlist(user.id));
+    let isActive = true;
+    const loadWishlist = async () => {
+      if (!user) {
+        setWishlistIds([]);
+        return;
+      }
+      const ids = await api.getWishlist(user.id);
+      if (isActive) setWishlistIds(ids);
+    };
+    loadWishlist();
+    return () => {
+      isActive = false;
+    };
   }, [user]);
 
-  const handleToggleWishlist = (bookId) => {
+  const handleToggleWishlist = async (bookId) => {
     if (!user) {
       if (confirm("Sign in to save items to your wishlist?")) {
         navigate("/login");
       }
       return;
     }
-    const next = api.toggleWishlist(user.id, bookId);
+    const next = await api.toggleWishlist(user.id, bookId);
     setWishlistIds(next);
   };
 

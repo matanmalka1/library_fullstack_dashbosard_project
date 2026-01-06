@@ -1,58 +1,41 @@
-import { setStore, KEYS } from "./core";
 import { requireRole } from "./auth.utils";
 import { UserRole } from "../../types";
+import { http } from "./http";
 
-const recalculateRating = (book) => {
-  const approved = book.reviews.filter((r) => r.approved);
-  book.rating = approved.length
-    ? Number(
-        (
-          approved.reduce((sum, r) => sum + r.rating, 0) / approved.length
-        ).toFixed(1)
-      )
-    : 0;
+const getApiErrorMessage = (error, fallback) => {
+  if (error?.response?.data?.message) {
+    return error.response.data.message;
+  }
+  return error?.message || fallback;
 };
 
 export const attachReviewMethods = (service) => {
   service.addReview = async (bookId, review) => {
-    const books = await service.getBooks();
-    const book = books.find((b) => b.id === bookId);
-
-    if (book) {
-      book.reviews.push({
-        ...review,
-        id: Date.now().toString(),
-        approved: false,
+    try {
+      await http.post(`/books/${bookId}/reviews`, {
+        rating: review.rating,
+        comment: review.comment,
       });
+    } catch (error) {
+      throw new Error(getApiErrorMessage(error, "Unable to submit review"));
     }
-
-    setStore(KEYS.BOOKS, books);
   };
 
   service.approveReview = async (bookId, reviewId) => {
     requireRole([UserRole.ADMIN]);
-    const books = await service.getBooks();
-    const book = books.find((b) => b.id === bookId);
-    const review = book?.reviews.find((r) => r.id === reviewId);
-
-    if (book && review) {
-      review.approved = true;
-      recalculateRating(book);
+    try {
+      await http.patch(`/books/${bookId}/reviews/${reviewId}/approve`);
+    } catch (error) {
+      throw new Error(getApiErrorMessage(error, "Unable to approve review"));
     }
-
-    setStore(KEYS.BOOKS, books);
   };
 
   service.deleteReview = async (bookId, reviewId) => {
     requireRole([UserRole.ADMIN]);
-    const books = await service.getBooks();
-    const book = books.find((b) => b.id === bookId);
-
-    if (book) {
-      book.reviews = book.reviews.filter((r) => r.id !== reviewId);
-      recalculateRating(book);
+    try {
+      await http.delete(`/books/${bookId}/reviews/${reviewId}`);
+    } catch (error) {
+      throw new Error(getApiErrorMessage(error, "Unable to delete review"));
     }
-
-    setStore(KEYS.BOOKS, books);
   };
 };
