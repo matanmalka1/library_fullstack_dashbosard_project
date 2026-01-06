@@ -7,9 +7,9 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../../context/auth/AuthContext";
 import { useCart } from "../../../context/cart/CartContext";
-import { NavbarLinks } from "../NavbarLinks/NavbarLinks";
-import { NavbarActions } from "../NavbarActions/NavbarActions";
-import { NavbarMobileMenu } from "../NavbarMobileMenu/NavbarMobileMenu";
+import { NavbarLinks } from "./NavbarLinks";
+import { NavbarActions } from "./NavbarActions";
+import { NavbarMobileMenu } from "./NavbarMobileMenu";
 
 export const Navbar = () => {
   const { user, isAuthenticated, logout, isAdmin, isManager } = useAuth();

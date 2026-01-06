@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import { BookCard } from '../../../components/book/BookCard/BookCard/BookCard';
+import { BookCard } from '../../components/book/BookCard/BookCard';
 
 export const HomeFeatured = ({ featuredBooks }) => (
   <section className="w-full max-w-[1120px] mx-auto px-4 sm:px-6 lg:px-8">

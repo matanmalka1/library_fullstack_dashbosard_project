@@ -5,7 +5,7 @@ import { OrderStatus } from '../../types';
 import { api } from '../../services/api';
 import { InventoryStats } from '../../components/manager/InventoryStats/InventoryStats';
 import { InventoryTable } from '../../components/manager/InventoryTable/InventoryTable';
-import { BookFormModal } from '../../components/manager/BookFormModal/BookFormModal/BookFormModal';
+import { BookFormModal } from '../../components/manager/BookFormModal/BookFormModal';
 
 export const ManagerDashboard = () => {
   const [books, setBooks] = useState([]);

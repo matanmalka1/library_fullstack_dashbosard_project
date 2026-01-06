@@ -3,7 +3,7 @@ import { api } from "../../services/api";
 import { useAuth } from "../../context/auth/AuthContext";
 import { AdminDashboardNav } from "./AdminDashboardNav";
 import { AdminReviewsPanel } from "./AdminReviewsPanel";
-import { AdminUsersPanel } from "./AdminUsersPanel/AdminUsersPanel";
+import { AdminUsersPanel } from "./AdminUsersPanel";
 
 export const AdminDashboard = () => {
   const [books, setBooks] = useState([]);

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { api } from "../../../services/api";
 import { useAuth } from "../../../context/auth/AuthContext";
-import { ReviewSummary } from "../ReviewSummary/ReviewSummary";
+import { ReviewSummary } from "./ReviewSummary";
 import { ReviewList } from "./ReviewList";
 
 export const ReviewSection = ({ book, onUpdate }) => {

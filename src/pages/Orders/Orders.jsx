@@ -4,7 +4,7 @@ import { Package } from 'lucide-react';
 import { api } from '../../services/api';
 import { useAuth } from '../../context/auth/AuthContext';
 import { Link } from 'react-router-dom';
-import { OrderCard } from '../OrderCard/OrderCard';
+import { OrderCard } from './OrderCard';
 
 export const Orders = () => {
   const [orders, setOrders] = useState([]);

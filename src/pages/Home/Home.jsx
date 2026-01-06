@@ -1,9 +1,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { api } from '../../services/api';
-import { HomeHero } from '../HomeHero/HomeHero';
-import { HomeFeatures } from '../HomeFeatures/HomeFeatures';
-import { HomeFeatured } from '../HomeFeatured/HomeFeatured';
+import { HomeHero } from './HomeHero';
+import { HomeFeatures } from './HomeFeatures';
+import { HomeFeatured } from './HomeFeatured';
 import { HomeCTA } from './HomeCTA';
 
 export const Home = () => {

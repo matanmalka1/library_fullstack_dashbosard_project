@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import { api } from '../../services/api';
-import { BookCard } from '../../components/book/BookCard/BookCard/BookCard';
+import { BookCard } from '../../components/book/BookCard/BookCard';
 import { CATEGORIES } from '../../Utils/constants';
 
 export const Books = () => {

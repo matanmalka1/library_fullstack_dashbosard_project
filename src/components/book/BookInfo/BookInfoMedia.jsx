@@ -1,6 +1,6 @@
 import React from "react";
 import { Truck, Shield, RotateCcw } from "lucide-react";
-import { BookInfoFeature } from "../BookInfoFeature/BookInfoFeature";
+import { BookInfoFeature } from "./BookInfoFeature";
 
 export const BookInfoMedia = ({ coverImage, safeTitle }) => (
   <div className="w-full lg:w-1/2">

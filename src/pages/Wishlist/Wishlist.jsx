@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Heart, Search, ArrowRight } from "lucide-react";
 import { api } from "../../services/api";
 import { useAuth } from "../../context/auth/AuthContext";
-import { BookCard } from "../../components/book/BookCard/BookCard/BookCard";
+import { BookCard } from "../../components/book/BookCard/BookCard";
 import { Link } from "react-router-dom";
 
 export const Wishlist = () => {

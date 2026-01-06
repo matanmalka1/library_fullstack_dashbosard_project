@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { useCart } from "../../../context/cart/CartContext";
-import { BookCardMedia } from "../BookCardMedia/BookCardMedia";
-import { BookCardBody } from "../BookCardBody/BookCardBody";
+import { BookCardMedia } from "./BookCardMedia";
+import { BookCardBody } from "./BookCardBody";
 
 export const BookCard = memo(({ book, isWishlisted, onToggleWishlist }) => {
   const { addToCart } = useCart();

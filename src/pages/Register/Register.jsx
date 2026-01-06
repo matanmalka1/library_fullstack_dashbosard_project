@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/auth/AuthContext";
-import { RegisterFormPanel } from "../RegisterFormPanel/RegisterFormPanel";
+import { RegisterFormPanel } from "./RegisterFormPanel";
 import { RegisterVisual } from "./RegisterVisual";
 
 export const Register = () => {

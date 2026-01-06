@@ -4,20 +4,20 @@ import { AuthProvider } from "../../../context/auth/AuthContext";
 import { CartProvider } from "../../../context/cart/CartContext";
 import { UserRole } from "../../../types";
 
-import { Navbar } from "../Navbar/Navbar/Navbar";
+import { Navbar } from "../Navbar/Navbar";
 import { MainFooter } from "../MainFooter/MainFooter";
 import { PrivateRoute } from "../../routes/PrivateRoute";
 
-import { Home } from "../../../pages/Home/Home/Home";
+import { Home } from "../../../pages/Home/Home";
 import { Books } from "../../../pages/Books/Books";
 import { DetailsPage } from "../../../pages/BookDetails/BookDetails";
-import { Login } from "../../../pages/Login/Login/Login";
-import { Register } from "../../../pages/Register/Register/Register";
-import { Cart } from "../../../pages/Cart/Cart/Cart";
+import { Login } from "../../../pages/Login/Login";
+import { Register } from "../../../pages/Register/Register";
+import { Cart } from "../../../pages/Cart/Cart";
 import { Wishlist } from "../../../pages/Wishlist/Wishlist";
-import { Checkout } from "../../../pages/Checkout/Checkout/Checkout";
-import { Orders } from "../../../pages/Orders/Orders/Orders";
-import { AdminDashboard } from "../../../pages/AdminDashboard/AdminDashboard/AdminDashboard";
+import { Checkout } from "../../../pages/Checkout/Checkout";
+import { Orders } from "../../../pages/Orders/Orders";
+import { AdminDashboard } from "../../../pages/AdminDashboard/AdminDashboard";
 import { ManagerDashboard } from "../../../pages/ManagerDashboard/ManagerDashboard";
 
 export const App = () => (

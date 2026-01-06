@@ -5,9 +5,9 @@ import { ChevronLeft } from 'lucide-react';
 import { useCart } from '../../context/cart/CartContext';
 import { useAuth } from '../../context/auth/AuthContext';
 import { api } from '../../services/api';
-import { CheckoutSuccess } from '../CheckoutSuccess/CheckoutSuccess';
-import { CheckoutForm } from '../CheckoutForm/CheckoutForm';
-import { CheckoutSummary } from '../CheckoutSummary/CheckoutSummary';
+import { CheckoutSuccess } from './CheckoutSuccess';
+import { CheckoutForm } from './CheckoutForm';
+import { CheckoutSummary } from './CheckoutSummary';
 
 export const Checkout = () => {
   const { items, totalPrice, clearCart } = useCart();

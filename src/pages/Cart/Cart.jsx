@@ -1,9 +1,9 @@
 
 import React from 'react';
 import { useCart } from '../../context/cart/CartContext';
-import { CartEmpty } from '../CartEmpty/CartEmpty';
-import { CartItems } from '../CartItems/CartItems';
-import { CartSummary } from '../CartSummary/CartSummary';
+import { CartEmpty } from './CartEmpty';
+import { CartItems } from './CartItems';
+import { CartSummary } from './CartSummary';
 
 export const Cart = () => {
   const { items, removeFromCart, updateQuantity, totalPrice, totalItems } = useCart();

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/auth/AuthContext";
-import { LoginFormPanel } from "../LoginFormPanel/LoginFormPanel";
-import { LoginVisual } from "../LoginVisual/LoginVisual";
+import { LoginFormPanel } from "./LoginFormPanel";
+import { LoginVisual } from "./LoginVisual";
 
 export const Login = () => {
   const [email, setEmail] = useState("");

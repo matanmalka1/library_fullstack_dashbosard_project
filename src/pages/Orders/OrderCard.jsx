@@ -3,7 +3,7 @@ import { Truck, CheckCircle2, Clock, XCircle } from 'lucide-react';
 import { OrderStatus } from '../../types';
 import { OrderCardHeader } from './OrderCardHeader';
 import { OrderCardItems } from './OrderCardItems';
-import { OrderCardFooter } from '../OrderCardFooter/OrderCardFooter';
+import { OrderCardFooter } from './OrderCardFooter';
 
 export const OrderCard = ({ order, user }) => {
   const getStatusStyle = (status) => {
