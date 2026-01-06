@@ -1,0 +1,53 @@
+.admin-dashboard {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 48px 16px;
+}
+
+.admin-dashboard__layout {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 32px;
+  overflow: hidden;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-dashboard__main {
+  flex: 1;
+  padding: 32px;
+  background: rgba(248, 250, 252, 0.6);
+}
+
+.admin-dashboard__section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.admin-dashboard__section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 24px;
+}
+
+.admin-dashboard__badge {
+  background: #fef3c7;
+  color: #d97706;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+@media (min-width: 768px) {
+  .admin-dashboard__layout {
+    flex-direction: row;
+  }
+}

@@ -1,0 +1,27 @@
+.book-form-modal__header {
+  padding: 32px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.book-form-modal__title {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.book-form-modal__close {
+  border: none;
+  background: transparent;
+  color: #cbd5e1;
+  cursor: pointer;
+  padding: 8px;
+  transition: color 0.2s ease;
+}
+
+.book-form-modal__close:hover {
+  color: #64748b;
+}

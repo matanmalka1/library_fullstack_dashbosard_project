@@ -1,0 +1,44 @@
+.cart {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 48px 16px;
+}
+
+.cart__title {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 40px;
+}
+
+.cart__title-count {
+  color: #cbd5e1;
+  font-family: inherit;
+  margin-left: 8px;
+}
+
+.cart__layout {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+@media (min-width: 1024px) {
+  .cart {
+    padding: 48px 32px;
+  }
+
+  .cart__layout {
+    flex-direction: row;
+  }
+
+  .cart__summary {
+    width: 384px;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

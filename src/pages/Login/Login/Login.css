@@ -1,0 +1,5 @@
+.login {
+  min-height: calc(100vh - 64px);
+  display: flex;
+  background: #f8fafc;
+}

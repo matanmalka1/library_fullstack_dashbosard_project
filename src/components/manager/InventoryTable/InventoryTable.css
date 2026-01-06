@@ -24,7 +24,6 @@
 .inventory-table__scroll {
   overflow-x: auto;
 }
-
 .inventory-table__table {
   width: 100%;
   border-collapse: collapse;
@@ -63,7 +62,6 @@
 .inventory-table__row:hover {
   background: rgba(248, 250, 252, 0.6);
 }
-
 .inventory-table__cell--details {
   display: flex;
   align-items: center;

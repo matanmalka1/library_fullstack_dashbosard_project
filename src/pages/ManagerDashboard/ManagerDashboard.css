@@ -49,7 +49,6 @@
   grid-template-columns: 1fr;
   gap: 32px;
 }
-
 .manager-dashboard__status {
   background: #0f172a;
   color: #ffffff;
@@ -122,7 +121,6 @@
   font-weight: 700;
   font-size: 14px;
 }
-
 @media (min-width: 1024px) {
   .manager-dashboard {
     padding: 48px 32px;

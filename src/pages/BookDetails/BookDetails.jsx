@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { api } from '../../services/api';
-import { BookInfo } from '../../components/book/BookInfo/BookInfo';
-import { ReviewSection } from '../../components/book/ReviewSection/ReviewSection';
+import { BookInfo } from '../../components/book/BookInfo/BookInfo/BookInfo';
+import { ReviewSection } from '../../components/book/ReviewSection/ReviewSection/ReviewSection';
 import './BookDetails.css';
 
 export const DetailsPage = () => {

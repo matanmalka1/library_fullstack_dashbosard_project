@@ -1,0 +1,39 @@
+.review-section {
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+}
+
+.review-section__summary {
+  width: 100%;
+}
+
+.review-section__title {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 24px;
+  color: #0f172a;
+}
+
+.review-section__card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  padding: 32px;
+}
+
+.review-section__list {
+  flex: 1;
+  display: grid;
+  gap: 24px;
+}
+@media (min-width: 768px) {
+  .review-section {
+    flex-direction: row;
+  }
+
+  .review-section__summary {
+    width: 35%;
+  }
+}

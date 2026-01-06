@@ -1,0 +1,51 @@
+.book-form-modal__media {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.book-form-modal__dropzone {
+  aspect-ratio: 3 / 4;
+  border-radius: 20px;
+  border: 2px dashed #e2e8f0;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.book-form-modal__dropzone.error {
+  border-color: #ef4444;
+  background: #fef2f2;
+}
+
+.book-form-modal__preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.book-form-modal__spinner {
+  width: 24px;
+  height: 24px;
+  color: #4f46e5;
+  animation: spin 1s linear infinite;
+}
+
+.book-form-modal__upload-icon {
+  color: #cbd5e1;
+  width: 24px;
+  height: 24px;
+}
+
+.book-form-modal__file {
+  display: none;
+}
+
+.book-form-modal__error {
+  color: #ef4444;
+  font-size: 12px;
+}

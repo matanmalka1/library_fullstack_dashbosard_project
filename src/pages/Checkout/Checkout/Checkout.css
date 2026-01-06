@@ -1,0 +1,92 @@
+.checkout {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 48px 16px;
+}
+
+.checkout__back {
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  font-weight: 700;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 40px;
+  cursor: pointer;
+}
+
+.checkout__back-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.checkout__layout {
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+}
+
+.checkout__title {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  margin: 0 0 32px;
+  color: #0f172a;
+}
+
+.checkout__sections {
+  display: grid;
+  gap: 40px;
+}
+
+.checkout__step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.checkout__step-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: #4f46e5;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkout__step-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+@media (min-width: 768px) {
+  .checkout__form {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .checkout {
+    padding: 48px 32px;
+  }
+
+  .checkout__layout {
+    flex-direction: row;
+  }
+
+  .checkout__summary {
+    width: 384px;
+  }
+}
+
+@keyframes checkout-pop {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}

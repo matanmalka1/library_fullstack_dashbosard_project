@@ -1,0 +1,44 @@
+import React, { useState } from "react";
+import { api } from "../../../../services/api";
+import { useAuth } from "../../../../context/auth/AuthContext";
+import { ReviewSummary } from "../ReviewSummary/ReviewSummary";
+import { ReviewList } from "../ReviewList/ReviewList";
+import "./ReviewSection.css";
+
+export const ReviewSection = ({ book, onUpdate }) => {
+  const { user, isAuthenticated } = useAuth();
+  const [comment, setComment] = useState("");
+  const [rating, setRating] = useState(5);
+  const approved = book.reviews.filter((r) => r.approved);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!user || !comment) return;
+    await api.addReview(book.id, {
+      userId: user.id,
+      userName: user.name,
+      rating,
+      comment,
+      date: new Date().toISOString(),
+    });
+    setComment("");
+    alert("Review submitted for approval!");
+    onUpdate();
+  };
+
+  return (
+    <div className="review-section">
+      <ReviewSummary
+        ratingValue={book.rating || 0}
+        reviewCount={approved.length}
+        isAuthenticated={isAuthenticated}
+        rating={rating}
+        comment={comment}
+        onPickRating={setRating}
+        onCommentChange={setComment}
+        onSubmit={handleSubmit}
+      />
+      <ReviewList reviews={approved} />
+    </div>
+  );
+};

@@ -1,11 +1,10 @@
-
-import React, { useEffect, useState } from 'react';
-import { Heart, Search, ArrowRight } from 'lucide-react';
-import { api } from '../../services/api';
-import { useAuth } from '../../context/auth/AuthContext';
-import { BookCard } from '../../components/book/BookCard/BookCard';
-import { Link } from 'react-router-dom';
-import './Wishlist.css';
+import React, { useEffect, useState } from "react";
+import { Heart, Search, ArrowRight } from "lucide-react";
+import { api } from "../../services/api";
+import { useAuth } from "../../context/auth/AuthContext";
+import { BookCard } from "../../components/book/BookCard/BookCard/BookCard";
+import { Link } from "react-router-dom";
+import "./Wishlist.css";
 
 export const Wishlist = () => {
   const [wishlist, setWishlist] = useState([]);
@@ -24,7 +23,7 @@ export const Wishlist = () => {
     }
     const allBooks = await api.getBooks();
     const ids = api.getWishlist(user.id);
-    setWishlist(allBooks.filter(b => ids.includes(b.id)));
+    setWishlist(allBooks.filter((b) => ids.includes(b.id)));
     setLoading(false);
   };
 
@@ -35,11 +34,12 @@ export const Wishlist = () => {
     }
   };
 
-  if (loading) return (
-    <div className="wishlist__loading">
-      <div className="wishlist__spinner" />
-    </div>
-  );
+  if (loading)
+    return (
+      <div className="wishlist__loading">
+        <div className="wishlist__spinner" />
+      </div>
+    );
 
   if (!user) {
     return (
@@ -48,8 +48,12 @@ export const Wishlist = () => {
           <Heart className="wishlist__empty-icon-svg" />
         </div>
         <h2 className="wishlist__empty-title">Save your favorites</h2>
-        <p className="wishlist__empty-text">Please sign in to keep track of books you'd like to read later.</p>
-        <Link to="/login" className="wishlist__empty-action">Sign In</Link>
+        <p className="wishlist__empty-text">
+          Please sign in to keep track of books you'd like to read later.
+        </p>
+        <Link to="/login" className="wishlist__empty-action">
+          Sign In
+        </Link>
       </div>
     );
   }
@@ -68,10 +72,10 @@ export const Wishlist = () => {
 
       {wishlist.length > 0 ? (
         <div className="wishlist__grid">
-          {wishlist.map(book => (
-            <BookCard 
-              key={book.id} 
-              book={book} 
+          {wishlist.map((book) => (
+            <BookCard
+              key={book.id}
+              book={book}
               isWishlisted={true}
               onToggleWishlist={handleToggle}
             />
@@ -83,8 +87,13 @@ export const Wishlist = () => {
             <Search className="wishlist__empty-card-icon-svg" />
           </div>
           <h3 className="wishlist__empty-card-title">Your wishlist is empty</h3>
-          <p className="wishlist__empty-card-text">Click the heart icon on any book to add it to your personal favorites collection.</p>
-          <Link to="/books" className="wishlist__empty-card-action">Explore Catalog</Link>
+          <p className="wishlist__empty-card-text">
+            Click the heart icon on any book to add it to your personal
+            favorites collection.
+          </p>
+          <Link to="/books" className="wishlist__empty-card-action">
+            Explore Catalog
+          </Link>
         </div>
       )}
     </div>

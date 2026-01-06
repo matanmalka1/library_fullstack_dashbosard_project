@@ -1,0 +1,40 @@
+.checkout--success {
+  text-align: center;
+  padding: 128px 16px;
+  animation: checkout-pop 0.3s ease;
+}
+
+.checkout__success-icon {
+  width: 96px;
+  height: 96px;
+  background: #ecfdf3;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 32px;
+}
+
+.checkout__success-icon-svg {
+  width: 48px;
+  height: 48px;
+  color: #22c55e;
+}
+
+.checkout__success-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  margin: 0 0 16px;
+  color: #0f172a;
+}
+
+.checkout__success-text {
+  color: #64748b;
+  font-size: 18px;
+  margin: 0 0 32px;
+}
+
+.checkout__success-note {
+  color: #94a3b8;
+  margin: 0;
+}
