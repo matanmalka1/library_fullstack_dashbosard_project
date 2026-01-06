@@ -2,20 +2,15 @@ import { getStore, setStore, KEYS } from "./core";
 import { requireRole } from "./auth.utils";
 import { UserRole } from "../../types";
 import { http } from "./http";
-
-const getApiErrorMessage = (error, fallback) => {
-  if (error?.response?.data?.message) {
-    return error.response.data.message;
-  }
-  return error?.message || fallback;
-};
+import { getApiErrorMessage } from "./error";
+import { normalizeId } from "./normalize";
 
 const normalizeReview = (review) => {
   if (!review) return review;
   return {
     ...review,
-    id: review._id || review.id,
-    userId: review.user?._id || review.user || review.userId,
+    id: normalizeId(review._id || review.id),
+    userId: normalizeId(review.user?._id || review.user || review.userId),
   };
 };
 
@@ -23,7 +18,7 @@ const normalizeBook = (book) => {
   if (!book) return book;
   const normalized = {
     ...book,
-    id: book._id || book.id,
+    id: normalizeId(book._id || book.id),
     reviews: (book.reviews || []).map(normalizeReview),
   };
   return normalized;
@@ -89,5 +84,3 @@ export class BookService {
   }
 }
 
-/* -------- Singleton export -------- */
-export const bookApi = new BookService();

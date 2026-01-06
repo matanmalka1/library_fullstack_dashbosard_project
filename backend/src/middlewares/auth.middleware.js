@@ -34,6 +34,9 @@ export const authenticate = async (req, _res, next) => {
     }
 
     req.user = user;
+    if (req.user && !req.user.id && req.user._id) {
+      req.user.id = req.user._id.toString();
+    }
     next();
   } catch (error) {
     next(error);

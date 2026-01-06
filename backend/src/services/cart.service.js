@@ -1,12 +1,8 @@
 import { Book, Cart } from "../models/index.js";
 import { ApiError, API_ERROR_CODES } from "../constants/api-error-codes.js";
+import { mapItemWithBook } from "../utils/normalize.js";
 
-const mapCartItems = (items) =>
-  items.map((item) => ({
-    bookId: item.book?._id?.toString() || item.book?.toString(),
-    quantity: item.quantity,
-    book: item.book,
-  }));
+const mapCartItems = (items) => items.map(mapItemWithBook);
 
 export const getCart = async (userId) => {
   const cart = await Cart.findOne({ user: userId })

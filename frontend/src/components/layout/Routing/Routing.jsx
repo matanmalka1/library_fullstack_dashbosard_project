@@ -5,7 +5,7 @@ import { CartProvider } from "../../../context/cart/CartContext";
 import { UserRole } from "../../../types";
 
 import { Navbar } from "../Navbar/Navbar";
-import { MainFooter } from "../MainFooter/MainFooter";
+import { Footer } from "../Footer/Footer";
 import { PrivateRoute } from "../../routes/PrivateRoute";
 
 import { Home } from "../../../pages/Home/Home";
@@ -69,7 +69,7 @@ export const App = () => (
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
-        <MainFooter />
+        <Footer />
       </div>
     </CartProvider>
   </AuthProvider>

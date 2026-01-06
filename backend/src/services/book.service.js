@@ -20,6 +20,7 @@ const buildSearchFilter = ({ search, category }) => {
 
 const populateReviews = () => ({
   path: "reviews",
+  match: { approved: true },
   select: "user userName rating comment approved date createdAt",
   options: { sort: { createdAt: -1 } },
 });

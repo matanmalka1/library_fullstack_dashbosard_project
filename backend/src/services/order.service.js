@@ -1,18 +1,13 @@
 import { Book, Order } from "../models/index.js";
 import { ApiError, API_ERROR_CODES } from "../constants/api-error-codes.js";
+import { mapItemWithBook } from "../utils/normalize.js";
 
 const canManageOrders = (user) =>
   user?.role?.name === "admin" || user?.role?.name === "manager";
 
-const mapOrderItem = (item) => ({
-  bookId: item.book?._id?.toString() || item.book?.toString(),
-  quantity: item.quantity,
-  book: item.book,
-});
-
 const mapOrder = (order) => ({
   ...order,
-  items: (order.items || []).map(mapOrderItem),
+  items: (order.items || []).map(mapItemWithBook),
 });
 
 export const getOrders = async (user, query = {}) => {

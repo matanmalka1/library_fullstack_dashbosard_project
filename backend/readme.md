@@ -106,8 +106,6 @@ All users have password: `Password123!`
 |-------|------|-------------|
 | admin@example.com | Admin | All permissions |
 | manager@example.com | Manager | Users (read, create, update), roles (read), upload |
-| editor@example.com | Editor | Users (read, update), upload |
-| support@example.com | Support | Users (read), health check |
 | user1@example.com | User | Basic access |
 
 ## API Documentation

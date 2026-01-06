@@ -41,7 +41,7 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     if (!user || !hasLoadedRef.current) return;
     api.saveCart(user.id, items).catch(() => {
-      // Ignore sync errors; cart will retry on next change.
+      // Ignore sync errors.
     });
   }, [items, user]);
 

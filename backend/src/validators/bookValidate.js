@@ -15,18 +15,6 @@ export const validateBookIdParam = (req, _res, next) => {
   return next();
 };
 
-export const validateReviewIdParam = (req, _res, next) => {
-  const { reviewId } = req.params;
-  if (!mongoose.Types.ObjectId.isValid(reviewId)) {
-    return next(
-      buildValidationError([
-        { field: "reviewId", message: "Invalid review ID format" },
-      ])
-    );
-  }
-  return next();
-};
-
 export const validateCreateBook = (req, _res, next) => {
   const { title, author, price } = req.body ?? {};
   const errors = [];

@@ -1,13 +1,7 @@
 import { setStore, KEYS } from "./core";
 import { buildAuth, normalizeRole } from "./auth.utils";
 import { http } from "./http";
-
-const getApiErrorMessage = (error, fallback) => {
-  if (error?.response?.data?.message) {
-    return error.response.data.message;
-  }
-  return error?.message || fallback;
-};
+import { getApiErrorMessage } from "./error";
 
 export class AuthService {
   constructor() {
@@ -129,6 +123,3 @@ export class AuthService {
     return parsed;
   }
 }
-
-/* -------- Singleton export -------- */
-export const authApi = new AuthService();

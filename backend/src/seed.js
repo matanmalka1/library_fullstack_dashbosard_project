@@ -29,7 +29,7 @@ const seed = async () => {
   console.log("Starting database seed...");
 
   // Create Roles
-  const roleNames = ["admin", "manager", "editor", "support", "user"];
+  const roleNames = ["admin", "manager", "user"];
   const roleMap = {};
 
   for (const name of roleNames) {
@@ -92,17 +92,6 @@ const seed = async () => {
   ].map((name) => permissionMap[name]._id);
   await roleMap.manager.save();
 
-  roleMap.editor.permissions = [
-    "users.read",
-    "users.update",
-    "upload.create",
-  ].map((name) => permissionMap[name]._id);
-  await roleMap.editor.save();
-
-  roleMap.support.permissions = ["users.read", "health.read"].map(
-    (name) => permissionMap[name]._id
-  );
-  await roleMap.support.save();
 
   roleMap.user.permissions = ["health.read", "auth.refresh", "auth.logout"].map(
     (name) => permissionMap[name]._id
@@ -119,18 +108,6 @@ const seed = async () => {
       first: "Manager",
       last: "User",
       role: "manager",
-    },
-    {
-      email: "editor@example.com",
-      first: "Editor",
-      last: "User",
-      role: "editor",
-    },
-    {
-      email: "support@example.com",
-      first: "Support",
-      last: "User",
-      role: "support",
     },
     { email: "user1@example.com", first: "User", last: "One", role: "user" },
     { email: "user2@example.com", first: "User", last: "Two", role: "user" },

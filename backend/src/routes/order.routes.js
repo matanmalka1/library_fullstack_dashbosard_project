@@ -16,12 +16,5 @@ export const router = express.Router();
 
 router.get("/", authenticate, getOrders);
 router.post("/", authenticate, validateCreateOrder, placeOrder);
-router.patch(
-  "/:id/status",
-  authenticate,
-  authorize("admin", "manager"),
-  validateOrderIdParam,
-  validateOrderStatus,
-  updateOrderStatus
-);
+router.patch("/:id/status",authenticate,authorize("admin", "manager"),validateOrderIdParam,validateOrderStatus,updateOrderStatus);
 router.patch("/:id/cancel", authenticate, validateOrderIdParam, cancelOrder);

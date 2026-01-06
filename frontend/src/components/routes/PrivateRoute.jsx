@@ -2,9 +2,11 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../../context/auth/AuthContext";
 import { UserRole } from "../../types";
+import { normalizeRole } from "../../services/api/auth.utils";
 
 export const PrivateRoute = ({ children, role }) => {
   const { isAuthenticated, user, isAuthLoading } = useAuth();
+  const normalizedRole = normalizeRole(user?.role);
 
   if (isAuthLoading) {
     return (
@@ -18,7 +20,7 @@ export const PrivateRoute = ({ children, role }) => {
     return <Navigate to="/login" replace />;
   }
 
-  if (role && user?.role !== role && user?.role !== UserRole.ADMIN) {
+  if (role && normalizedRole !== role && normalizedRole !== UserRole.ADMIN) {
     return <Navigate to="/" replace />;
   }
 

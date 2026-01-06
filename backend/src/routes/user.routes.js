@@ -17,11 +17,17 @@ export const router = express.Router();
 // CREATE 
 router.post("/",authenticate,authorize("admin"),validateCreateUser,createUser);
 // READ ALL
-router.get("/", authenticate, getAllUsers);
+router.get("/", authenticate, authorize("admin"), getAllUsers);
 // READ ONE
-router.get("/:id", authenticate, validateUserIdParam, getUserById);
+router.get("/:id", authenticate, authorize("admin"), validateUserIdParam, getUserById);
 // UPDATE
-router.put("/:id", authenticate, validateUserIdParam, validateUpdateUser,updateUser);
+router.put(
+  "/:id",
+  authenticate,
+  authorize("admin"),
+  validateUserIdParam,
+  validateUpdateUser,
+  updateUser
+);
 // DELETE
 router.delete("/:id",authenticate,authorize("admin"),validateUserIdParam,deleteUser);
-

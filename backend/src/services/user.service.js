@@ -120,6 +120,10 @@ export const updateUser = async (id, userData) => {
     delete userData.roleId;
   }
 
+  if (userData.password) {
+    userData.password = await hashPassword(userData.password);
+  }
+
   Object.assign(user, userData);
   await user.save();
 

@@ -29,5 +29,4 @@ export class ApiService {
   }
 }
 
-/* -------- Singleton export -------- */
-export const api = new ApiService();
+ const api = new ApiService();

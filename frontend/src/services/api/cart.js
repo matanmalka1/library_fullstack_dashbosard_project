@@ -1,24 +1,13 @@
 import { http } from "./http";
-
-const getApiErrorMessage = (error, fallback) => {
-  if (error?.response?.data?.message) {
-    return error.response.data.message;
-  }
-  return error?.message || fallback;
-};
-
-const normalizeCartItem = (item) => ({
-  bookId: item.bookId || item.book?._id || item.book,
-  quantity: item.quantity,
-  book: item.book,
-});
+import { getApiErrorMessage } from "./error";
+import { normalizeItem } from "./normalize";
 
 export const attachCartMethods = (service) => {
   service.getCart = async () => {
     try {
       const { data } = await http.get("/cart");
       const items = data?.data?.items || [];
-      return items.map(normalizeCartItem);
+      return items.map(normalizeItem);
     } catch (error) {
       throw new Error(getApiErrorMessage(error, "Unable to load cart"));
     }
@@ -34,7 +23,7 @@ export const attachCartMethods = (service) => {
       };
       const { data } = await http.put("/cart", payload);
       const saved = data?.data?.items || [];
-      return saved.map(normalizeCartItem);
+      return saved.map(normalizeItem);
     } catch (error) {
       throw new Error(getApiErrorMessage(error, "Unable to save cart"));
     }
