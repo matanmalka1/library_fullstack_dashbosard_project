@@ -1,4 +1,4 @@
-import { Book, Review } from "../models/index.js";
+import { Book, Review, Category } from "../models/index.js";
 import { ApiError, API_ERROR_CODES } from "../constants/api-error-codes.js";
 
 const buildSearchFilter = ({ search, category }) => {
@@ -68,6 +68,14 @@ export const getBookById = async (id) => {
     );
   }
   return book;
+};
+
+export const getCategories = async () => {
+  const categories = await Category.find()
+    .select("name -_id")
+    .sort({ name: 1 })
+    .lean();
+  return categories.map((category) => category.name);
 };
 
 export const createBook = async (data) => {

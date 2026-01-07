@@ -1,31 +1,16 @@
 // LocalStorage utilities
-// Note: Auth state is managed separately in auth/store.js but KEYS.AUTH is included for legacy compatibility
-
-export const KEYS = {
-  BOOKS: "books",
-  USERS: "users",
-  ORDERS: "orders",
-  AUTH: "auth",
-  CART: "cart",
-  WISHLIST: "wishlist",
-};
-
-const getDefaultValue = (key) => {
-  if (key === KEYS.CART || key === KEYS.WISHLIST) return {};
-  return [];
-};
+const getDefaultValue = () => [];
 
 export const getStorageItem = (key) => {
   try {
-    const raw = localStorage.getItem(key);
-    if (!raw) return getDefaultValue(key);
-    return JSON.parse(raw);
+    const value = localStorage.getItem(key);
+    if (!value) return getDefaultValue();
+    return JSON.parse(value);
   } catch (error) {
-    // Log error but don't throw - return default value
     if (process.env.NODE_ENV === "development") {
       console.warn(`Failed to parse ${key} from localStorage:`, error);
     }
-    return getDefaultValue(key);
+    return getDefaultValue();
   }
 };
 
@@ -48,4 +33,3 @@ export const removeStorageItem = (key) => {
     }
   }
 };
-

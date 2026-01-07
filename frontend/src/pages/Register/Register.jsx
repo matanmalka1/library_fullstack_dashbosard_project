@@ -5,7 +5,8 @@ import { RegisterFormPanel } from "./RegisterFormPanel";
 import { RegisterVisual } from "./RegisterVisual";
 
 export const Register = () => {
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -18,7 +19,7 @@ export const Register = () => {
     setError("");
     setLoading(true);
     try {
-      await register(name, email, password);
+      await register(firstName, lastName, email, password);
       navigate("/");
     } catch (err) {
       setError(err.message || "Registration failed");
@@ -30,12 +31,14 @@ export const Register = () => {
   return (
     <div className="min-h-[calc(100vh-64px)] flex bg-slate-50">
       <RegisterFormPanel
-        name={name}
+        firstName={firstName}
+        lastName={lastName}
         email={email}
         password={password}
         error={error}
         loading={loading}
-        onNameChange={setName}
+        onFirstNameChange={setFirstName}
+        onLastNameChange={setLastName}
         onEmailChange={setEmail}
         onPasswordChange={setPassword}
         onSubmit={handleSubmit}

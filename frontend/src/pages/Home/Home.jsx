@@ -1,16 +1,15 @@
-
-import React, { useEffect, useState } from 'react';
-import { api } from '../../services/api';
-import { HomeHero } from './HomeHero';
-import { HomeFeatures } from './HomeFeatures';
-import { HomeFeatured } from './HomeFeatured';
-import { HomeCTA } from './HomeCTA';
+import React, { useEffect, useState } from "react";
+import { bookService } from "../../services/BookService";
+import { HomeHero } from "./HomeHero";
+import { HomeFeatures } from "./HomeFeatures";
+import { HomeFeatured } from "./HomeFeatured";
+import { HomeCTA } from "./HomeCTA";
 
 export const Home = () => {
   const [featuredBooks, setFeaturedBooks] = useState([]);
 
   useEffect(() => {
-    api.getBooks().then(books => {
+    bookService.getBooks().then((books) => {
       setFeaturedBooks(books.slice(0, 4));
     });
   }, []);

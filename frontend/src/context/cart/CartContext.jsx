@@ -1,6 +1,13 @@
-import React, { createContext, useContext, useState, useEffect, useRef } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+} from "react";
 import { useAuth } from "../auth/AuthContext";
-import { api } from "../../services/api";
+import { cartService } from "../../services/CartService";
 
 const CartContext = createContext(null);
 
@@ -8,6 +15,7 @@ export const CartProvider = ({ children }) => {
   const { user } = useAuth();
   const [items, setItems] = useState([]);
   const hasLoadedRef = useRef(false);
+  const syncTimeoutRef = useRef(null);
 
   useEffect(() => {
     let isActive = true;
@@ -18,7 +26,7 @@ export const CartProvider = ({ children }) => {
         return;
       }
       try {
-        const cartItems = await api.getCart(user.id);
+        const cartItems = await cartService.getCart(user.id);
         if (isActive) {
           setItems(cartItems);
           hasLoadedRef.current = true;
@@ -39,10 +47,29 @@ export const CartProvider = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
-    if (!user || !hasLoadedRef.current) return;
-    api.saveCart(user.id, items).catch(() => {
-      // Ignore sync errors.
-    });
+    if (!user || !hasLoadedRef.current) {
+      if (syncTimeoutRef.current) {
+        clearTimeout(syncTimeoutRef.current);
+        syncTimeoutRef.current = null;
+      }
+      return;
+    }
+
+    if (syncTimeoutRef.current) {
+      clearTimeout(syncTimeoutRef.current);
+    }
+    syncTimeoutRef.current = setTimeout(() => {
+      cartService.saveCart(user.id, items).catch(() => {
+        // Ignore sync errors.
+      });
+    }, 300);
+
+    return () => {
+      if (syncTimeoutRef.current) {
+        clearTimeout(syncTimeoutRef.current);
+        syncTimeoutRef.current = null;
+      }
+    };
   }, [items, user]);
 
   const addToCart = (book, quantity = 1) => {
@@ -83,7 +110,9 @@ export const CartProvider = ({ children }) => {
         if (i.bookId !== bookId) return i;
         const available = Number(i.book?.stockQuantity);
         const hasStockLimit = Number.isFinite(available);
-        const nextQty = hasStockLimit ? Math.min(quantity, available) : quantity;
+        const nextQty = hasStockLimit
+          ? Math.min(quantity, available)
+          : quantity;
         return { ...i, quantity: nextQty };
       })
     );
@@ -91,10 +120,16 @@ export const CartProvider = ({ children }) => {
 
   const clearCart = () => setItems([]);
 
-  const totalItems = items.reduce((acc, item) => acc + item.quantity, 0);
-  const totalPrice = items.reduce(
-    (acc, item) => acc + item.book.price * item.quantity,
-    0
+  const { totalItems, totalPrice } = useMemo(
+    () =>
+      items.reduce(
+        (acc, item) => ({
+          totalItems: acc.totalItems + item.quantity,
+          totalPrice: acc.totalPrice + item.book.price * item.quantity,
+        }),
+        { totalItems: 0, totalPrice: 0 }
+      ),
+    [items]
   );
 
   return (

@@ -1,19 +1,8 @@
-import { getAuthState, setAuthState } from "./store";
-
-export const normalizeRole = (role) => {
-  if (!role) return null;
-  if (typeof role === "string") return role.toUpperCase();
-  if (typeof role === "object" && role.name) return role.name.toUpperCase();
-  return null;
-};
-
-export const stripPassword = (user) => {
-  const { password: _password, ...userNoPass } = user;
-  return userNoPass;
-};
+import { normalizeRole, normalizeUser, stripPassword } from "../shared/normalize";
+import { getAuthState, setAuthState } from "./authStore";
 
 export const buildAuth = (user, token) => {
-  const normalizedUser = normalizeUser(user);
+  const normalizedUser = normalizeUser(user, { normalizeRole });
   return {
     user: normalizedUser,
     token: token || null,
@@ -26,7 +15,7 @@ export const getStoredAuth = () => {
   if (!stored?.user && !stored?.token) return null;
   return {
     ...stored,
-    user: normalizeUser(stored.user),
+    user: normalizeUser(stored.user, { normalizeRole }),
   };
 };
 
@@ -83,19 +72,3 @@ const parseJwtPayload = (token) => {
     return null;
   }
 };
-
-const normalizeUser = (user) => {
-  if (!user) return user;
-  const normalized = { ...user };
-  if (normalized._id && !normalized.id) {
-    normalized.id = normalized._id;
-  }
-  if (normalized.role && typeof normalized.role === "object") {
-    normalized.role = normalized.role.name || normalized.role;
-  }
-  if (!normalized.name && (normalized.firstName || normalized.lastName)) {
-    normalized.name = `${normalized.firstName || ""} ${normalized.lastName || ""}`.trim();
-  }
-  return normalized;
-};
-

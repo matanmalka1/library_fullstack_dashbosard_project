@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { api } from "../../services/api";
+import { bookService } from "../../services/BookService";
+import { usersService } from "../../services/UsersService";
 import { useAuth } from "../../context/auth/AuthContext";
 import { AdminDashboardNav } from "./AdminDashboardNav";
 import { AdminReviewsPanel } from "./AdminReviewsPanel";
@@ -22,7 +23,10 @@ export const AdminDashboard = () => {
   const fetchData = async () => {
     setError("");
     try {
-      const [b, u] = await Promise.all([api.getBooks(), api.getUsers()]);
+      const [b, u] = await Promise.all([
+        bookService.getBooks(),
+        usersService.getUsers(),
+      ]);
       setBooks(b);
       setUsers(u);
 
@@ -42,7 +46,7 @@ export const AdminDashboard = () => {
 
   const handleApprove = async (bookId, reviewId) => {
     try {
-      await api.approveReview(bookId, reviewId);
+      await usersService.approveReview(bookId, reviewId);
       fetchData();
     } catch (err) {
       setError(err.message || "Unable to approve review.");
@@ -52,7 +56,7 @@ export const AdminDashboard = () => {
   const handleDelete = async (bookId, reviewId) => {
     if (confirm("Delete this review permanently?")) {
       try {
-        await api.deleteReview(bookId, reviewId);
+        await usersService.deleteReview(bookId, reviewId);
         fetchData();
       } catch (err) {
         setError(err.message || "Unable to delete review.");
@@ -68,7 +72,7 @@ export const AdminDashboard = () => {
     const role = roleChanges[userId];
     if (!role) return;
     try {
-      await api.updateUserRole(userId, role);
+      await usersService.updateUserRole(userId, role);
       setRoleChanges((prev) => {
         const next = { ...prev };
         delete next[userId];

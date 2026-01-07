@@ -1,11 +1,11 @@
-import { buildAuth, getStoredAuth, getTokenExpiry } from "./utils";
+import { buildAuth, getStoredAuth, getTokenExpiry } from "./authUtils";
 import {
   clearAuthState,
   clearLegacyAuthStorage,
   getAccessToken,
   setAuthState,
-} from "./store";
-import { http } from "../shared/http";
+} from "./authStore";
+import { httpClient } from "../shared/httpClient";
 
 const REFRESH_THRESHOLD_MS = 60 * 1000;
 
@@ -13,7 +13,7 @@ let refreshPromise = null;
 
 const requestRefresh = async (currentAuth) => {
   // Use http instance with skipAuthRefresh to avoid infinite loop
-  const { data } = await http.post("/auth/refresh", null, {
+  const { data } = await httpClient.post("/auth/refresh", null, {
     skipAuthRefresh: true,
   });
   const token = data?.data?.accessToken;
@@ -23,8 +23,7 @@ const requestRefresh = async (currentAuth) => {
 
   let user = currentAuth?.user || getStoredAuth()?.user;
   if (!user) {
-    // Fetch user profile with new token
-    const meResponse = await http.get("/auth/me", {
+    const meResponse = await httpClient.get("/auth/me", {
       skipAuthRefresh: true,
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -51,10 +50,10 @@ export const ensureFreshAccessToken = async (currentAuth) => {
   const token = getAccessToken();
   if (!token) return null;
 
-  const exp = getTokenExpiry(token);
-  if (!exp) return token;
+  if (!getTokenExpiry(token)) return token;
 
-  const shouldRefresh = Date.now() >= exp - REFRESH_THRESHOLD_MS;
+  const shouldRefresh =
+    Date.now() >= getTokenExpiry(token) - REFRESH_THRESHOLD_MS;
   if (!shouldRefresh) return token;
 
   const auth = await refreshAccessToken(currentAuth);
@@ -65,4 +64,3 @@ export const forceLogout = () => {
   clearAuthState();
   clearLegacyAuthStorage();
 };
-

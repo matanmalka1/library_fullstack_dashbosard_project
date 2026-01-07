@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { api } from "../../../services/api";
+import { usersService } from "../../../services/UsersService";
 import { useAuth } from "../../../context/auth/AuthContext";
 import { ReviewSummary } from "./ReviewSummary";
 import { ReviewList } from "./ReviewList";
@@ -13,7 +13,7 @@ export const ReviewSection = ({ book, onUpdate }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!user || !comment) return;
-    await api.addReview(book.id, {
+    await usersService.addReview(book.id, {
       userId: user.id,
       userName: user.name,
       rating,

@@ -1,12 +1,16 @@
 import axios from "axios";
-import { getAccessToken } from "../auth/store";
-import { ensureFreshAccessToken, forceLogout, refreshAccessToken } from "../auth/session";
-import { getStoredAuth } from "../auth/utils";
+import { getAccessToken } from "../auth/authStore";
+import {
+  ensureFreshAccessToken,
+  forceLogout,
+  refreshAccessToken,
+} from "../auth/authSession";
+import { getStoredAuth } from "../auth/authUtils";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api/v1";
 
-export const http = axios.create({
+export const httpClient = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true,
   headers: {
@@ -14,31 +18,27 @@ export const http = axios.create({
   },
 });
 
-http.interceptors.request.use(async (config) => {
+httpClient.interceptors.request.use(async (config) => {
   if (!config.skipAuthRefresh) {
     try {
       await ensureFreshAccessToken(getStoredAuth());
-    } catch {
-      // Proceed and let the response handler decide on auth failures.
-    }
+    } catch {}
   }
 
-  const token = getAccessToken();
-  if (token) {
+  if (getAccessToken()) {
     config.headers = config.headers || {};
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers.Authorization = `Bearer ${getAccessToken()}`;
   }
 
   return config;
 });
 
-http.interceptors.response.use(
+httpClient.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const status = error?.response?.status;
     const originalRequest = error?.config;
 
-    if (status !== 401 || !originalRequest) {
+    if (error?.response?.status !== 401 || !originalRequest) {
       return Promise.reject(error);
     }
 
@@ -54,16 +54,15 @@ http.interceptors.response.use(
     originalRequest._retry = true;
     try {
       await refreshAccessToken(getStoredAuth());
-      const token = getAccessToken();
-      if (token) {
+
+      if (getAccessToken()) {
         originalRequest.headers = originalRequest.headers || {};
-        originalRequest.headers.Authorization = `Bearer ${token}`;
+        originalRequest.headers.Authorization = `Bearer ${getAccessToken()}`;
       }
-      return http(originalRequest);
+      return httpClient(originalRequest);
     } catch (refreshError) {
       forceLogout();
       return Promise.reject(refreshError);
     }
   }
 );
-

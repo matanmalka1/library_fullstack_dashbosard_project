@@ -4,12 +4,14 @@ import { Mail, Lock, User, ArrowRight, BookOpen } from "lucide-react";
 import { AlertBanner } from "../../components/ui/AlertBanner";
 
 export const RegisterFormPanel = ({
-  name,
+  firstName,
+  lastName,
   email,
   password,
   error,
   loading,
-  onNameChange,
+  onFirstNameChange,
+  onLastNameChange,
   onEmailChange,
   onPasswordChange,
   onSubmit,
@@ -30,20 +32,38 @@ export const RegisterFormPanel = ({
     />
 
     <form onSubmit={onSubmit} className="grid gap-5">
-      <div className="grid gap-2">
-        <label className="text-[11px] uppercase tracking-[0.16em] font-bold text-slate-400">
-          Full Name
-        </label>
-        <div className="relative">
-          <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300" />
-          <input
-            type="text"
-            required
-            className="w-full pl-12 pr-4 py-3.5 rounded-[20px] border border-slate-200 bg-slate-50 text-sm outline-none transition focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200 focus:bg-white"
-            placeholder="Jane Doe"
-            value={name}
-            onChange={(e) => onNameChange(e.target.value)}
-          />
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-2">
+          <label className="text-[11px] uppercase tracking-[0.16em] font-bold text-slate-400">
+            First Name
+          </label>
+          <div className="relative">
+            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300" />
+            <input
+              type="text"
+              required
+              className="w-full pl-12 pr-4 py-3.5 rounded-[20px] border border-slate-200 bg-slate-50 text-sm outline-none transition focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200 focus:bg-white"
+              placeholder="Jane"
+              value={firstName}
+              onChange={(e) => onFirstNameChange(e.target.value)}
+            />
+          </div>
+        </div>
+        <div className="grid gap-2">
+          <label className="text-[11px] uppercase tracking-[0.16em] font-bold text-slate-400">
+            Last Name
+          </label>
+          <div className="relative">
+            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300" />
+            <input
+              type="text"
+              required
+              className="w-full pl-12 pr-4 py-3.5 rounded-[20px] border border-slate-200 bg-slate-50 text-sm outline-none transition focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200 focus:bg-white"
+              placeholder="Doe"
+              value={lastName}
+              onChange={(e) => onLastNameChange(e.target.value)}
+            />
+          </div>
         </div>
       </div>
 

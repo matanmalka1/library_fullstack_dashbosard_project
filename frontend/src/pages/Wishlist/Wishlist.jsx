@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Heart, Search, ArrowRight } from "lucide-react";
-import { api } from "../../services/api";
+import { bookService } from "../../services/BookService";
+import { wishlistService } from "../../services/WishlistService";
 import { useAuth } from "../../context/auth/AuthContext";
 import { BookCard } from "../../components/book/BookCard/BookCard";
 import { Link } from "react-router-dom";
@@ -20,15 +21,15 @@ export const Wishlist = () => {
       setLoading(false);
       return;
     }
-    const allBooks = await api.getBooks();
-    const ids = await api.getWishlist(user.id);
+    const allBooks = await bookService.getBooks();
+    const ids = await wishlistService.getWishlist(user.id);
     setWishlist(allBooks.filter((b) => ids.includes(b.id)));
     setLoading(false);
   };
 
   const handleToggle = async (id) => {
     if (user) {
-      await api.toggleWishlist(user.id, id);
+      await wishlistService.toggleWishlist(user.id, id);
       fetchWishlist();
     }
   };
@@ -52,7 +53,10 @@ export const Wishlist = () => {
         <p className="text-slate-500 max-w-[360px] mx-auto mb-10">
           Please sign in to keep track of books you'd like to read later.
         </p>
-        <Link to="/login" className="inline-block bg-indigo-600 text-white px-10 py-4 rounded-2xl font-bold no-underline shadow-[0_16px_30px_rgba(79,70,229,0.2)]">
+        <Link
+          to="/login"
+          className="inline-block bg-indigo-600 text-white px-10 py-4 rounded-2xl font-bold no-underline shadow-[0_16px_30px_rgba(79,70,229,0.2)]"
+        >
           Sign In
         </Link>
       </div>
@@ -63,11 +67,17 @@ export const Wishlist = () => {
     <div className="max-w-[1120px] mx-auto px-4 lg:px-8 py-12">
       <div className="flex items-center justify-between gap-6 mb-12 flex-wrap">
         <div>
-          <h1 className="font-serif text-4xl text-slate-900 mb-2">My Wishlist</h1>
+          <h1 className="font-serif text-4xl text-slate-900 mb-2">
+            My Wishlist
+          </h1>
           <p className="text-slate-500 m-0">Items you've saved for later.</p>
         </div>
-        <Link to="/books" className="inline-flex items-center gap-1.5 text-indigo-600 font-bold no-underline group">
-          Keep Shopping <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+        <Link
+          to="/books"
+          className="inline-flex items-center gap-1.5 text-indigo-600 font-bold no-underline group"
+        >
+          Keep Shopping{" "}
+          <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
         </Link>
       </div>
 
@@ -87,12 +97,17 @@ export const Wishlist = () => {
           <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
             <Search className="w-8 h-8 text-slate-200" />
           </div>
-          <h3 className="text-xl font-bold text-slate-800 mb-2">Your wishlist is empty</h3>
+          <h3 className="text-xl font-bold text-slate-800 mb-2">
+            Your wishlist is empty
+          </h3>
           <p className="text-slate-500 max-w-[320px] mx-auto mb-8">
             Click the heart icon on any book to add it to your personal
             favorites collection.
           </p>
-          <Link to="/books" className="inline-block bg-slate-900 text-white px-8 py-3 rounded-[14px] font-bold no-underline">
+          <Link
+            to="/books"
+            className="inline-block bg-slate-900 text-white px-8 py-3 rounded-[14px] font-bold no-underline"
+          >
             Explore Catalog
           </Link>
         </div>

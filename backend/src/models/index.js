@@ -7,3 +7,4 @@ export { Review } from "./Review.js";
 export { Cart } from "./Cart.js";
 export { Wishlist } from "./Wishlist.js";
 export { Order } from "./Order.js";
+export { Category } from "./Category.js";

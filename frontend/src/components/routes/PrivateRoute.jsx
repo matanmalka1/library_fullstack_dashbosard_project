@@ -1,8 +1,7 @@
-import React from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../../context/auth/AuthContext";
 import { UserRole } from "../../types";
-import { normalizeRole } from "../../services/api/auth.utils";
+import { normalizeRole } from "../../services/shared/normalize";
 
 export const PrivateRoute = ({ children, role }) => {
   const { isAuthenticated, user, isAuthLoading } = useAuth();

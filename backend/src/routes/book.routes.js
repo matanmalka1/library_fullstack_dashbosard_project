@@ -2,6 +2,7 @@ import express from "express";
 import {
   getAllBooks,
   getBookById,
+  getCategories,
   createBook,
   updateBook,
   deleteBook,
@@ -16,6 +17,7 @@ import {
 export const router = express.Router();
 
 router.get("/", getAllBooks);
+router.get("/categories", getCategories);
 router.get("/:id", validateBookIdParam, getBookById);
 router.post("/",authenticate,authorize("admin", "manager"),validateCreateBook,createBook);
 router.put("/:id",authenticate,authorize("admin", "manager"),validateBookIdParam,validateUpdateBook,updateBook);

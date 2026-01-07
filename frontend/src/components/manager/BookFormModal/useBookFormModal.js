@@ -1,19 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { api } from "../../../services/api";
-import { CATEGORIES } from "../../../Utils/constants";
+import { bookService } from "../../../services/BookService";
 
-const getDefaults = (book) => ({
+const getDefaults = (book, categories) => ({
   title: book?.title || "",
   author: book?.author || "",
   isbn: book?.isbn || "",
   price: book?.price || 0,
   stock: book?.stockQuantity || 0,
-  category: book?.categories?.[0] || CATEGORIES[0],
+  category: book?.categories?.[0] || categories?.[0] || "",
   coverImage: book?.coverImage || "",
 });
 
-export const useBookFormModal = (editingBook, { onClose, onSaved }) => {
+export const useBookFormModal = (
+  editingBook,
+  categories,
+  { onClose, onSaved }
+) => {
   const [isUploading, setIsUploading] = useState(false);
   const [formError, setFormError] = useState("");
   const fileInputRef = useRef(null);
@@ -28,14 +31,14 @@ export const useBookFormModal = (editingBook, { onClose, onSaved }) => {
     watch,
     formState: { errors, isSubmitting },
   } = useForm({
-    defaultValues: getDefaults(editingBook),
+    defaultValues: getDefaults(editingBook, categories),
   });
 
   const coverImage = watch("coverImage");
 
   useEffect(() => {
-    reset(getDefaults(editingBook));
-  }, [editingBook, reset]);
+    reset(getDefaults(editingBook, categories));
+  }, [editingBook, categories, reset]);
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
@@ -65,7 +68,7 @@ export const useBookFormModal = (editingBook, { onClose, onSaved }) => {
   const onSubmit = async (data) => {
     setFormError("");
     try {
-      await api.saveBook({
+      await bookService.saveBook({
         ...editingBook,
         ...data,
         price: Number(data.price),

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { ShoppingCart, Heart, LogOut } from "lucide-react";
-import { normalizeRole } from "../../../services/api/auth.utils";
+import { normalizeRole } from "../../../services/shared/normalize";
 
 export const NavbarActions = ({
   isAuthenticated,

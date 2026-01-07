@@ -23,6 +23,13 @@ export const getBookById = asyncHandler(async (req, res) => {
   successResponse(res, { book }, "Book retrieved successfully");
 });
 
+// READ CATEGORIES
+// List distinct book categories.
+export const getCategories = asyncHandler(async (_req, res) => {
+  const categories = await bookService.getCategories();
+  successResponse(res, { categories }, "Categories retrieved successfully");
+});
+
 // UPDATE
 // Update an existing book entry.
 export const updateBook = asyncHandler(async (req, res) => {

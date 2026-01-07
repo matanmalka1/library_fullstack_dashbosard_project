@@ -1,12 +1,11 @@
 import React from "react";
-import { CATEGORIES } from "../../../Utils/constants";
 import { BookFormHeader } from "./BookFormHeader";
 import { BookFormMedia } from "./BookFormMedia";
 import { BookFormFields } from "./BookFormFields";
 import { useBookFormModal } from "./useBookFormModal";
 import { AlertBanner } from "../../ui/AlertBanner";
 
-export const BookFormModal = ({ editingBook, onClose, onSaved }) => {
+export const BookFormModal = ({ editingBook, categories, onClose, onSaved }) => {
   const {
     register,
     handleSubmit,
@@ -18,7 +17,7 @@ export const BookFormModal = ({ editingBook, onClose, onSaved }) => {
     handleFileChange,
     onSubmit,
     formError,
-  } = useBookFormModal(editingBook, { onClose, onSaved });
+  } = useBookFormModal(editingBook, categories, { onClose, onSaved });
 
   return (
     <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-lg z-[100] flex items-center justify-center p-4">
@@ -42,7 +41,7 @@ export const BookFormModal = ({ editingBook, onClose, onSaved }) => {
             <BookFormFields
               register={register}
               errors={errors}
-              categories={CATEGORIES}
+              categories={categories}
             />
           </div>
 
