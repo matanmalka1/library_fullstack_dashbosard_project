@@ -3,8 +3,9 @@ node_modules/
 package-lock.json
 
 # Environment variables
-.env.development
-.env.production
+# Ignore any env files to avoid committing secrets
+.env
+.env.*
 
 # Logs
 logs/

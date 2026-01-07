@@ -7,6 +7,7 @@ import {
   generateRefreshToken,
   verifyRefreshToken,
 } from "../utils/jwt.js";
+import crypto from "node:crypto";
 
 // Create a new user account with the default role.
 export const register = async (userData) => {
@@ -85,8 +86,15 @@ export const login = async (email, password) => {
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + 7);
 
+  // Store only a hashed representation of the refresh token to reduce
+  // risk if the database is compromised.
+  const tokenHash = crypto
+    .createHash("sha256")
+    .update(refreshToken)
+    .digest("hex");
+
   await RefreshToken.create({
-    token: refreshToken,
+    token: tokenHash,
     user: user._id,
     expiresAt,
   });
@@ -108,8 +116,13 @@ export const login = async (email, password) => {
 // Revoke a refresh token to log out a user.
 export const logout = async (userId, refreshToken) => {
   if (refreshToken) {
+    const tokenHash = crypto
+      .createHash("sha256")
+      .update(refreshToken)
+      .digest("hex");
+
     await RefreshToken.updateOne(
-      { token: refreshToken, user: userId },
+      { token: tokenHash, user: userId },
       { isRevoked: true, revokedAt: new Date() }
     );
     logger.info("User logged out", { userId });
@@ -120,23 +133,27 @@ export const logout = async (userId, refreshToken) => {
 export const refreshAccessToken = async (oldRefreshToken) => {
   const decoded = verifyRefreshToken(oldRefreshToken);
 
-  const tokenRecord = await RefreshToken.findOne({
-    token: oldRefreshToken,
-    user: decoded.userId,
-  });
+  // Use a hashed token lookup and atomically mark the token revoked to
+  // prevent replay attacks/race conditions.
+  const tokenHash = crypto
+    .createHash("sha256")
+    .update(oldRefreshToken)
+    .digest("hex");
 
-  if (!tokenRecord || tokenRecord.isRevoked) {
+  const tokenRecord = await RefreshToken.findOneAndUpdate(
+    {
+      token: tokenHash,
+      user: decoded.userId,
+      isRevoked: false,
+      expiresAt: { $gt: new Date() },
+    },
+    { isRevoked: true, revokedAt: new Date() }
+  );
+
+  if (!tokenRecord) {
     throw new ApiError(
       API_ERROR_CODES.REFRESH_TOKEN_INVALID,
-      "Invalid refresh token",
-      401
-    );
-  }
-
-  if (new Date() > tokenRecord.expiresAt) {
-    throw new ApiError(
-      API_ERROR_CODES.REFRESH_TOKEN_EXPIRED,
-      "Refresh token expired",
+      "Invalid or already used/expired refresh token",
       401
     );
   }
@@ -150,16 +167,19 @@ export const refreshAccessToken = async (oldRefreshToken) => {
     );
   }
 
-  await tokenRecord.updateOne({ isRevoked: true, revokedAt: new Date() });
-
   const newAccessToken = generateAccessToken({ userId: user._id.toString() });
   const newRefreshToken = generateRefreshToken({ userId: user._id.toString() });
 
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + 7);
 
+  const newTokenHash = crypto
+    .createHash("sha256")
+    .update(newRefreshToken)
+    .digest("hex");
+
   await RefreshToken.create({
-    token: newRefreshToken,
+    token: newTokenHash,
     user: user._id,
     expiresAt,
   });
