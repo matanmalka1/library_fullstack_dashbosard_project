@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Trash2, Plus, Minus, Info } from 'lucide-react';
 
 export const CartItems = ({ items, onRemove, onUpdateQuantity }) => (

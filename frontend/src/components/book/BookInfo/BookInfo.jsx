@@ -1,4 +1,3 @@
-import React from "react";
 import { useCart } from "../../../context/cart/CartContext";
 import { BookInfoMedia } from "./BookInfoMedia";
 import { BookInfoDetails } from "./BookInfoDetails";

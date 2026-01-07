@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import  { memo } from "react";
 
 export const BookInfoFeature = memo(({ icon: Icon, label, value }) => (
   <div className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col items-center gap-1.5">

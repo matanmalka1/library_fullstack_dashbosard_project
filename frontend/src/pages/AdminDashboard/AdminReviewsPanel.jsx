@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Star, CheckCircle2, XCircle } from "lucide-react";
 
 export const AdminReviewsPanel = ({ pendingReviews, onApprove, onDelete }) => (

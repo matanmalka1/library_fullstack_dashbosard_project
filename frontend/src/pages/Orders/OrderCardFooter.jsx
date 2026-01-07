@@ -1,4 +1,3 @@
-import React from 'react';
 import { Truck } from 'lucide-react';
 
 export const OrderCardFooter = ({

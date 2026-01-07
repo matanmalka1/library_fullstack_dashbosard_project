@@ -1,4 +1,3 @@
-import React from "react";
 import { Star, MessageCircle } from "lucide-react";
 
 export const ReviewList = ({ reviews }) => (

@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import  { memo } from "react";
 import { useCart } from "../../../context/cart/CartContext";
 import { BookCardMedia } from "./BookCardMedia";
 import { BookCardBody } from "./BookCardBody";

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Truck, CheckCircle2, Clock, XCircle } from 'lucide-react';
 import { OrderStatus } from '../../types';
 import { OrderCardHeader } from './OrderCardHeader';

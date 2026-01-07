@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Star, ShieldCheck, Zap } from 'lucide-react';
 
 const FEATURES = [

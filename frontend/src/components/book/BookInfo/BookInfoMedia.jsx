@@ -1,4 +1,3 @@
-import React from "react";
 import { Truck, Shield, RotateCcw } from "lucide-react";
 import { BookInfoFeature } from "./BookInfoFeature";
 

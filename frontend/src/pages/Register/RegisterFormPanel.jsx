@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { Mail, Lock, User, ArrowRight, BookOpen } from "lucide-react";
 import { AlertBanner } from "../../components/ui/AlertBanner";

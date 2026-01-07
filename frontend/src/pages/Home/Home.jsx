@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { bookService } from "../../services/BookService";
 import { HomeHero } from "./HomeHero";
 import { HomeFeatures } from "./HomeFeatures";

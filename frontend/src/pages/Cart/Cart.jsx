@@ -1,5 +1,4 @@
 
-import React from 'react';
 import { useCart } from '../../context/cart/CartContext';
 import { CartEmpty } from './CartEmpty';
 import { CartItems } from './CartItems';

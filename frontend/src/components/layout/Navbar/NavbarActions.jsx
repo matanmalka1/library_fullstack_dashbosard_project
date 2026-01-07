@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { ShoppingCart, Heart, LogOut } from "lucide-react";
 import { normalizeRole } from "../../../services/shared/normalize";

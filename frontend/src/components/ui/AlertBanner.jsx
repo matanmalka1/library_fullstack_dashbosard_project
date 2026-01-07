@@ -1,5 +1,3 @@
-import React from "react";
-
 const TONE_STYLES = {
   error: "bg-red-50 border-red-100 text-red-600",
   info: "bg-slate-50 border-slate-200 text-slate-600",

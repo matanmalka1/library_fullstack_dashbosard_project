@@ -1,4 +1,3 @@
-import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "../../../context/auth/AuthContext";
 import { CartProvider } from "../../../context/cart/CartContext";
@@ -13,6 +12,7 @@ import { Books } from "../../../pages/Books/Books";
 import { DetailsPage } from "../../../pages/BookDetails/BookDetails";
 import { Login } from "../../../pages/Login/Login";
 import { Register } from "../../../pages/Register/Register";
+import { OAuthCallback } from "../../../pages/OAuthCallback/OAuthCallback";
 import { Cart } from "../../../pages/Cart/Cart";
 import { Wishlist } from "../../../pages/Wishlist/Wishlist";
 import { Checkout } from "../../../pages/Checkout/Checkout";
@@ -32,6 +32,7 @@ export const App = () => (
             <Route path="/books/:id" element={<DetailsPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/auth/callback" element={<OAuthCallback />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/wishlist" element={<Wishlist />} />
             <Route

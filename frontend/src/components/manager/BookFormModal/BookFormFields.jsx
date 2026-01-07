@@ -1,5 +1,3 @@
-import React from "react";
-
 export const BookFormFields = ({ register, errors, categories }) => (
   <div className="flex-1 grid grid-cols-2 gap-4">
     <input

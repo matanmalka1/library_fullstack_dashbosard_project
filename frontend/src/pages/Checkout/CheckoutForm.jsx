@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { CreditCard } from 'lucide-react';
 
 export const CheckoutForm = ({

@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { ShieldCheck, Truck } from 'lucide-react';
 
 export const CheckoutSummary = ({ items, totalPrice, loading }) => (

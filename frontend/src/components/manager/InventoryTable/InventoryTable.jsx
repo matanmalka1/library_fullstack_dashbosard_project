@@ -1,4 +1,3 @@
-
 import { Edit, Trash2 } from 'lucide-react';
 
 export const InventoryTable = ({ books, onEdit, onDelete }) => (

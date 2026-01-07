@@ -1,5 +1,3 @@
-import React from "react";
-
 export const RegisterVisual = () => (
   <div className="hidden lg:flex flex-1 relative overflow-hidden bg-indigo-900 order-1">
     <img
