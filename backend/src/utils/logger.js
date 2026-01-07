@@ -35,14 +35,12 @@ export const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || "info",
   format: fileFormat,
   transports: [
-    // Error logs
     new winston.transports.File({
       filename: path.join(logsDir, "error.log"),
       level: "error",
       maxsize: 5242880, // 5MB
       maxFiles: 2,
     }),
-    // Combined logs
     new winston.transports.File({
       filename: path.join(logsDir, "combined.log"),
       maxsize: 5242880, // 5MB
@@ -61,6 +59,5 @@ if (process.env.NODE_ENV !== "production") {
 
 
 export const stream = {
-  // Forward Morgan messages into winston.
   write: (message) => logger.info(message.trim())
 };

@@ -1,7 +1,7 @@
 import { User, Role } from "../models/index.js";
-import { ApiError, API_ERROR_CODES } from "../constants/api-error-codes.js";
 import { hashPassword } from "../utils/password.js";
-import {parsePaginationParams,buildPaginationMeta,} from "../utils/pagination.js";
+import { resourceNotFoundError,duplicateResourceError } from "../utils/error-factories.js";
+import { parsePaginationParams,buildPaginationMeta } from "../utils/pagination.js";
 
 // CREATE
 // Create a new user with role validation.
@@ -9,21 +9,13 @@ export const createUser = async (userData) => {
   const existingUser = await User.findOne({ email: userData.email });
 
   if (existingUser) {
-    throw new ApiError(
-      API_ERROR_CODES.DUPLICATE_RESOURCE,
-      "User with this email already exists",
-      400
-    );
+    throw duplicateResourceError("User", "email");
   }
 
   const role = await Role.findById(userData.roleId);
 
   if (!role) {
-    throw new ApiError(
-      API_ERROR_CODES.RESOURCE_NOT_FOUND,
-      "Role not found",
-      404
-    );
+    throw resourceNotFoundError("Role");
   }
 
   const user = await User.create({
@@ -72,11 +64,7 @@ export const getUserById = async (id) => {
     .lean();
 
   if (!user) {
-    throw new ApiError(
-      API_ERROR_CODES.RESOURCE_NOT_FOUND,
-      `User with id ${id} not found`,
-      404
-    );
+    throw resourceNotFoundError("User", id);
   }
 
   return user;
@@ -88,32 +76,20 @@ export const updateUser = async (id, userData) => {
   const user = await User.findById(id);
 
   if (!user) {
-    throw new ApiError(
-      API_ERROR_CODES.RESOURCE_NOT_FOUND,
-      "User not found",
-      404
-    );
+    throw resourceNotFoundError("User");
   }
 
   if (userData.email && userData.email !== user.email) {
     const existingUser = await User.findOne({ email: userData.email });
     if (existingUser) {
-      throw new ApiError(
-        API_ERROR_CODES.DUPLICATE_RESOURCE,
-        "User with this email already exists",
-        400
-      );
+      throw duplicateResourceError("User", "email");
     }
   }
 
   if (userData.roleId) {
     const role = await Role.findById(userData.roleId);
     if (!role) {
-      throw new ApiError(
-        API_ERROR_CODES.RESOURCE_NOT_FOUND,
-        "Role not found",
-        404
-      );
+      throw resourceNotFoundError("Role");
     }
     userData.role = userData.roleId;
     delete userData.roleId;
@@ -135,11 +111,7 @@ export const deleteUser = async (id) => {
   const user = await User.findById(id);
 
   if (!user) {
-    throw new ApiError(
-      API_ERROR_CODES.RESOURCE_NOT_FOUND,
-      "User not found",
-      404
-    );
+    throw resourceNotFoundError("User");
   }
 
   await user.deleteOne();

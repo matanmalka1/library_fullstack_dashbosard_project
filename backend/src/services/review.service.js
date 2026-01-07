@@ -1,5 +1,5 @@
 import { Book, Review } from "../models/index.js";
-import { ApiError, API_ERROR_CODES } from "../constants/api-error-codes.js";
+import { resourceNotFoundError } from "../utils/error-factories.js";
 
 const recalculateRating = async (bookId) => {
   const approved = await Review.find({ book: bookId, approved: true }).lean();
@@ -17,11 +17,7 @@ const recalculateRating = async (bookId) => {
 export const addReview = async (bookId, user, data) => {
   const book = await Book.findById(bookId);
   if (!book) {
-    throw new ApiError(
-      API_ERROR_CODES.RESOURCE_NOT_FOUND,
-      "Book not found",
-      404
-    );
+    throw resourceNotFoundError("Book");
   }
 
   const review = await Review.create({
@@ -43,11 +39,7 @@ export const addReview = async (bookId, user, data) => {
 export const approveReview = async (bookId, reviewId) => {
   const review = await Review.findOne({ _id: reviewId, book: bookId });
   if (!review) {
-    throw new ApiError(
-      API_ERROR_CODES.RESOURCE_NOT_FOUND,
-      "Review not found",
-      404
-    );
+    throw resourceNotFoundError("Review");
   }
 
   if (!review.approved) {
@@ -62,11 +54,7 @@ export const approveReview = async (bookId, reviewId) => {
 export const deleteReview = async (bookId, reviewId) => {
   const review = await Review.findOne({ _id: reviewId, book: bookId });
   if (!review) {
-    throw new ApiError(
-      API_ERROR_CODES.RESOURCE_NOT_FOUND,
-      "Review not found",
-      404
-    );
+    throw resourceNotFoundError("Review");
   }
 
   const wasApproved = review.approved;

@@ -1,7 +1,7 @@
 import * as authService from "../services/auth.service.js";
 import { successResponse } from "../utils/response.js";
-import { ApiError, API_ERROR_CODES } from "../constants/api-error-codes.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { refreshTokenInvalidError } from "../utils/error-factories.js";
 
 const cookieOptions = {
   httpOnly: true,
@@ -45,11 +45,7 @@ export const refresh = asyncHandler(async (req, res) => {
   const oldRefreshToken = req.cookies.refreshToken;
 
   if (!oldRefreshToken) {
-    throw new ApiError(
-      API_ERROR_CODES.REFRESH_TOKEN_INVALID,
-      "Refresh token not found",
-      401
-    );
+    throw refreshTokenInvalidError("Refresh token not found");
   }
   const { accessToken, refreshToken } = await authService.refreshAccessToken(
     oldRefreshToken

@@ -14,7 +14,6 @@ export const generateAccessToken = (payload) => {
 export const generateRefreshToken = (payload) => {
   const tokenPayload = {
     ...payload,
-    // Ensure refresh tokens are unique even when issued in the same second.
     jti: crypto.randomUUID(),
   };
 

@@ -1,10 +1,15 @@
 import rateLimit from "express-rate-limit";
 import { API_ERROR_CODES } from "../constants/api-error-codes.js";
+import { getUserFromToken } from "../utils/auth-helpers.js";
 
 // Apply global rate limits for all requests.
 export const globalRateLimiter = rateLimit({
   windowMs: +process.env.RATE_LIMIT_WINDOW_MS || 15 * 60 * 1000,
-  max: +process.env.RATE_LIMIT_MAX_REQUESTS || 100,
+  max: async (req) => {
+    const user = await getUserFromToken(req.headers.authorization);
+    if (user?.role?.name === "ADMIN") return 800;
+    return 200;
+  },
   message: {
     success: false,
     error: {

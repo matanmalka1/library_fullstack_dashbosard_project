@@ -1,13 +1,15 @@
 import { comparePassword, hashPassword } from "../utils/password.js";
 import { logger } from "../utils/logger.js";
 import { User, Role, RefreshToken } from "../models/index.js";
-import { ApiError, API_ERROR_CODES } from "../constants/api-error-codes.js";
 import {
-  generateAccessToken,
-  generateRefreshToken,
-  verifyRefreshToken,
-} from "../utils/jwt.js";
-import crypto from "node:crypto";
+  duplicateResourceError,
+  invalidCredentialsError,
+  authenticationError,
+  refreshTokenInvalidError,
+  serverError,
+} from "../utils/error-factories.js";
+import { generateAccessToken,generateRefreshToken,verifyRefreshToken } from "../utils/jwt.js";
+import { hashRefreshToken,getRefreshTokenExpiration,sanitizeUser } from "../utils/auth-helpers.js";
 
 // Create a new user account with the default role.
 export const register = async (userData) => {
@@ -16,20 +18,12 @@ export const register = async (userData) => {
     logger.warn("Registration failed - duplicate email", {
       email: userData.email,
     });
-    throw new ApiError(
-      API_ERROR_CODES.DUPLICATE_RESOURCE,
-      "User with this email already exists",
-      400
-    );
+    throw duplicateResourceError("User", "email");
   }
 
   const defaultRole = await Role.findOne({ name: "user" });
   if (!defaultRole) {
-    throw new ApiError(
-      API_ERROR_CODES.SERVER_ERROR,
-      "Default role not found",
-      500
-    );
+    throw serverError("Default role not found");
   }
 
   const user = await User.create({
@@ -41,8 +35,7 @@ export const register = async (userData) => {
   });
 
   // Remove password from response
-  const userObject = user.toObject();
-  delete userObject.password;
+  const userObject = sanitizeUser(user);
 
   logger.info("User registered successfully", {
     userId: user._id,
@@ -63,35 +56,23 @@ export const login = async (email, password) => {
 
   if (!user || !user.isActive) {
     logger.warn("Login failed - invalid credentials", { email });
-    throw new ApiError(
-      API_ERROR_CODES.INVALID_CREDENTIALS,
-      "Invalid credentials",
-      401
-    );
+    throw invalidCredentialsError();
   }
 
   const isPasswordValid = await comparePassword(password, user.password);
   if (!isPasswordValid) {
     logger.warn("Login failed - invalid password", { email });
-    throw new ApiError(
-      API_ERROR_CODES.INVALID_CREDENTIALS,
-      "Invalid credentials",
-      401
-    );
+    throw invalidCredentialsError();
   }
 
   const accessToken = generateAccessToken({ userId: user._id.toString() });
   const refreshToken = generateRefreshToken({ userId: user._id.toString() });
 
-  const expiresAt = new Date();
-  expiresAt.setDate(expiresAt.getDate() + 7);
+  const expiresAt = getRefreshTokenExpiration();
 
   // Store only a hashed representation of the refresh token to reduce
   // risk if the database is compromised.
-  const tokenHash = crypto
-    .createHash("sha256")
-    .update(refreshToken)
-    .digest("hex");
+  const tokenHash = hashRefreshToken(refreshToken);
 
   await RefreshToken.create({
     token: tokenHash,
@@ -102,8 +83,7 @@ export const login = async (email, password) => {
   await user.updateOne({ lastLogin: new Date() });
 
   // Remove password from response
-  const userObject = user.toObject();
-  delete userObject.password;
+  const userObject = sanitizeUser(user);
 
   logger.info("User logged in successfully", {
     userId: user._id,
@@ -116,10 +96,7 @@ export const login = async (email, password) => {
 // Revoke a refresh token to log out a user.
 export const logout = async (userId, refreshToken) => {
   if (refreshToken) {
-    const tokenHash = crypto
-      .createHash("sha256")
-      .update(refreshToken)
-      .digest("hex");
+    const tokenHash = hashRefreshToken(refreshToken);
 
     await RefreshToken.updateOne(
       { token: tokenHash, user: userId },
@@ -135,10 +112,7 @@ export const refreshAccessToken = async (oldRefreshToken) => {
 
   // Use a hashed token lookup and atomically mark the token revoked to
   // prevent replay attacks/race conditions.
-  const tokenHash = crypto
-    .createHash("sha256")
-    .update(oldRefreshToken)
-    .digest("hex");
+  const tokenHash = hashRefreshToken(oldRefreshToken);
 
   const tokenRecord = await RefreshToken.findOneAndUpdate(
     {
@@ -151,32 +125,18 @@ export const refreshAccessToken = async (oldRefreshToken) => {
   );
 
   if (!tokenRecord) {
-    throw new ApiError(
-      API_ERROR_CODES.REFRESH_TOKEN_INVALID,
-      "Invalid or already used/expired refresh token",
-      401
-    );
+    throw refreshTokenInvalidError("Invalid or already used/expired refresh token");
   }
 
   const user = await User.findById(decoded.userId);
   if (!user || !user.isActive) {
-    throw new ApiError(
-      API_ERROR_CODES.AUTHENTICATION_ERROR,
-      "User not found or inactive",
-      401
-    );
+    throw authenticationError();
   }
 
   const newAccessToken = generateAccessToken({ userId: user._id.toString() });
   const newRefreshToken = generateRefreshToken({ userId: user._id.toString() });
-
-  const expiresAt = new Date();
-  expiresAt.setDate(expiresAt.getDate() + 7);
-
-  const newTokenHash = crypto
-    .createHash("sha256")
-    .update(newRefreshToken)
-    .digest("hex");
+  const expiresAt = getRefreshTokenExpiration();
+  const newTokenHash = hashRefreshToken(newRefreshToken);
 
   await RefreshToken.create({
     token: newTokenHash,

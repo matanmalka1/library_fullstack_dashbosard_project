@@ -1,5 +1,6 @@
 import { Book, Wishlist } from "../models/index.js";
 import { ApiError, API_ERROR_CODES } from "../constants/api-error-codes.js";
+import { resourceNotFoundError } from "../utils/error-factories.js";
 
 const mapWishlistItems = (items = []) =>
   items.map((item) => item.book?.toString() || item.book?._id?.toString());
@@ -13,11 +14,7 @@ export const getWishlist = async (userId) => {
 export const toggleWishlist = async (userId, bookId) => {
   const exists = await Book.exists({ _id: bookId });
   if (!exists) {
-    throw new ApiError(
-      API_ERROR_CODES.RESOURCE_NOT_FOUND,
-      "Book not found",
-      404
-    );
+    throw resourceNotFoundError("Book");
   }
 
   const wishlist = await Wishlist.findOne({ user: userId });

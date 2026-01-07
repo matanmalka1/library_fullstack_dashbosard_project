@@ -1,6 +1,7 @@
 import { Book, Cart } from "../models/index.js";
 import { ApiError, API_ERROR_CODES } from "../constants/api-error-codes.js";
 import { mapItemWithBook } from "../utils/normalize.js";
+import { validationError } from "../utils/error-factories.js";
 
 const mapCartItems = (items) => items.map(mapItemWithBook);
 
@@ -23,11 +24,7 @@ export const saveCart = async (userId, items = []) => {
 
   const hasInvalid = bookIds.some((id) => !validBookIds.has(id));
   if (hasInvalid) {
-    throw new ApiError(
-      API_ERROR_CODES.VALIDATION_ERROR,
-      "One or more books do not exist",
-      400
-    );
+    throw validationError("One or more books do not exist");
   }
 
   const payload = items.map((item) => ({

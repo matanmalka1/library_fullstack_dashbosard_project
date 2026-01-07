@@ -1,6 +1,7 @@
 import { Book, Review, Category } from "../models/index.js";
 import { ApiError, API_ERROR_CODES } from "../constants/api-error-codes.js";
 import { parsePaginationParams,buildPaginationMeta } from "../utils/pagination.js";
+import { resourceNotFoundError } from "../utils/error-factories.js";
 
 const buildSearchFilter = ({ search, category }) => {
   const filter = {};
@@ -60,11 +61,7 @@ export const getAllBooks = async (query) => {
 export const getBookById = async (id) => {
   const book = await Book.findById(id).populate(populateReviews()).lean();
   if (!book) {
-    throw new ApiError(
-      API_ERROR_CODES.RESOURCE_NOT_FOUND,
-      "Book not found",
-      404
-    );
+    throw resourceNotFoundError("Book");
   }
   return book;
 };
@@ -88,11 +85,7 @@ export const updateBook = async (id, data) => {
     runValidators: true,
   });
   if (!book) {
-    throw new ApiError(
-      API_ERROR_CODES.RESOURCE_NOT_FOUND,
-      "Book not found",
-      404
-    );
+    throw resourceNotFoundError("Book");
   }
 
   return book;
@@ -101,11 +94,7 @@ export const updateBook = async (id, data) => {
 export const deleteBook = async (id) => {
   const book = await Book.findById(id);
   if (!book) {
-    throw new ApiError(
-      API_ERROR_CODES.RESOURCE_NOT_FOUND,
-      "Book not found",
-      404
-    );
+    throw resourceNotFoundError("Book");
   }
 
   await Review.deleteMany({ book: id });
