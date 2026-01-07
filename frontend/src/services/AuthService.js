@@ -8,6 +8,7 @@ import { BaseService } from "./BaseService";
 class AuthServiceClass extends BaseService {
   constructor() {
     super();
+    this.httpClient = httpClient;
     this.roleIdByName = new Map();
   }
 
@@ -21,44 +22,54 @@ class AuthServiceClass extends BaseService {
       "Refresh token failed."
     );
   }
+
   login(email, password) {
-    return this.handleRequest(async () => {
-      const { data } = await httpClient.post("/auth/login", {
-        email,
-        password,
-      });
-      const user = normalizeUser(data?.data?.user, {
-        normalizeRole,
-        roleIdByName: this.roleIdByName,
-      });
-      const token = data?.data?.accessToken || null;
-      const auth = buildAuth(user, token);
-      setAuthState(auth);
-      return auth;
-    }, "Login failed.");
+    return this.handlePost(
+      "/auth/login",
+      { email, password },
+      {
+        normalize: (data) => {
+          const user = normalizeUser(data?.user, {
+            normalizeRole,
+            roleIdByName: this.roleIdByName,
+          });
+          const token = data?.accessToken || null;
+          const auth = buildAuth(user, token);
+          setAuthState(auth);
+          return auth;
+        },
+        fallback: "Login failed.",
+      }
+    );
   }
 
-  register(firstName, lastName, email, password) {
-    return this.handleRequest(async () => {
-      await httpClient.post("/auth/register", {
+  async register(firstName, lastName, email, password) {
+    await this.handlePost(
+      "/auth/register",
+      {
         firstName,
         lastName,
         email,
         password,
-      });
-      return this.login(email, password);
-    }, "Registration failed.");
+      },
+      { fallback: "Registration failed." }
+    );
+    // After successful registration, auto-login
+    return this.login(email, password);
   }
 
   logout() {
-    return this.handleRequest(async () => {
-      try {
-        await httpClient.post("/auth/logout");
-      } finally {
-        forceLogout();
+    return this.handlePost(
+      "/auth/logout",
+      {},
+      {
+        normalize: () => {
+          forceLogout();
+          return true;
+        },
+        fallback: "Logout failed.",
       }
-      return true;
-    }, "Logout failed.");
+    );
   }
 }
 

@@ -1,41 +1,49 @@
 import { httpClient } from "./shared/httpClient";
-import { normalizeUser } from "./shared/normalize";
+import { normalizeUser, normalizeRole } from "./shared/normalize";
 import { BaseService } from "./BaseService";
 
 class UsersServiceClass extends BaseService {
+  constructor() {
+    super();
+    this.httpClient = httpClient;
+    this.roleIdByName = new Map();
+  }
+
   getUsers() {
-    return this.handleRequest(async () => {
-      const { data } = await httpClient.get("/users");
-      const users = data?.data?.users || [];
-      return users.map((user) => normalizeUser(user));
-    }, "Unable to load users.");
+    return this.handleGetList("/users", {
+      dataKey: "users",
+      normalize: (user) => normalizeUser(user),
+      fallback: "Unable to load users."
+    });
   }
 
   createUser(payload) {
-    return this.handleRequest(async () => {
-      const { data } = await httpClient.post("/users", payload);
-      return normalizeUser(data?.data?.user, {
-        normalizeRole,
-        roleIdByName: this.roleIdByName,
-      });
-    }, "Unable to create user.");
+    return this.handlePost("/users", 
+      payload,
+      {
+        normalize: (data) => normalizeUser(data?.user, {
+          normalizeRole,
+          roleIdByName: this.roleIdByName,
+        }),
+        fallback: "Unable to create user."
+      }
+    );
   }
 
   getUserById(userId) {
-    return this.handleRequest(async () => {
-      const { data } = await httpClient.get(`/users/${userId}`);
-      return normalizeUser(data?.data?.user, {
+    return this.handleGet(`/users/${userId}`, {
+      normalize: (data) => normalizeUser(data?.user, {
         normalizeRole,
         roleIdByName: this.roleIdByName,
-      });
-    }, "Unable to load user.");
+      }),
+      fallback: "Unable to load user."
+    });
   }
 
   deleteUser(userId) {
-    return this.handleRequest(async () => {
-      await httpClient.delete(`/users/${userId}`);
-      return true;
-    }, "Unable to delete user.");
+    return this.handleDelete(`/users/${userId}`, {
+      fallback: "Unable to delete user."
+    });
   }
 }
 

@@ -6,14 +6,12 @@ export class ErrorBoundary extends React.Component {
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError() {
-    return { hasError: true };
-  }
+  // static getDerivedStateFromError(error) {
+  //   return { hasError: true ,error};
+  // }
 
   componentDidCatch(error, info) {
-    if (typeof this.props.onError === "function") {
-      this.props.onError(error, info);
-    }
+    console.error("ErrorBoundary caught:", error, info);
   }
 
   handleReload = () => {

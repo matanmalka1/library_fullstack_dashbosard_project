@@ -2,17 +2,23 @@ import { httpClient } from "./shared/httpClient";
 import { BaseService } from "./BaseService";
 
 class UploadServiceClass extends BaseService {
+  constructor() {
+    super();
+    this.httpClient = httpClient;
+  }
+
   uploadFile(file) {
-    return this.handleRequest(async () => {
-      const formData = new FormData();
-      formData.append("file", file);
-      const { data } = await httpClient.post("/upload", formData, {
+    const formData = new FormData();
+    formData.append("file", file);
+    return this.handlePost("/upload", formData, {
+      normalize: (data) => data?.filePath || data?.url || null,
+      fallback: "Unable to upload file.",
+      config: {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      });
-      return data?.data?.filePath || data?.data?.url || null;
-    }, "Unable to upload file.");
+      },
+    });
   }
 }
 

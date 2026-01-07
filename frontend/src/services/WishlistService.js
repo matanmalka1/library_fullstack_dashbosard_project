@@ -3,25 +3,33 @@ import { normalizeIds } from "./shared/normalize";
 import { BaseService } from "./BaseService";
 
 class WishlistServiceClass extends BaseService {
+  constructor() {
+    super();
+    this.httpClient = httpClient;
+  }
+
   getWishlist() {
-    return this.handleRequest(async () => {
-      const { data } = await httpClient.get("/wishlist");
-      return normalizeIds(data?.data?.items || []);
-    }, "Unable to load wishlist.");
+    return this.handleGetList("/wishlist", {
+      dataKey: "items",
+      normalize: (items) => normalizeIds(items),
+      fallback: "Unable to load wishlist."
+    });
   }
 
   toggleWishlist(_userId, bookId) {
-    return this.handleRequest(async () => {
-      const { data } = await httpClient.post("/wishlist/toggle", { bookId });
-      return normalizeIds(data?.data?.items || []);
-    }, "Unable to update wishlist.");
+    return this.handlePost("/wishlist/toggle", 
+      { bookId },
+      {
+        normalize: (data) => normalizeIds(data?.items || []),
+        fallback: "Unable to update wishlist."
+      }
+    );
   }
 
   clearWishlist() {
-    return this.handleRequest(async () => {
-      await httpClient.delete("/wishlist");
-      return true;
-    }, "Unable to clear wishlist.");
+    return this.handleDelete("/wishlist", {
+      fallback: "Unable to clear wishlist."
+    });
   }
 }
 
