@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { bookService } from "../../services/BookService";
+import { categoryService } from "../../services/CategoryService";
 import { wishlistService } from "../../services/WishlistService";
 import { BookCard } from "../../components/book/BookCard/BookCard";
 import { useAuth } from "../../context/auth/AuthContext";
@@ -110,8 +111,8 @@ export const Books = () => {
                     onClick={() => setCat(c)}
                     className={`w-full text-left border-0 bg-transparent px-3 py-2 rounded-[12px] text-sm font-medium cursor-pointer transition ${
                       cat === c
-                        ? "bg-indigo-600 text-white shadow-[0_12px_20px_rgba(79,70,229,0.2)]"
-                        : "text-slate-500 hover:bg-slate-50"
+                        ? "bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-none"
+                        : "text-slate-700 hover:bg-slate-50"
                     }`}
                     type="button"
                   >

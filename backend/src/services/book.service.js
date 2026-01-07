@@ -1,5 +1,6 @@
 import { Book, Review, Category } from "../models/index.js";
 import { ApiError, API_ERROR_CODES } from "../constants/api-error-codes.js";
+import { parsePaginationParams,buildPaginationMeta } from "../utils/pagination.js";
 
 const buildSearchFilter = ({ search, category }) => {
   const filter = {};
@@ -26,9 +27,10 @@ const populateReviews = () => ({
 });
 
 export const getAllBooks = async (query) => {
-  const page = Math.max(1, parseInt(query.page, 10) || 1);
-  const limit = Math.min(200, Math.max(1, parseInt(query.limit, 10) || 20));
-  const skip = (page - 1) * limit;
+  const { page, limit, skip } = parsePaginationParams(query, {
+    defaultLimit: 20,
+    maxLimit: 200,
+  });
   const includeReviews = query.includeReviews !== "false";
 
   const filter = buildSearchFilter(query);
@@ -51,10 +53,7 @@ export const getAllBooks = async (query) => {
 
   return {
     books,
-    count,
-    page,
-    limit,
-    totalPages: Math.ceil(count / limit),
+    ...buildPaginationMeta(page, limit, count),
   };
 };
 

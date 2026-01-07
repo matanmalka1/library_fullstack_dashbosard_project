@@ -1,14 +1,14 @@
-// LocalStorage utilities
+// SessionStorage utilities
 const getDefaultValue = () => [];
 
 export const getStorageItem = (key) => {
   try {
-    const value = localStorage.getItem(key);
+    const value = sessionStorage.getItem(key);
     if (!value) return getDefaultValue();
     return JSON.parse(value);
   } catch (error) {
     if (process.env.NODE_ENV === "development") {
-      console.warn(`Failed to parse ${key} from localStorage:`, error);
+      console.warn(`Failed to parse ${key} from sessionStorage:`, error);
     }
     return getDefaultValue();
   }
@@ -16,20 +16,20 @@ export const getStorageItem = (key) => {
 
 export const setStorageItem = (key, data) => {
   try {
-    localStorage.setItem(key, JSON.stringify(data));
+    sessionStorage.setItem(key, JSON.stringify(data));
   } catch (error) {
     if (process.env.NODE_ENV === "development") {
-      console.warn(`Failed to set ${key} in localStorage:`, error);
+      console.warn(`Failed to set ${key} in sessionStorage:`, error);
     }
   }
 };
 
 export const removeStorageItem = (key) => {
   try {
-    localStorage.removeItem(key);
+    sessionStorage.removeItem(key);
   } catch (error) {
     if (process.env.NODE_ENV === "development") {
-      console.warn(`Failed to remove ${key} from localStorage:`, error);
+      console.warn(`Failed to remove ${key} from sessionStorage:`, error);
     }
   }
 };

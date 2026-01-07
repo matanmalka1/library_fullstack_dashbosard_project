@@ -31,6 +31,27 @@ npm run dev
 
 Open the printed local URL in your browser.
 
+## Docker
+
+Build a production image (static files served by Nginx):
+
+```bash
+docker build \
+  --build-arg VITE_API_BASE_URL=http://localhost:3000/api/v1 \
+  -t bookstore-frontend:latest .
+```
+
+Run the container (serves on host port 5173):
+
+```bash
+docker run --rm -p 5173:80 bookstore-frontend:latest
+```
+
+Notes:
+
+- The `VITE_API_BASE_URL` build-arg is injected at build time for Vite. Set it to your backend’s public URL.
+- The container serves static files via Nginx with SPA fallback configured.
+
 ## Scripts
 
 ```bash

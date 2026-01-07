@@ -1,10 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { UserRole } from "../../types";
 import { authService } from "../../services/AuthService";
-import {
-  clearLegacyAuthStorage,
-  subscribeAuthState,
-} from "../../services/auth/authStore";
+import { subscribeAuthState } from "../../services/auth/authStore";
 import { getTokenExpiry, isTokenExpired } from "../../services/auth/authUtils";
 import { normalizeRole } from "../../services/shared/normalize";
 
@@ -22,7 +19,6 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     let isActive = true;
     const hydrateAuth = async () => {
-      clearLegacyAuthStorage();
       const stored = authService.getStoredAuth();
 
       if (stored?.token && !isTokenExpired(stored.token)) {

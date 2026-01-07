@@ -16,7 +16,6 @@ const cookieOptions = {
 // Handle registration request.
 export const register = asyncHandler(async (req, res) => {
   const { user } = await authService.register(req.body);
-
   successResponse(res, { user }, "User registered successfully", 201);
 });
 
@@ -29,7 +28,6 @@ export const login = asyncHandler(async (req, res) => {
   );
 
   res.cookie("refreshToken", refreshToken, cookieOptions);
-
   successResponse(res, { user, accessToken }, "Login successful");
 });
 
@@ -39,7 +37,6 @@ export const logout = asyncHandler(async (req, res) => {
   await authService.logout(req.user.id, refreshToken);
 
   res.clearCookie("refreshToken", cookieOptions);
-
   successResponse(res, null, "Logout successful");
 });
 
@@ -59,15 +56,10 @@ export const refresh = asyncHandler(async (req, res) => {
   );
 
   res.cookie("refreshToken", refreshToken, cookieOptions);
-
   successResponse(res, { accessToken }, "Token refreshed successfully");
 });
 
 // Return the authenticated user's profile.
 export const me = asyncHandler(async (req, res) => {
-  successResponse(
-    res,
-    { user: req.user },
-    "User profile retrieved successfully"
-  );
+  successResponse(res,{ user: req.user },"User profile retrieved successfully");
 });

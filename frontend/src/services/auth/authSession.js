@@ -1,10 +1,5 @@
 import { buildAuth, getStoredAuth, getTokenExpiry } from "./authUtils";
-import {
-  clearAuthState,
-  clearLegacyAuthStorage,
-  getAccessToken,
-  setAuthState,
-} from "./authStore";
+import { clearAuthState, getAccessToken, setAuthState } from "./authStore";
 import { httpClient } from "../shared/httpClient";
 
 const REFRESH_THRESHOLD_MS = 60 * 1000;
@@ -65,5 +60,4 @@ export const ensureFreshAccessToken = async (currentAuth) => {
 
 export const forceLogout = () => {
   clearAuthState();
-  clearLegacyAuthStorage();
 };

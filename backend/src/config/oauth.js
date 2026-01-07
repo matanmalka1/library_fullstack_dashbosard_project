@@ -10,7 +10,6 @@ const findOrCreateUser = async (profile, provider) => {
     let user = await User.findOne({ [oauthField]: profile.id });
 
     if (user) {
-      // Update last login
       user.lastLogin = new Date();
       await user.save();
       return user;
@@ -21,7 +20,6 @@ const findOrCreateUser = async (profile, provider) => {
     user = await User.findOne({ email });
 
     if (user) {
-      // Link OAuth to existing user
       if (!user.oauth) user.oauth = {};
       user.oauth[provider] = {
         id: profile.id,
@@ -33,10 +31,8 @@ const findOrCreateUser = async (profile, provider) => {
     }
 
     // Create new user
-    const defaultRole = await Role.findOne({ name: "USER" });
-    if (!defaultRole) {
-      throw new Error("Default USER role not found. Run database seed.");
-    }
+    const role = await Role.findOne({ name: "USER" });
+    if (!role) throw new Error("Default USER role not found. Run database seed.");
 
     const firstName =
       profile.name?.givenName || profile.displayName?.split(" ")?.[0] || "User";
@@ -50,8 +46,8 @@ const findOrCreateUser = async (profile, provider) => {
       email: newEmail,
       firstName,
       lastName,
-      password: `oauth-${provider}-${profile.id}`, // Dummy password, user won't login with it
-      role: defaultRole._id,
+      password: `oauth-${provider}-${profile.id}`, 
+      role: role._id,
       oauth: {
         [provider]: {
           id: profile.id,
@@ -83,9 +79,7 @@ export const configureGoogleStrategy = () => {
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: `${
-          process.env.API_URL || "http://localhost:3000/api/v1"
-        }/auth/google/callback`,
+        callbackURL: `${process.env.API_URL || "http://localhost:3000/api/v1"}/auth/google/callback`,
       },
       async (accessToken, refreshToken, profile, done) => {
         try {

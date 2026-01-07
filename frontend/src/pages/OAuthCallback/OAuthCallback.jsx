@@ -44,9 +44,8 @@ export const OAuthCallback = () => {
               if (user) {
                 // Build auth object with user and token
                 const auth = buildAuth(user, accessToken);
-                // Store in auth context and localStorage
+  
                 setAuthState(auth);
-                // Clear hash from URL
                 window.history.replaceState(
                   {},
                   document.title,

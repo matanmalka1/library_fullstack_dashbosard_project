@@ -14,7 +14,6 @@ if (!existsSync(uploadDir)) {
 
 // Configure disk storage for uploaded files.
 const storage = multer.diskStorage({
-  // Resolve upload destination folder.
   destination: (_req, _file, cb) => {
     cb(null, uploadDir);
   },
@@ -26,9 +25,12 @@ const storage = multer.diskStorage({
   },
 });
 
-// Multer middleware with storage only; validation happens in uploadValidate.
+// Multer middleware with storage and file size limits.
 export const upload = multer({
   storage,
+  limits: {
+    fileSize: +process.env.MAX_FILE_SIZE || 5 * 1024 * 1024, // 5MB default
+  },
 });
 
 // Translate multer errors into ApiError responses.

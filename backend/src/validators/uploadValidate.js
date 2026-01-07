@@ -13,20 +13,11 @@ export const validateUpload = async (req, _res, next) => {
     const allowedTypes = process.env.ALLOWED_FILE_TYPES
       ? process.env.ALLOWED_FILE_TYPES.split(",").map((value) => value.trim())
       : ["image/jpeg", "image/png", "image/gif", "application/pdf"];
-      
-    const maxFileSize = +process.env.MAX_FILE_SIZE || 5 * 1024 * 1024;
 
     if (!allowedTypes.includes(req.file.mimetype)) {
       errors.push({
         field: "file",
         message: `File type ${req.file.mimetype} is not allowed`,
-      });
-    }
-
-    if (req.file.size > maxFileSize) {
-      errors.push({
-        field: "file",
-        message: `File size exceeds maximum allowed size of ${maxFileSize} bytes`,
       });
     }
   }

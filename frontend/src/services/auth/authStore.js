@@ -17,10 +17,10 @@ const normalizeAuthState = (nextState) => {
   };
 };
 
-// Initialize auth state from localStorage on module load
+// Initialize auth state from sessionStorage on module load
 const loadAuthFromStorage = () => {
   try {
-    const raw = localStorage.getItem(AUTH_STORAGE_KEY);
+    const raw = sessionStorage.getItem(AUTH_STORAGE_KEY);
     if (!raw) return { ...emptyAuthState };
     const parsed = JSON.parse(raw);
     if (parsed?.user || parsed?.token) {
@@ -43,12 +43,12 @@ export const getAuthState = () => authState;
 
 export const setAuthState = (nextState) => {
   authState = normalizeAuthState(nextState);
-  // Persist to localStorage
+  // Persist to sessionStorage
   try {
     if (authState.isAuthenticated) {
-      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(authState));
+      sessionStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(authState));
     } else {
-      localStorage.removeItem(AUTH_STORAGE_KEY);
+      sessionStorage.removeItem(AUTH_STORAGE_KEY);
     }
   } catch {
     // Ignore storage errors
@@ -69,7 +69,7 @@ export const setAccessToken = (token) => {
 export const clearAuthState = () => {
   authState = { ...emptyAuthState };
   try {
-    localStorage.removeItem(AUTH_STORAGE_KEY);
+    sessionStorage.removeItem(AUTH_STORAGE_KEY);
   } catch {
     // Ignore storage errors
   }
@@ -81,11 +81,4 @@ export const getAccessToken = () => authState.token || null;
 export const subscribeAuthState = (listener) => {
   listeners.add(listener);
   return () => listeners.delete(listener);
-};
-
-export const clearLegacyAuthStorage = () => {
-  try {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-  } catch {}
 };

@@ -1,6 +1,7 @@
 import { User, Role } from "../models/index.js";
 import { ApiError, API_ERROR_CODES } from "../constants/api-error-codes.js";
 import { hashPassword } from "../utils/password.js";
+import {parsePaginationParams,buildPaginationMeta,} from "../utils/pagination.js";
 
 // CREATE
 // Create a new user with role validation.
@@ -39,9 +40,10 @@ export const createUser = async (userData) => {
 // READ ALL (with pagination)
 // Fetch paginated users with role names.
 export const getAllUsers = async (query) => {
-  const page = Math.max(1, parseInt(query.page) || 1);
-  const limit = Math.min(100, Math.max(1, parseInt(query.limit) || 10));
-  const skip = (page - 1) * limit;
+  const { page, limit, skip } = parsePaginationParams(query, {
+    defaultLimit: 10,
+    maxLimit: 100,
+  });
 
   const [users, count] = await Promise.all([
     User.find()
@@ -54,11 +56,8 @@ export const getAllUsers = async (query) => {
   ]);
 
   return {
-    count,
     users,
-    page,
-    limit,
-    totalPages: Math.ceil(count / limit),
+    ...buildPaginationMeta(page, limit, count),
   };
 };
 
