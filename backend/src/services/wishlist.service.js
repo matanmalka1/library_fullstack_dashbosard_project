@@ -1,5 +1,4 @@
 import { Book, Wishlist } from "../models/index.js";
-import { ApiError, API_ERROR_CODES } from "../constants/api-error-codes.js";
 import { resourceNotFoundError } from "../utils/error-factories.js";
 
 const mapWishlistItems = (items = []) =>

@@ -1,4 +1,13 @@
-import { ApiError, API_ERROR_CODES } from "../constants/api-error-codes.js";
+import { API_ERROR_CODES } from "../constants/api-error-codes.js";
+
+export class ApiError extends Error {
+  constructor(code, message, statusCode = 500, details = null) {
+    super(message);
+    this.code = code;
+    this.statusCode = statusCode;
+    this.details = details;
+  }
+}
 
 export const resourceNotFoundError = (resourceName, id = null) => {
   const message = id
@@ -39,9 +48,7 @@ export const validationErrorWithDetails = (details,message = "Validation failed"
   });
 };
 
-export const refreshTokenInvalidError = (
-  message = "Invalid or expired refresh token"
-) => {
+export const refreshTokenInvalidError = (message = "Invalid or expired refresh token") => {
   return new ApiError(API_ERROR_CODES.REFRESH_TOKEN_INVALID, message, 401);
 };
 

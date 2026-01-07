@@ -34,19 +34,15 @@ const findOrCreateUser = async (profile, provider) => {
     const role = await Role.findOne({ name: "USER" });
     if (!role) throw new Error("Default USER role not found. Run database seed.");
 
-    const firstName =
-      profile.name?.givenName || profile.displayName?.split(" ")?.[0] || "User";
-    const lastName =
-      profile.name?.familyName ||
-      profile.displayName?.split(" ")?.[1] ||
-      "User";
+    const firstName = profile.name?.givenName || profile.displayName?.split(" ")?.[0] || "User";
+    const lastName = profile.name?.familyName || profile.displayName?.split(" ")?.[1] || "User";
     const newEmail = email || `${provider}-${profile.id}@oauth.local`;
 
     const newUser = await User.create({
       email: newEmail,
       firstName,
       lastName,
-      password: `oauth-${provider}-${profile.id}`, 
+      password: `oauth-${provider}-${profile.id}`,
       role: role._id,
       oauth: {
         [provider]: {
@@ -66,24 +62,25 @@ const findOrCreateUser = async (profile, provider) => {
   }
 };
 
-export const configureGoogleStrategy = () => {
-  if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
-    logger.warn(
-      "Google OAuth: GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET not set. Google login disabled."
-    );
+const configureOAuthStrategy = (provider,Strategy,clientIdEnv,clientSecretEnv) => {
+  const clientID = process.env[clientIdEnv];
+  const clientSecret = process.env[clientSecretEnv];
+
+  if (!clientID || !clientSecret) {
+    logger.warn(`${provider} OAuth: ${clientIdEnv} or ${clientSecretEnv} not set. ${provider} login disabled.`);
     return;
   }
 
   passport.use(
-    new GoogleOAuth2Strategy(
+    new Strategy(
       {
-        clientID: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: `${process.env.API_URL || "http://localhost:3000/api/v1"}/auth/google/callback`,
+        clientID,
+        clientSecret,
+        callbackURL: `${process.env.API_URL || "http://localhost:3000/api/v1"}/auth/${provider.toLowerCase()}/callback`,
       },
-      async (accessToken, refreshToken, profile, done) => {
+      async (_accessToken, _refreshToken, profile, done) => {
         try {
-          const user = await findOrCreateUser(profile, "google");
+          const user = await findOrCreateUser(profile, provider.toLowerCase());
           return done(null, user);
         } catch (error) {
           return done(error);
@@ -91,39 +88,15 @@ export const configureGoogleStrategy = () => {
       }
     )
   );
+  logger.info(`${provider} OAuth strategy configured`);
+};
 
-  logger.info("Google OAuth strategy configured");
+export const configureGoogleStrategy = () => {
+  configureOAuthStrategy("Google",GoogleOAuth2Strategy,"GOOGLE_CLIENT_ID","GOOGLE_CLIENT_SECRET");
 };
 
 export const configureGitHubStrategy = () => {
-  if (!process.env.GITHUB_CLIENT_ID || !process.env.GITHUB_CLIENT_SECRET) {
-    logger.warn(
-      "GitHub OAuth: GITHUB_CLIENT_ID or GITHUB_CLIENT_SECRET not set. GitHub login disabled."
-    );
-    return;
-  }
-
-  passport.use(
-    new GitHubOAuth2Strategy(
-      {
-        clientID: process.env.GITHUB_CLIENT_ID,
-        clientSecret: process.env.GITHUB_CLIENT_SECRET,
-        callbackURL: `${
-          process.env.API_URL || "http://localhost:3000/api/v1"
-        }/auth/github/callback`,
-      },
-      async (accessToken, refreshToken, profile, done) => {
-        try {
-          const user = await findOrCreateUser(profile, "github");
-          return done(null, user);
-        } catch (error) {
-          return done(error);
-        }
-      }
-    )
-  );
-
-  logger.info("GitHub OAuth strategy configured");
+  configureOAuthStrategy("GitHub",GitHubOAuth2Strategy,"GITHUB_CLIENT_ID","GITHUB_CLIENT_SECRET");
 };
 
 passport.serializeUser((user, done) => {

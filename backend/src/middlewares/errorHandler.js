@@ -1,4 +1,4 @@
-import { ApiError, API_ERROR_CODES } from '../constants/api-error-codes.js';
+import { ApiError, serverError } from '../utils/error-factories.js';
 import { errorResponse } from '../utils/response.js';
 import { logger } from '../utils/logger.js';
 
@@ -9,12 +9,11 @@ export const errorHandler = (err, req, res, _next) => {
   if (!(error instanceof ApiError)) {
     const statusCode = error.statusCode || 500;
     const message = error.message || 'Internal server error';
-    error = new ApiError(
-      API_ERROR_CODES.SERVER_ERROR,
-      message,
-      statusCode,
-      err instanceof Error ? err.stack : undefined
-    );
+    error = serverError(message);
+    error.statusCode = statusCode;
+    if (err instanceof Error) {
+      error.details = err.stack;
+    }
   }
 
   const { code, message, statusCode, details } = error;
