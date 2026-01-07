@@ -146,3 +146,26 @@ export const refreshAccessToken = async (oldRefreshToken) => {
 
   return { accessToken: newAccessToken, refreshToken: newRefreshToken };
 };
+
+// Handle OAuth login - generate tokens and store refresh token.
+export const handleOAuthLogin = async (user) => {
+  const accessToken = generateAccessToken({
+    userId: user._id.toString(),
+    email: user.email,
+  });
+  const refreshToken = generateRefreshToken({ userId: user._id.toString() });
+
+  const tokenHash = hashRefreshToken(refreshToken);
+  await RefreshToken.create({
+    token: tokenHash,
+    user: user._id,
+    expiresAt: getRefreshTokenExpiration(),
+  });
+
+  logger.info("OAuth login successful", {
+    userId: user._id,
+    email: user.email,
+  });
+
+  return { accessToken, refreshToken };
+};

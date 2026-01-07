@@ -1,29 +1,9 @@
 import express from "express";
 import passport from "passport";
-import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js";
-import { RefreshToken } from "../models/index.js";
 import { logger } from "../utils/logger.js";
-import { hashRefreshToken,getRefreshTokenExpiration } from "../utils/auth-helpers.js";
+import * as authService from "../services/auth.service.js";
 
 export const router = express.Router();
-
-
-
-// Redirects user to Google login consent screen
-router.get("/google",passport.authenticate("google", {scope: ["profile", "email"],})
-);
-
-
-// Called by Google after user grants permission
-router.get("/google/callback",passport.authenticate("google", { session: false }),handleOAuthCallback);
-
-// Redirects user to GitHub login consent screen
-router.get("/github",passport.authenticate("github", {scope: ["user:email"],})
-);
-
-
-// Called by GitHub after user grants permission
-router.get("/github/callback",passport.authenticate("github", { session: false }),handleOAuthCallback);
 
 const handleOAuthCallback = async (req, res) => {
   try {
@@ -34,22 +14,8 @@ const handleOAuthCallback = async (req, res) => {
       return res.redirect(`${process.env.FRONTEND_URL || "http://localhost:5173"}/login?error=auth_failed`);
     }
 
-    // Generate JWT tokens
-    // Use `userId` in payload to match verification logic elsewhere
-    const accessToken = generateAccessToken({
-      userId: user._id.toString(),
-      email: user.email,
-    });
-    const refreshToken = generateRefreshToken({ userId: user._id.toString() });
-
-    // Store only a hashed representation of the refresh token in DB.
-    const tokenHash = hashRefreshToken(refreshToken);
-
-    await RefreshToken.create({
-      token: tokenHash,
-      user: user._id,
-      expiresAt: getRefreshTokenExpiration()
-    });
+    // Use service to handle token generation and storage
+    const { accessToken, refreshToken } = await authService.handleOAuthLogin(user);
 
     const isProduction = process.env.NODE_ENV === "production";
     res.cookie("refreshToken", refreshToken, {
@@ -67,9 +33,6 @@ const handleOAuthCallback = async (req, res) => {
       accessToken
     )}&userId=${encodeURIComponent(user._id.toString())}`;
 
-    logger.info(
-      `OAuth login successful for user: ${user.email} - redirecting to frontend callback`
-    );
     res.redirect(redirectUrl);
   } catch (error) {
     logger.error("OAuth callback error:", error.message);
@@ -79,4 +42,30 @@ const handleOAuthCallback = async (req, res) => {
       }/login?error=server_error`
     );
   }
-}
+};
+
+// Redirects user to Google login consent screen
+router.get(
+  "/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+// Called by Google after user grants permission
+router.get(
+  "/google/callback",
+  passport.authenticate("google", { session: false }),
+  handleOAuthCallback
+);
+
+// Redirects user to GitHub login consent screen
+router.get(
+  "/github",
+  passport.authenticate("github", { scope: ["user:email"] })
+);
+
+// Called by GitHub after user grants permission
+router.get(
+  "/github/callback",
+  passport.authenticate("github", { session: false }),
+  handleOAuthCallback
+);
