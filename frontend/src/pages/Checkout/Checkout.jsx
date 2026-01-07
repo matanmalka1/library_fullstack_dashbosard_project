@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
 import { useCart } from "../../context/cart/CartContext";
@@ -21,6 +21,21 @@ export const Checkout = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("cod"); // 'cod' | 'card'
+  const [cardName, setCardName] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [cardExpiry, setCardExpiry] = useState("");
+  const [cardCvc, setCardCvc] = useState("");
+
+  const applySavedAddress = () => {
+    const addr = user?.defaultShippingAddress;
+    if (!addr) return;
+    setAddress(addr.street || "");
+    setCity(addr.city || "");
+    setZip(addr.zip || "");
+  };
+
+  // Removed auto-prefill. User can apply saved address on demand.
 
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
@@ -29,6 +44,16 @@ export const Checkout = () => {
     setLoading(true);
     setError("");
     try {
+      if (paymentMethod === "card") {
+        // Basic client-side validation for card details
+        const num = cardNumber.replace(/\s+/g, "");
+        const numberOk = /^\d{13,19}$/.test(num);
+        const expiryOk = /^(0[1-9]|1[0-2])\/(\d{2})$/.test(cardExpiry);
+        const cvcOk = /^\d{3,4}$/.test(cardCvc);
+        if (!cardName || !numberOk || !expiryOk || !cvcOk) {
+          throw new Error("Please enter valid credit card details.");
+        }
+      }
       const fullAddress = `${address}, ${city}, ${zip}`;
       await ordersService.placeOrder(user.id, items, totalPrice, fullAddress);
       setSuccess(true);
@@ -65,6 +90,18 @@ export const Checkout = () => {
           onAddressChange={setAddress}
           onCityChange={setCity}
           onZipChange={setZip}
+          paymentMethod={paymentMethod}
+          onPaymentMethodChange={setPaymentMethod}
+          cardName={cardName}
+          cardNumber={cardNumber}
+          cardExpiry={cardExpiry}
+          cardCvc={cardCvc}
+          onCardNameChange={setCardName}
+          onCardNumberChange={setCardNumber}
+          onCardExpiryChange={setCardExpiry}
+          onCardCvcChange={setCardCvc}
+          hasSavedAddress={!!user?.defaultShippingAddress}
+          onApplySavedAddress={applySavedAddress}
           onSubmit={handlePlaceOrder}
         />
         <CheckoutSummary

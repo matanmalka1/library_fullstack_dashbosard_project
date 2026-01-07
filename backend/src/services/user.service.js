@@ -1,7 +1,13 @@
 import { User, Role } from "../models/index.js";
 import { hashPassword } from "../utils/password.js";
-import { resourceNotFoundError,duplicateResourceError } from "../utils/error-factories.js";
-import { parsePaginationParams,buildPaginationMeta } from "../utils/pagination.js";
+import {
+  resourceNotFoundError,
+  duplicateResourceError,
+} from "../utils/error-factories.js";
+import {
+  parsePaginationParams,
+  buildPaginationMeta,
+} from "../utils/pagination.js";
 
 // CREATE
 // Create a new user with role validation.
@@ -13,7 +19,8 @@ export const createUser = async (userData) => {
   }
 
   // Password required for non-OAuth users
-  if (!userData.password) throw new Error("Password is required for email/password registration");
+  if (!userData.password)
+    throw new Error("Password is required for email/password registration");
 
   const role = await Role.findById(userData.roleId);
 

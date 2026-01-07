@@ -47,6 +47,28 @@ const userSchema = new mongoose.Schema(
         displayName: String,
       },
     },
+    phoneNumber: {
+      type: String,
+      default: null,
+      trim: true,
+    },
+    profilePicture: {
+      type: String, // Base64 or URL
+      default: null,
+    },
+    bio: {
+      type: String,
+      default: null,
+      trim: true,
+      maxlength: [300, "Bio cannot exceed 300 characters"],
+    },
+    defaultShippingAddress: {
+      street: String,
+      city: String,
+      state: String,
+      zip: String,
+      country: String,
+    },
   },
   {
     timestamps: true,

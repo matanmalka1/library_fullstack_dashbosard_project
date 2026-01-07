@@ -7,6 +7,7 @@ export const PersonalInfoForm = ({ user, onSuccess }) => {
   const { updateUser } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
+  const [saved, setSaved] = useState(false);
 
   const {
     register,
@@ -36,6 +37,8 @@ export const PersonalInfoForm = ({ user, onSuccess }) => {
       updateUser(updatedUser);
       onSuccess("Profile updated successfully!");
       reset(data);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
     } catch (error) {
       setFormError(error.message || "Failed to update profile.");
     } finally {
@@ -115,6 +118,9 @@ export const PersonalInfoForm = ({ user, onSuccess }) => {
       >
         {isSubmitting ? "Saving..." : "Save Changes"}
       </button>
+      {saved && (
+        <p className="text-sm text-emerald-600 mt-2">Saved</p>
+      )}
     </form>
   );
 };

@@ -1,5 +1,9 @@
 import { useAuth } from "../../context/auth/AuthContext";
 import { PersonalInfoForm } from "../../components/profile/PersonalInfoForm";
+import { ProfilePictureForm } from "../../components/profile/ProfilePictureForm";
+import { PhoneNumberForm } from "../../components/profile/PhoneNumberForm";
+import { ShippingAddressForm } from "../../components/profile/ShippingAddressForm";
+import { BioForm } from "../../components/profile/BioForm";
 import { PasswordChangeForm } from "../../components/profile/PasswordChangeForm";
 import { AlertBanner } from "../../components/ui/AlertBanner";
 import { useState } from "react";
@@ -27,11 +31,20 @@ export const Profile = () => {
       {showSuccess && (
         <AlertBanner
           message={successMessage}
-          className="mb-8 bg-green-50 border-green-200 text-green-800"
+          tone="success"
+          className="mb-8"
         />
       )}
 
-      <div className="grid gap-12 lg:grid-cols-[2fr_1fr]">
+      {/* Profile Picture Section */}
+      <div className="bg-white border border-slate-200 rounded-[32px] p-8 shadow-[0_8px_20px_rgba(15,23,42,0.05)] mb-12">
+        <h2 className="text-2xl font-bold text-slate-900 mb-6">
+          Profile Picture
+        </h2>
+        <ProfilePictureForm user={user} onSuccess={handleSuccess} />
+      </div>
+
+      <div className="grid gap-12 lg:grid-cols-2">
         {/* Personal Info Section */}
         <div className="bg-white border border-slate-200 rounded-[32px] p-8 shadow-[0_8px_20px_rgba(15,23,42,0.05)]">
           <h2 className="text-2xl font-bold text-slate-900 mb-6">
@@ -40,11 +53,31 @@ export const Profile = () => {
           <PersonalInfoForm user={user} onSuccess={handleSuccess} />
         </div>
 
+        {/* Phone Number Section */}
+        <div className="bg-white border border-slate-200 rounded-[32px] p-8 shadow-[0_8px_20px_rgba(15,23,42,0.05)]">
+          <h2 className="text-2xl font-bold text-slate-900 mb-6">Contact</h2>
+          <PhoneNumberForm user={user} onSuccess={handleSuccess} />
+        </div>
+
+        {/* Bio Section */}
+        <div className="bg-white border border-slate-200 rounded-[32px] p-8 shadow-[0_8px_20px_rgba(15,23,42,0.05)]">
+          <h2 className="text-2xl font-bold text-slate-900 mb-6">About You</h2>
+          <BioForm user={user} onSuccess={handleSuccess} />
+        </div>
+
         {/* Password Change Section */}
         <div className="bg-white border border-slate-200 rounded-[32px] p-8 shadow-[0_8px_20px_rgba(15,23,42,0.05)]">
           <h2 className="text-2xl font-bold text-slate-900 mb-6">Security</h2>
           <PasswordChangeForm user={user} onSuccess={handleSuccess} />
         </div>
+      </div>
+
+      {/* Shipping Address Section */}
+      <div className="mt-12 bg-white border border-slate-200 rounded-[32px] p-8 shadow-[0_8px_20px_rgba(15,23,42,0.05)]">
+        <h2 className="text-2xl font-bold text-slate-900 mb-6">
+          Default Shipping Address
+        </h2>
+        <ShippingAddressForm user={user} onSuccess={handleSuccess} />
       </div>
 
       {/* Account Info */}
