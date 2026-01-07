@@ -37,6 +37,16 @@ const userSchema = new mongoose.Schema(
     lastLogin: {
       type: Date,
     },
+    oauth: {
+      google: {
+        id: String,
+        displayName: String,
+      },
+      github: {
+        id: String,
+        displayName: String,
+      },
+    },
   },
   {
     timestamps: true,

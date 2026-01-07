@@ -6,6 +6,17 @@ const emptyAuthState = {
   isAuthenticated: false,
 };
 
+const normalizeAuthState = (nextState) => {
+  if (!nextState) return { ...emptyAuthState };
+  const user = nextState.user || null;
+  const token = nextState.token || null;
+  return {
+    user,
+    token,
+    isAuthenticated: Boolean(user && token),
+  };
+};
+
 // Initialize auth state from localStorage on module load
 const loadAuthFromStorage = () => {
   try {
@@ -23,17 +34,6 @@ const loadAuthFromStorage = () => {
 
 let authState = loadAuthFromStorage();
 const listeners = new Set();
-
-const normalizeAuthState = (nextState) => {
-  if (!nextState) return { ...emptyAuthState };
-  const user = nextState.user || null;
-  const token = nextState.token || null;
-  return {
-    user,
-    token,
-    isAuthenticated: Boolean(user && token),
-  };
-};
 
 const notify = () => {
   listeners.forEach((listener) => listener(authState));
@@ -84,6 +84,8 @@ export const subscribeAuthState = (listener) => {
 };
 
 export const clearLegacyAuthStorage = () => {
-  clearAuthState();
+  try {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+  } catch {}
 };
-

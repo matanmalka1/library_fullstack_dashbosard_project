@@ -1,6 +1,11 @@
 import { getApiErrorMessage, toApiError } from "./shared/error";
+import { httpClient } from "./shared/httpClient";
 
 export class BaseService {
+  constructor() {
+    this.httpClient = httpClient;
+  }
+
   async handleRequest(fn, fallback) {
     try {
       return await fn();

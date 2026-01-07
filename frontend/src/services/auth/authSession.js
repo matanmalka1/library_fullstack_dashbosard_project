@@ -13,9 +13,12 @@ let refreshPromise = null;
 
 const requestRefresh = async (currentAuth) => {
   // Use http instance with skipAuthRefresh to avoid infinite loop
-  const { data } = await httpClient.post("/auth/refresh", null, {
-    skipAuthRefresh: true,
-  });
+  const { data } = await httpClient.post("/auth/refresh",{},
+    {
+      skipAuthRefresh: true,
+      withCredentials: true,
+    }
+  );
   const token = data?.data?.accessToken;
   if (!token) {
     throw new Error("Token refresh failed");

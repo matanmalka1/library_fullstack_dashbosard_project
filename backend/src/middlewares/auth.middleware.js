@@ -1,6 +1,7 @@
 import { verifyAccessToken } from "../utils/jwt.js";
 import { ApiError, API_ERROR_CODES } from "../constants/api-error-codes.js";
 import { User } from "../models/index.js";
+import { logger } from "../utils/logger.js";
 
 // Authenticate request by validating JWT and loading user with role/permissions.
 export const authenticate = async (req, _res, next) => {
@@ -26,6 +27,16 @@ export const authenticate = async (req, _res, next) => {
       .lean();
 
     if (!user || !user.isActive) {
+      // Helpful debug log for tracing token -> DB user mapping issues
+      try {
+        logger.warn("Auth failed - token valid but user missing or inactive", {
+          tokenUserId: decoded?.userId,
+          tokenPayload: decoded,
+        });
+      } catch (logErr) {
+        // swallow logging errors to avoid breaking auth flow
+      }
+
       throw new ApiError(
         API_ERROR_CODES.AUTHENTICATION_ERROR,
         "User not found or inactive",

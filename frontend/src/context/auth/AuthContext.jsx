@@ -33,6 +33,14 @@ export const AuthProvider = ({ children }) => {
         return;
       }
 
+      // Only attempt refresh if we have stored auth (valid refresh token)
+      if (!stored) {
+        if (isActive) {
+          setIsAuthLoading(false);
+        }
+        return;
+      }
+
       try {
         const refreshed = await authService.refreshAccessToken(stored);
         if (isActive) {

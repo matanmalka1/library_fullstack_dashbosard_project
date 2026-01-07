@@ -19,16 +19,14 @@ if (!process.env.NODE_ENV && fs.existsSync(preferredDevEnv)) {
 }
 
 // Basic runtime validation for required environment variables and safe defaults.
-const requiredEnvs = [
-  "MONGODB_URI",
-  "JWT_ACCESS_SECRET",
-  "JWT_REFRESH_SECRET",
-];
+const requiredEnvs = ["MONGODB_URI", "JWT_ACCESS_SECRET", "JWT_REFRESH_SECRET"];
 
 const missing = requiredEnvs.filter((k) => !process.env[k]);
 
 if (missing.length) {
-  const message = `Missing required environment variables: ${missing.join(", ")}`;
+  const message = `Missing required environment variables: ${missing.join(
+    ", "
+  )}`;
   if (process.env.NODE_ENV === "production") {
     // Fail fast in production
     throw new Error(message);
@@ -41,13 +39,14 @@ if (missing.length) {
 
 // Enforce minimum secret length for JWT secrets
 const minSecretLength = 32;
-const weakSecrets = [
-  "JWT_ACCESS_SECRET",
-  "JWT_REFRESH_SECRET",
- ].filter((k) => process.env[k] && process.env[k].length < minSecretLength);
+const weakSecrets = ["JWT_ACCESS_SECRET", "JWT_REFRESH_SECRET"].filter(
+  (k) => process.env[k] && process.env[k].length < minSecretLength
+);
 
 if (weakSecrets.length) {
-  const msg = `Weak JWT secret(s) detected (must be >= ${minSecretLength} chars): ${weakSecrets.join(", ")}`;
+  const msg = `Weak JWT secret(s) detected (must be >= ${minSecretLength} chars): ${weakSecrets.join(
+    ", "
+  )}`;
   if (process.env.NODE_ENV === "production") {
     throw new Error(msg);
   } else {

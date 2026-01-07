@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { bookService } from "../../services/BookService";
 import { wishlistService } from "../../services/WishlistService";
@@ -27,7 +27,7 @@ export const Books = () => {
 
   useEffect(() => {
     let isActive = true;
-    bookService
+    categoryService
       .getCategories()
       .then((data) => {
         if (isActive) setCategories(data);

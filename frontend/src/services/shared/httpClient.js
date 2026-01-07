@@ -25,9 +25,12 @@ httpClient.interceptors.request.use(async (config) => {
     } catch {}
   }
 
-  if (getAccessToken()) {
-    config.headers = config.headers || {};
-    config.headers.Authorization = `Bearer ${getAccessToken()}`;
+  config.headers = config.headers || {};
+  if (!config.headers.Authorization) {
+    const token = getAccessToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
   }
 
   return config;

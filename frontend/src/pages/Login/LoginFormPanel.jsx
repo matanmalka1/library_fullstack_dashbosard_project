@@ -10,15 +10,25 @@ export const LoginFormPanel = ({
   onEmailChange,
   onPasswordChange,
   onSubmit,
+  onOAuthLogin,
 }) => (
   <div className="w-full max-w-[450px] p-8 lg:p-16 bg-white shadow-[0_24px_50px_rgba(15,23,42,0.12)] z-10 flex flex-col justify-center">
     <div className="mb-10 text-center lg:text-left">
-      <Link to="/" className="inline-flex items-center gap-2 mb-8 no-underline lg:hidden">
+      <Link
+        to="/"
+        className="inline-flex items-center gap-2 mb-8 no-underline lg:hidden"
+      >
         <BookOpen className="w-8 h-8 text-indigo-600" />
-        <span className="text-xl font-bold font-serif text-slate-800">Books</span>
+        <span className="text-xl font-bold font-serif text-slate-800">
+          Books
+        </span>
       </Link>
-      <h1 className="font-serif text-3xl font-bold text-slate-900 mb-2">Welcome back</h1>
-      <p className="text-slate-500 m-0">Sign in to continue your reading journey.</p>
+      <h1 className="font-serif text-3xl font-bold text-slate-900 mb-2">
+        Welcome back
+      </h1>
+      <p className="text-slate-500 m-0">
+        Sign in to continue your reading journey.
+      </p>
     </div>
 
     <AlertBanner
@@ -49,7 +59,10 @@ export const LoginFormPanel = ({
           <label className="text-[11px] uppercase tracking-[0.16em] font-bold text-slate-400">
             Password
           </label>
-          <a href="#" className="text-xs font-bold text-indigo-600 no-underline hover:text-indigo-700">
+          <a
+            href="#"
+            className="text-xs font-bold text-indigo-600 no-underline hover:text-indigo-700"
+          >
             Forgot?
           </a>
         </div>
@@ -84,22 +97,33 @@ export const LoginFormPanel = ({
     </div>
 
     <div className="flex gap-4">
-      <button type="button" className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-3 border border-slate-200 rounded-2xl bg-white font-bold text-[13px] text-slate-700 cursor-pointer transition hover:bg-slate-50">
+      <button
+        type="button"
+        onClick={() => onOAuthLogin("google")}
+        className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-3 border border-slate-200 rounded-2xl bg-white font-bold text-[13px] text-slate-700 cursor-pointer transition hover:bg-slate-50"
+      >
         <img
           src="https://www.svgrepo.com/show/475656/google-color.svg"
           className="w-5 h-5"
           alt="Google"
-        />{' '}
+        />{" "}
         Google
       </button>
-      <button type="button" className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-3 border border-slate-200 rounded-2xl bg-white font-bold text-[13px] text-slate-700 cursor-pointer transition hover:bg-slate-50">
+      <button
+        type="button"
+        onClick={() => onOAuthLogin("github")}
+        className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-3 border border-slate-200 rounded-2xl bg-white font-bold text-[13px] text-slate-700 cursor-pointer transition hover:bg-slate-50"
+      >
         <Github className="w-5 h-5" /> GitHub
       </button>
     </div>
 
     <p className="mt-10 text-center text-slate-500 text-sm">
       Don't have an account?{" "}
-      <Link to="/register" className="text-indigo-600 font-bold no-underline hover:underline">
+      <Link
+        to="/register"
+        className="text-indigo-600 font-bold no-underline hover:underline"
+      >
         Create one
       </Link>
     </p>
