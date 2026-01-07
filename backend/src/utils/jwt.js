@@ -1,7 +1,12 @@
-import crypto from 'node:crypto';
-import jwt from 'jsonwebtoken';
+import crypto from "node:crypto";
+import jwt from "jsonwebtoken";
 
-import { ApiError, API_ERROR_CODES } from '../constants/api-error-codes.js';
+import {
+  tokenExpiredError,
+  invalidTokenError,
+  refreshTokenExpiredError,
+  refreshTokenInvalidError,
+} from "../utils/error-factories.js";
 
 // Sign a short-lived access token.
 export const generateAccessToken = (payload) => {
@@ -25,12 +30,12 @@ export const generateRefreshToken = (payload) => {
 // Verify access token and translate errors into ApiError.
 export const verifyAccessToken = (token) => {
   try {
-    return jwt.verify(token,  process.env.JWT_ACCESS_SECRET);
+    return jwt.verify(token, process.env.JWT_ACCESS_SECRET);
   } catch (error) {
-    if (error.name === 'TokenExpiredError') {
-      throw new ApiError(API_ERROR_CODES.TOKEN_EXPIRED, 'Access token expired', 401);
+    if (error.name === "TokenExpiredError") {
+      throw tokenExpiredError("Access token expired");
     }
-    throw new ApiError(API_ERROR_CODES.INVALID_TOKEN, 'Invalid access token', 401);
+    throw invalidTokenError("Invalid access token");
   }
 };
 
@@ -39,9 +44,9 @@ export const verifyRefreshToken = (token) => {
   try {
     return jwt.verify(token, process.env.JWT_REFRESH_SECRET);
   } catch (error) {
-    if (error.name === 'TokenExpiredError') {
-      throw new ApiError(API_ERROR_CODES.REFRESH_TOKEN_EXPIRED, 'Refresh token expired', 401);
+    if (error.name === "TokenExpiredError") {
+      throw refreshTokenExpiredError("Refresh token expired");
     }
-    throw new ApiError(API_ERROR_CODES.REFRESH_TOKEN_INVALID, 'Invalid refresh token', 401);
+    throw refreshTokenInvalidError("Invalid refresh token");
   }
 };

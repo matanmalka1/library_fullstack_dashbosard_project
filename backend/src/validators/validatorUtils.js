@@ -1,4 +1,4 @@
-import { ApiError, API_ERROR_CODES } from "../constants/api-error-codes.js";
+import { validationErrorWithDetails } from "../utils/error-factories.js";
 
 // Validate name length and characters.
 export const isValidName = (value) =>
@@ -31,9 +31,6 @@ export const isPositiveInteger = (value) =>
 export const isValidRating = (value) =>
   typeof value === "number" && value >= 1 && value <= 5;
 
-
 // Wrap validation errors in ApiError payload.
 export const buildValidationError = (details) =>
-  new ApiError(API_ERROR_CODES.VALIDATION_ERROR, "Validation failed", 400, {
-    fields: details,
-  });
+  validationErrorWithDetails(details);

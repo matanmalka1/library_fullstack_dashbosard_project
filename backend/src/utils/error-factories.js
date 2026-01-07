@@ -17,11 +17,7 @@ export const duplicateResourceError = (resourceName, field = null) => {
 };
 
 export const invalidCredentialsError = () => {
-  return new ApiError(
-    API_ERROR_CODES.INVALID_CREDENTIALS,
-    "Invalid credentials",
-    401
-  );
+  return new ApiError(API_ERROR_CODES.INVALID_CREDENTIALS,"Invalid credentials",401);
 };
 
 export const authenticationError = (message = "User not found or inactive") => {
@@ -34,6 +30,13 @@ export const authorizationError = (message = "Insufficient permissions") => {
 
 export const validationError = (message) => {
   return new ApiError(API_ERROR_CODES.VALIDATION_ERROR, message, 400);
+};
+
+// Validation error with structured field details
+export const validationErrorWithDetails = (details,message = "Validation failed") => {
+  return new ApiError(API_ERROR_CODES.VALIDATION_ERROR, message, 400, {
+    fields: details,
+  });
 };
 
 export const refreshTokenInvalidError = (
@@ -59,4 +62,17 @@ export const fileUploadError = (message = "File upload error") => {
 export const fileTooLargeError = (maxBytes) => {
   const message = `File size exceeds maximum allowed size of ${maxBytes} bytes`;
   return new ApiError(API_ERROR_CODES.FILE_TOO_LARGE, message, 400);
+};
+
+// JWT/Token related errors
+export const tokenExpiredError = (message = "Access token expired") => {
+  return new ApiError(API_ERROR_CODES.TOKEN_EXPIRED, message, 401);
+};
+
+export const invalidTokenError = (message = "Invalid access token") => {
+  return new ApiError(API_ERROR_CODES.INVALID_TOKEN, message, 401);
+};
+
+export const refreshTokenExpiredError = (message = "Refresh token expired") => {
+  return new ApiError(API_ERROR_CODES.REFRESH_TOKEN_EXPIRED, message, 401);
 };
