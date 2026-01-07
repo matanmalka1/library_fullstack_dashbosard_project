@@ -1,11 +1,9 @@
-import { httpClient } from "./shared/httpClient";
 import { normalizeId, normalizeOrder } from "./shared/normalize";
 import { BaseService } from "./BaseService";
 
 class OrdersServiceClass extends BaseService {
   constructor() {
     super();
-    this.httpClient = httpClient;
   }
 
   placeOrder(_userId, items = [], _totalPrice, shippingAddress) {

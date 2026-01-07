@@ -1,10 +1,8 @@
-import { httpClient } from "./shared/httpClient";
 import { BaseService } from "./BaseService";
 
 class CategoryServiceClass extends BaseService {
   constructor() {
     super();
-    this.httpClient = httpClient;
   }
 
   getCategories() {

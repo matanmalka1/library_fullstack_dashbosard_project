@@ -1,11 +1,9 @@
-import { httpClient } from "./shared/httpClient";
 import { normalizeUser, normalizeRole } from "./shared/normalize";
 import { BaseService } from "./BaseService";
 
 class RoleServiceClass extends BaseService {
   constructor() {
     super();
-    this.httpClient = httpClient;
     this.roleIdByName = new Map();
   }
 

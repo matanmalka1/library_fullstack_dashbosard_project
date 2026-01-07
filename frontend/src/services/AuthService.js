@@ -1,4 +1,3 @@
-import { httpClient } from "./shared/httpClient";
 import { normalizeUser, normalizeRole } from "./shared/normalize";
 import { buildAuth, getStoredAuth } from "./auth/authUtils";
 import { setAuthState } from "./auth/authStore";
@@ -8,7 +7,6 @@ import { BaseService } from "./BaseService";
 class AuthServiceClass extends BaseService {
   constructor() {
     super();
-    this.httpClient = httpClient;
     this.roleIdByName = new Map();
   }
 

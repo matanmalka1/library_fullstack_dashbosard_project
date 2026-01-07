@@ -1,11 +1,9 @@
-import { httpClient } from "./shared/httpClient";
 import { normalizeReview } from "./shared/normalize";
 import { BaseService } from "./BaseService";
 
 class ReviewServiceClass extends BaseService {
   constructor() {
     super();
-    this.httpClient = httpClient;
   }
 
   addReview(bookId, payload) {

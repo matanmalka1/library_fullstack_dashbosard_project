@@ -1,11 +1,9 @@
-import { httpClient } from "./shared/httpClient";
 import { normalizeIds } from "./shared/normalize";
 import { BaseService } from "./BaseService";
 
 class WishlistServiceClass extends BaseService {
   constructor() {
     super();
-    this.httpClient = httpClient;
   }
 
   getWishlist() {

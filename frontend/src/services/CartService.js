@@ -1,11 +1,9 @@
-import { httpClient } from "./shared/httpClient";
 import { normalizeId, normalizeCartItem } from "./shared/normalize";
 import { BaseService } from "./BaseService";
 
 class CartServiceClass extends BaseService {
   constructor() {
     super();
-    this.httpClient = httpClient;
   }
 
   getCart() {
