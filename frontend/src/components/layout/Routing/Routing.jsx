@@ -17,6 +17,7 @@ import { Cart } from "../../../pages/Cart/Cart";
 import { Wishlist } from "../../../pages/Wishlist/Wishlist";
 import { Checkout } from "../../../pages/Checkout/Checkout";
 import { Orders } from "../../../pages/Orders/Orders";
+import { Profile } from "../../../pages/Profile/Profile";
 import { AdminDashboard } from "../../../pages/AdminDashboard/AdminDashboard";
 import { ManagerDashboard } from "../../../pages/ManagerDashboard/ManagerDashboard";
 
@@ -48,6 +49,14 @@ export const App = () => (
               element={
                 <PrivateRoute>
                   <Orders />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute>
+                  <Profile />
                 </PrivateRoute>
               }
             />

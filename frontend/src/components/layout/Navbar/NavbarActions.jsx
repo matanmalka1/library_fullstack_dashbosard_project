@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ShoppingCart, Heart, LogOut } from "lucide-react";
+import { ShoppingCart, Heart, LogOut, Settings } from "lucide-react";
 import { normalizeRole } from "../../../services/shared/normalize";
 
 export const NavbarActions = ({
@@ -28,6 +28,13 @@ export const NavbarActions = ({
             {normalizeRole(user?.role)}
           </span>
         </div>
+        <Link
+          to="/profile"
+          className="border-0 bg-transparent text-slate-500 cursor-pointer transition-colors hover:text-indigo-600 p-2 no-underline"
+          title="Account Settings"
+        >
+          <Settings className="w-5 h-5" />
+        </Link>
         <button
           onClick={onLogout}
           className="border-0 bg-transparent text-slate-500 cursor-pointer transition-colors hover:text-red-500 p-2"

@@ -59,3 +59,10 @@ export const refresh = asyncHandler(async (req, res) => {
 export const me = asyncHandler(async (req, res) => {
   successResponse(res,{ user: req.user },"User profile retrieved successfully");
 });
+
+// Handle password change request.
+export const changePassword = asyncHandler(async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  await authService.changePassword(req.user.id, currentPassword, newPassword);
+  successResponse(res, null, "Password changed successfully");
+});

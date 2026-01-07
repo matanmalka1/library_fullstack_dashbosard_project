@@ -10,7 +10,7 @@ export const AdminDashboardNav = ({ activeTab, onChangeTab }) => (
       onClick={() => onChangeTab("reviews")}
       className={`w-full border-0 bg-transparent px-4 py-3 rounded-2xl font-bold text-sm text-slate-500 flex items-center gap-3 cursor-pointer transition ${
         activeTab === "reviews"
-          ? "bg-indigo-600 text-white shadow-[0_12px_20px_rgba(79,70,229,0.2)]"
+          ? "bg-indigo-600 text-black shadow-[0_12px_20px_rgba(79,70,229,0.2)]"
           : "hover:bg-slate-50"
       }`}
       type="button"
@@ -21,7 +21,7 @@ export const AdminDashboardNav = ({ activeTab, onChangeTab }) => (
       onClick={() => onChangeTab("users")}
       className={`w-full border-0 bg-transparent px-4 py-3 rounded-2xl font-bold text-sm text-slate-500 flex items-center gap-3 cursor-pointer transition ${
         activeTab === "users"
-          ? "bg-indigo-600 text-white shadow-[0_12px_20px_rgba(79,70,229,0.2)]"
+          ? "bg-indigo-600 text-black shadow-[0_12px_20px_rgba(79,70,229,0.2)]"
           : "hover:bg-slate-50"
       }`}
       type="button"

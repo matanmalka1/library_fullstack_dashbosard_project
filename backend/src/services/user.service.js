@@ -12,6 +12,9 @@ export const createUser = async (userData) => {
     throw duplicateResourceError("User", "email");
   }
 
+  // Password required for non-OAuth users
+  if (!userData.password) throw new Error("Password is required for email/password registration");
+
   const role = await Role.findById(userData.roleId);
 
   if (!role) {

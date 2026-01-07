@@ -106,12 +106,20 @@ export const AuthProvider = ({ children }) => {
     setAuthState(emptyAuthState);
   };
 
+  const updateUser = (updatedUser) => {
+    setAuthState((prevState) => ({
+      ...prevState,
+      user: updatedUser,
+    }));
+  };
+
   const normalizedRole = normalizeRole(authState.user?.role);
   const value = {
     ...authState,
     login,
     register,
     logout,
+    updateUser,
     isAuthLoading,
     isAdmin: normalizedRole === UserRole.ADMIN,
     isManager:

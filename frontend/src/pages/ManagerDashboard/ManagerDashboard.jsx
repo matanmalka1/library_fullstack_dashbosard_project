@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { OrderStatus } from "../../types";
 import { bookService } from "../../services/BookService";
+import { categoryService } from "../../services/CategoryService";
 import { ordersService } from "../../services/OrdersService";
 import { InventoryStats } from "../../components/manager/InventoryStats/InventoryStats";
 import { InventoryTable } from "../../components/manager/InventoryTable/InventoryTable";
@@ -29,7 +30,7 @@ export const ManagerDashboard = () => {
       setError(err.message || "Unable to load inventory data.");
     }
     try {
-      const nextCategories = await bookService.getCategories();
+      const nextCategories = await categoryService.getCategories();
       setCategories(nextCategories);
     } catch {
       setCategories([]);

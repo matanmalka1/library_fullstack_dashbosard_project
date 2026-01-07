@@ -1,4 +1,4 @@
-import { normalizeIds } from "./shared/normalize";
+import { normalizeId, normalizeIds } from "./shared/normalize";
 import { BaseService } from "./BaseService";
 
 class WishlistServiceClass extends BaseService {
@@ -9,7 +9,7 @@ class WishlistServiceClass extends BaseService {
   getWishlist() {
     return this.handleGetList("/wishlist", {
       dataKey: "items",
-      normalize: (items) => normalizeIds(items),
+      normalize: normalizeId,
       fallback: "Unable to load wishlist."
     });
   }

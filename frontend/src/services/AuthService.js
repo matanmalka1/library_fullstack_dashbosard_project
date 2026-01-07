@@ -69,6 +69,19 @@ class AuthServiceClass extends BaseService {
       }
     );
   }
+
+  changePassword(payload) {
+    return this.handlePost(
+      "/auth/change-password",
+      {
+        currentPassword: payload.currentPassword,
+        newPassword: payload.newPassword,
+      },
+      {
+        fallback: "Failed to change password.",
+      }
+    );
+  }
 }
 
 export const authService = new AuthServiceClass();

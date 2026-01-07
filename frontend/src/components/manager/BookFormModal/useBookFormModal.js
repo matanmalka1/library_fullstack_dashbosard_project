@@ -31,6 +31,7 @@ export const useBookFormModal = (
     watch,
     formState: { errors, isSubmitting },
   } = useForm({
+    mode: "onChange",
     defaultValues: getDefaults(editingBook, categories),
   });
 

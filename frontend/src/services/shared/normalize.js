@@ -53,6 +53,8 @@ export const normalizeUser = (user, { normalizeRole, roleIdByName } = {}) => {
   if (!normalized.name && (normalized.firstName || normalized.lastName)) {
     normalized.name = `${normalized.firstName || ""} ${normalized.lastName || ""}`.trim();
   }
+  // Check if user authenticated via OAuth
+  normalized.isOAuthUser = !!(normalized.oauth?.google?.id || normalized.oauth?.github?.id);
   return normalized;
 };
 
