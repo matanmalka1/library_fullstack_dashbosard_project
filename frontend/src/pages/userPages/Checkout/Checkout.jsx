@@ -9,6 +9,7 @@ import { CheckoutSuccess } from "./CheckoutSuccess";
 import { CheckoutForm } from "./CheckoutForm";
 import { CheckoutSummary } from "./CheckoutSummary";
 import { AlertBanner } from "../../../components/ui/AlertBanner";
+import { PageContainer } from "../../../components/layout/PageContainer";
 import { cardPaymentSchema } from "../../../validators/checkout/card-payment-schema";
 import { checkoutShippingSchema } from "../../../validators/checkout/checkout-shipping-schema";
 
@@ -89,7 +90,7 @@ export const Checkout = () => {
   }
 
   return (
-    <div className="max-w-[1120px] mx-auto px-4 lg:px-8 py-12">
+    <PageContainer className="py-12">
       <AlertBanner message={error} className="mb-6" />
       <button
         onClick={() => navigate("/cart")}
@@ -128,6 +129,6 @@ export const Checkout = () => {
           loading={loading}
         />
       </div>
-    </div>
+    </PageContainer>
   );
 };

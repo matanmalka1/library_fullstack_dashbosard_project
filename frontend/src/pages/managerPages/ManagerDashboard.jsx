@@ -8,6 +8,7 @@ import { InventoryStats } from "../../components/manager/InventoryStats/Inventor
 import { InventoryTable } from "../../components/manager/InventoryTable/InventoryTable";
 import { BookFormModal } from "../../components/manager/BookFormModal/BookFormModal";
 import { AlertBanner } from "../../components/ui/AlertBanner";
+import { PageContainer } from "../../components/layout/PageContainer";
 
 export const ManagerDashboard = () => {
   const [books, setBooks] = useState([]);
@@ -78,7 +79,7 @@ export const ManagerDashboard = () => {
   }
 
   return (
-    <div className="max-w-[1120px] mx-auto px-4 lg:px-8 py-12">
+    <PageContainer className="py-12">
       <AlertBanner message={error} className="mb-6" />
       <div className="flex items-center justify-between gap-6 mb-10 flex-wrap">
         <div>
@@ -165,6 +166,6 @@ export const ManagerDashboard = () => {
           onSaved={fetchData}
         />
       )}
-    </div>
+    </PageContainer>
   );
 };

@@ -1,6 +1,10 @@
 
-import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
+import visaLogo from "../../../assets/visa.svg";
+import mastercardLogo from "../../../assets/mastercard.svg";
+import dinersLogo from "../../../assets/diners.svg";
+import paypalLogo from "../../../assets/paypal.svg";
 
 export const CartSummary = ({ totalItems, totalPrice }) => (
   <aside className="w-full lg:w-[384px]">
@@ -28,20 +32,18 @@ export const CartSummary = ({ totalItems, totalPrice }) => (
         Proceed to Checkout <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
       </Link>
 
-      <div className="mt-8 pt-8 border-t border-slate-200 grid grid-cols-2 gap-4 text-center">
-        <div>
-          <img
-            src="https://www.svgrepo.com/show/508727/visa.svg"
-            className="h-4 mx-auto grayscale opacity-50"
-            alt="Visa"
-          />
+      <div className="mt-8 pt-8 border-t border-slate-200 flex items-center justify-center gap-3 flex-wrap">
+        <div className="w-12 h-12 rounded-full border border-slate-200 bg-white flex items-center justify-center">
+          <img src={visaLogo} className="h-4" alt="Visa" />
         </div>
-        <div>
-          <img
-            src="https://www.svgrepo.com/show/508703/mastercard.svg"
-            className="h-4 mx-auto grayscale opacity-50"
-            alt="Mastercard"
-          />
+        <div className="w-12 h-12 rounded-full border border-slate-200 bg-white flex items-center justify-center">
+          <img src={mastercardLogo} className="h-4" alt="Mastercard" />
+        </div>
+        <div className="w-12 h-12 rounded-full border border-slate-200 bg-white flex items-center justify-center">
+          <img src={dinersLogo} className="h-4" alt="Diners Club" />
+        </div>
+        <div className="w-12 h-12 rounded-full border border-slate-200 bg-white flex items-center justify-center">
+          <img src={paypalLogo} className="h-4" alt="PayPal" />
         </div>
       </div>
     </div>

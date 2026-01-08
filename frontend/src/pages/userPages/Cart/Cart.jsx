@@ -1,8 +1,9 @@
 
-import { useCart } from '../../../context/cart/CartContext';
-import { CartEmpty } from './CartEmpty';
-import { CartItems } from './CartItems';
-import { CartSummary } from './CartSummary';
+import { useCart } from "../../../context/cart/CartContext";
+import { CartEmpty } from "./CartEmpty";
+import { CartItems } from "./CartItems";
+import { CartSummary } from "./CartSummary";
+import { PageContainer } from "../../../components/layout/PageContainer";
 
 export const Cart = () => {
   const { items, removeFromCart, updateQuantity, totalPrice, totalItems } = useCart();
@@ -12,7 +13,7 @@ export const Cart = () => {
   }
 
   return (
-    <div className="max-w-[1120px] mx-auto px-4 lg:px-8 py-12">
+    <PageContainer className="py-12">
       <h1 className="font-serif text-4xl font-bold text-slate-900 mb-10">
         Shopping Bag <span className="text-slate-300 ml-2">({totalItems})</span>
       </h1>
@@ -25,6 +26,6 @@ export const Cart = () => {
         />
         <CartSummary totalItems={totalItems} totalPrice={totalPrice} />
       </div>
-    </div>
+    </PageContainer>
   );
 };

@@ -5,7 +5,8 @@ import { categoryService } from "../../../services/CategoryService";
 import { wishlistService } from "../../../services/WishlistService";
 import { BookCard } from "../../../components/book/BookCard/BookCard";
 import { useAuth } from "../../../context/auth/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { PageContainer } from "../../../components/layout/PageContainer";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const Books = () => {
   const [books, setBooks] = useState([]);
@@ -18,6 +19,7 @@ export const Books = () => {
   const [priceMax, setPriceMax] = useState(200);
   const [wishlistIds, setWishlistIds] = useState([]);
   const { user } = useAuth();
+  const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,6 +44,16 @@ export const Books = () => {
       isActive = false;
     };
   }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const selected = params.get("category");
+    if (selected) {
+      setCat(selected);
+      return;
+    }
+    setCat("All");
+  }, [location.search]);
 
   useEffect(() => {
     let res = books.filter(
@@ -93,8 +105,16 @@ export const Books = () => {
     );
   }
 
+  const handleCategoryClick = (category) => {
+    if (category === "All") {
+      navigate("/books");
+      return;
+    }
+    navigate(`/books?category=${encodeURIComponent(category)}`);
+  };
+
   return (
-    <div className="max-w-[1120px] mx-auto px-4 lg:px-8 py-12 flex flex-col gap-8 md:flex-row">
+    <PageContainer className="py-12 flex flex-col gap-8 md:flex-row">
       <aside className="w-full md:w-[260px] md:shrink-0">
         <div className="bg-white border border-slate-200 rounded-[24px] p-6 shadow-[0_8px_20px_rgba(15,23,42,0.05)]">
           <h3 className="text-[11px] uppercase tracking-[0.18em] font-bold text-slate-800 mb-6">
@@ -118,7 +138,7 @@ export const Books = () => {
                 {["All", ...categories].map((c) => (
                   <button
                     key={c}
-                    onClick={() => setCat(c)}
+                    onClick={() => handleCategoryClick(c)}
                     className={`w-full text-left border-0 bg-transparent px-3 py-2 rounded-[12px] text-sm font-medium cursor-pointer transition ${
                       cat === c
                         ? "bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-none"
@@ -162,6 +182,6 @@ export const Books = () => {
           ))}
         </div>
       </div>
-    </div>
+    </PageContainer>
   );
 };

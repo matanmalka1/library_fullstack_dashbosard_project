@@ -5,6 +5,7 @@ import { wishlistService } from "../../../services/WishlistService";
 import { useAuth } from "../../../context/auth/AuthContext";
 import { BookCard } from "../../../components/book/BookCard/BookCard";
 import { EmptyState } from "../../../components/ui/EmptyState";
+import { PageContainer } from "../../../components/layout/PageContainer";
 import { Link } from "react-router-dom";
 
 export const Wishlist = () => {
@@ -66,7 +67,7 @@ export const Wishlist = () => {
   }
 
   return (
-    <div className="max-w-[1120px] mx-auto px-4 lg:px-8 py-12">
+    <PageContainer className="py-12">
       <div className="flex items-center justify-between gap-6 mb-12 flex-wrap">
         <div>
           <h1 className="font-serif text-4xl text-slate-900 mb-2">
@@ -115,6 +116,6 @@ export const Wishlist = () => {
           />
         </div>
       )}
-    </div>
+    </PageContainer>
   );
 };
