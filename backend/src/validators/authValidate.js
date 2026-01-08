@@ -56,3 +56,27 @@ export const validateLogin = (req, _res, next) => {
   
   return errors.length > 0 ? next(buildValidationError(errors)) : next();
 };
+
+// Validate payload for password change.
+export const validateChangePassword = (req, _res, next) => {
+  const { currentPassword, newPassword } = req.body ?? {};
+  const errors = [];
+
+  if (!isValidPassword(currentPassword)) {
+    errors.push({
+      field: "currentPassword",
+      message:
+        "Current password must be at least 8 characters with uppercase, lowercase, number, and special character (@$!%*?&)",
+    });
+  }
+
+  if (!isValidPassword(newPassword)) {
+    errors.push({
+      field: "newPassword",
+      message:
+        "New password must be at least 8 characters with uppercase, lowercase, number, and special character (@$!%*?&)",
+    });
+  }
+
+  return errors.length ? next(buildValidationError(errors)) : next();
+};

@@ -6,6 +6,7 @@ import {
   invalidCredentialsError,
   authenticationError,
   refreshTokenInvalidError,
+  resourceNotFoundError,
   serverError,
 } from "../utils/error-factories.js";
 import {

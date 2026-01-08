@@ -2,6 +2,7 @@ import passport from "passport";
 import { Strategy as GoogleOAuth2Strategy } from "passport-google-oauth20";
 import { Strategy as GitHubOAuth2Strategy } from "passport-github2";
 import { User, Role } from "../models/index.js";
+import { hashPassword } from "../utils/password.js";
 import { logger } from "../utils/logger.js";
 
 const findOrCreateUser = async (profile, provider) => {
@@ -31,18 +32,19 @@ const findOrCreateUser = async (profile, provider) => {
     }
 
     // Create new user
-    const role = await Role.findOne({ name: "USER" });
+    const role = await Role.findOne({ name: "user" });
     if (!role) throw new Error("Default USER role not found. Run database seed.");
 
     const firstName = profile.name?.givenName || profile.displayName?.split(" ")?.[0] || "User";
     const lastName = profile.name?.familyName || profile.displayName?.split(" ")?.[1] || "User";
     const newEmail = email || `${provider}-${profile.id}@oauth.local`;
 
+    const hashedPassword = await hashPassword(`oauth-${provider}-${profile.id}`);
     const newUser = await User.create({
       email: newEmail,
       firstName,
       lastName,
-      password: `oauth-${provider}-${profile.id}`,
+      password: hashedPassword,
       role: role._id,
       oauth: {
         [provider]: {
