@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/auth/AuthContext";
 import { RegisterFormPanel } from "./RegisterFormPanel";
 import { RegisterVisual } from "./RegisterVisual";
-import { validateFirstName,validateLastName,validateEmail,validatePasswordStrength } from "../../utils/validation";
+import { registerSchema } from "../../validators/auth/register-schema";
 
 export const Register = () => {
   const [firstName, setFirstName] = useState("");
@@ -17,14 +17,26 @@ export const Register = () => {
   const navigate = useNavigate();
 
   const validateForm = () => {
-    const errors = {
-      firstName: validateFirstName(firstName),
-      lastName: validateLastName(lastName),
-      email: validateEmail(email),
-      password: validatePasswordStrength(password),
-    };
-    setValidationErrors(errors);
-    return !Object.values(errors).some((err) => err !== null);
+    const validation = registerSchema.safeParse({
+      firstName,
+      lastName,
+      email,
+      password,
+    });
+
+    if (validation.success) {
+      setValidationErrors({});
+      return true;
+    }
+
+    const fieldErrors = validation.error.flatten().fieldErrors;
+    setValidationErrors({
+      firstName: fieldErrors.firstName?.[0] || null,
+      lastName: fieldErrors.lastName?.[0] || null,
+      email: fieldErrors.email?.[0] || null,
+      password: fieldErrors.password?.[0] || null,
+    });
+    return false;
   };
 
   const handleSubmit = async (e) => {

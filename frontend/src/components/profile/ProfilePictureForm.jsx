@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { Upload, X } from "lucide-react";
 import { authService } from "../../services/AuthService";
 import { useAuth } from "../../context/auth/AuthContext";
-import { profilePictureSchema } from "../../validators/profile-picture-schema";
+import { profilePictureSchema } from "../../validators/profile/profile-picture-schema";
 
 export const ProfilePictureForm = ({ user, onSuccess }) => {
   const { updateUser } = useAuth();

@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { authService } from "../../services/AuthService";
 import { useAuth } from "../../context/auth/AuthContext";
-import { bioSchema } from "../../validators/bio-schema";
+import { bioSchema } from "../../validators/profile/bio-schema";
 
 export const BioForm = ({ user, onSuccess }) => {
   const { updateUser } = useAuth();

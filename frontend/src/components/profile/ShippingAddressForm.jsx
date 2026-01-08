@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { authService } from "../../services/AuthService";
 import { useAuth } from "../../context/auth/AuthContext";
-import { shippingAddressSchema } from "../../validators/shipping-address-schema";
+import { shippingAddressSchema } from "../../validators/profile/shipping-address-schema";
 
 export const ShippingAddressForm = ({ user, onSuccess }) => {
   const { updateUser } = useAuth();

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { CreditCard } from "lucide-react";
-import { cardPaymentSchema } from "../../validators/card-payment-schema";
-import { checkoutShippingSchema } from "../../validators/checkout-shipping-schema";
+import { cardPaymentSchema } from "../../validators/checkout/card-payment-schema";
+import { checkoutShippingSchema } from "../../validators/checkout/checkout-shipping-schema";
 
 export const CheckoutForm = ({
   userName,

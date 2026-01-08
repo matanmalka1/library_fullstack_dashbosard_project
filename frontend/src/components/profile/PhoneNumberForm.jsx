@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { authService } from "../../services/AuthService";
 import { useAuth } from "../../context/auth/AuthContext";
-import { phoneNumberSchema } from "../../validators/phone-number-schema";
+import { phoneNumberSchema } from "../../validators/profile/phone-number-schema";
 
 export const PhoneNumberForm = ({ user, onSuccess }) => {
   const { updateUser } = useAuth();

@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { authService } from "../../services/AuthService";
 import { useAuth } from "../../context/auth/AuthContext";
-import { passwordChangeSchema } from "../../validators/password-change-schema";
+import { passwordChangeSchema } from "../../validators/profile/password-change-schema";
 
 export const PasswordChangeForm = ({ onSuccess, user }) => {
   const { user: authUser } = useAuth();

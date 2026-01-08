@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { authService } from "../../services/AuthService";
 import { useAuth } from "../../context/auth/AuthContext";
-import { personalInfoSchema } from "../../validators/personal-info-schema";
+import { personalInfoSchema } from "../../validators/profile/personal-info-schema";
 
 export const PersonalInfoForm = ({ user, onSuccess }) => {
   const { updateUser } = useAuth();

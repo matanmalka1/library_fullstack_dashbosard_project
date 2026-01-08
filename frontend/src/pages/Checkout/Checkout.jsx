@@ -9,8 +9,8 @@ import { CheckoutSuccess } from "./CheckoutSuccess";
 import { CheckoutForm } from "./CheckoutForm";
 import { CheckoutSummary } from "./CheckoutSummary";
 import { AlertBanner } from "../../components/ui/AlertBanner";
-import { cardPaymentSchema } from "../../validators/card-payment-schema";
-import { checkoutShippingSchema } from "../../validators/checkout-shipping-schema";
+import { cardPaymentSchema } from "../../validators/checkout/card-payment-schema";
+import { checkoutShippingSchema } from "../../validators/checkout/checkout-shipping-schema";
 
 export const Checkout = () => {
   const { items, totalPrice, clearCart } = useCart();
