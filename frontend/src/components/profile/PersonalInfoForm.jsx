@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { authService } from "../../services/AuthService";
 import { useAuth } from "../../context/auth/AuthContext";
+import { personalInfoSchema } from "../../validators/personal-info-schema";
 
 export const PersonalInfoForm = ({ user, onSuccess }) => {
   const { updateUser } = useAuth();
@@ -16,6 +18,7 @@ export const PersonalInfoForm = ({ user, onSuccess }) => {
     formState: { errors },
   } = useForm({
     mode: "onChange",
+    resolver: zodResolver(personalInfoSchema),
     defaultValues: {
       firstName: user?.firstName || "",
       lastName: user?.lastName || "",
@@ -58,17 +61,7 @@ export const PersonalInfoForm = ({ user, onSuccess }) => {
           First Name
         </label>
         <input
-          {...register("firstName", {
-            required: "First name is required",
-            validate: (value) => {
-              const trimmed = value?.trim();
-              if (!trimmed) return "First name is required";
-              if (!/^[A-Za-z]{2,15}$/.test(trimmed)) {
-                return "First name must be 2-15 letters with no spaces";
-              }
-              return true;
-            },
-          })}
+          {...register("firstName")}
           className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
             errors.firstName ? "border-red-400" : "border-transparent"
           } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
@@ -86,17 +79,7 @@ export const PersonalInfoForm = ({ user, onSuccess }) => {
           Last Name
         </label>
         <input
-          {...register("lastName", {
-            required: "Last name is required",
-            validate: (value) => {
-              const trimmed = value?.trim();
-              if (!trimmed) return "Last name is required";
-              if (!/^[A-Za-z]{2,15}$/.test(trimmed)) {
-                return "Last name must be 2-15 letters with no spaces";
-              }
-              return true;
-            },
-          })}
+          {...register("lastName")}
           className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
             errors.lastName ? "border-red-400" : "border-transparent"
           } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
@@ -113,13 +96,7 @@ export const PersonalInfoForm = ({ user, onSuccess }) => {
         </label>
         <input
           type="email"
-          {...register("email", {
-            required: "Email is required",
-            pattern: {
-              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-              message: "Invalid email address",
-            },
-          })}
+          {...register("email")}
           className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
             errors.email ? "border-red-400" : "border-transparent"
           } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}

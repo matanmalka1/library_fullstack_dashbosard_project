@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { authService } from "../../services/AuthService";
 import { useAuth } from "../../context/auth/AuthContext";
+import { bioSchema } from "../../validators/bio-schema";
 
 export const BioForm = ({ user, onSuccess }) => {
   const { updateUser } = useAuth();
@@ -17,6 +19,7 @@ export const BioForm = ({ user, onSuccess }) => {
     formState: { errors },
   } = useForm({
     mode: "onChange",
+    resolver: zodResolver(bioSchema),
     defaultValues: {
       bio: user?.bio || "",
     },
@@ -64,12 +67,7 @@ export const BioForm = ({ user, onSuccess }) => {
           </span>
         </div>
         <textarea
-          {...register("bio", {
-            maxLength: {
-              value: 500,
-              message: "Bio cannot exceed 500 characters",
-            },
-          })}
+          {...register("bio")}
           className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
             errors.bio ? "border-red-400" : "border-transparent"
           } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200 resize-none`}

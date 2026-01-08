@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { authService } from "../../services/AuthService";
 import { useAuth } from "../../context/auth/AuthContext";
+import { shippingAddressSchema } from "../../validators/shipping-address-schema";
 
 export const ShippingAddressForm = ({ user, onSuccess }) => {
   const { updateUser } = useAuth();
@@ -14,10 +16,10 @@ export const ShippingAddressForm = ({ user, onSuccess }) => {
     register,
     handleSubmit,
     reset,
-    watch,
     formState: { errors },
   } = useForm({
     mode: "onChange",
+    resolver: zodResolver(shippingAddressSchema),
     defaultValues: {
       street: defaultAddress.street || "",
       city: defaultAddress.city || "",
@@ -26,9 +28,6 @@ export const ShippingAddressForm = ({ user, onSuccess }) => {
       country: defaultAddress.country || "",
     },
   });
-
-  // Watch all fields to check if address is partially filled
-  const watchAllFields = watch();
 
   const onSubmit = async (data) => {
     setFormError("");
@@ -72,18 +71,7 @@ export const ShippingAddressForm = ({ user, onSuccess }) => {
           Street Address
         </label>
         <input
-          {...register("street", {
-            minLength: {
-              value: 3,
-              message: "Street must be at least 3 characters",
-            },
-            validate: (value) => {
-              if (value && value.trim().length > 0 && value.trim().length < 3) {
-                return "Street must be at least 3 characters";
-              }
-              return true;
-            },
-          })}
+          {...register("street")}
           className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
             errors.street ? "border-red-400" : "border-transparent"
           } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
@@ -100,22 +88,7 @@ export const ShippingAddressForm = ({ user, onSuccess }) => {
             City
           </label>
           <input
-            {...register("city", {
-              minLength: {
-                value: 2,
-                message: "City must be at least 2 characters",
-              },
-              validate: (value) => {
-                if (
-                  value &&
-                  value.trim().length > 0 &&
-                  value.trim().length < 2
-                ) {
-                  return "City must be at least 2 characters";
-                }
-                return true;
-              },
-            })}
+            {...register("city")}
             className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
               errors.city ? "border-red-400" : "border-transparent"
             } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
@@ -131,22 +104,7 @@ export const ShippingAddressForm = ({ user, onSuccess }) => {
             State/Province
           </label>
           <input
-            {...register("state", {
-              minLength: {
-                value: 2,
-                message: "State must be at least 2 characters",
-              },
-              validate: (value) => {
-                if (
-                  value &&
-                  value.trim().length > 0 &&
-                  value.trim().length < 2
-                ) {
-                  return "State must be at least 2 characters";
-                }
-                return true;
-              },
-            })}
+            {...register("state")}
             className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
               errors.state ? "border-red-400" : "border-transparent"
             } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
@@ -164,22 +122,7 @@ export const ShippingAddressForm = ({ user, onSuccess }) => {
             ZIP/Postal Code
           </label>
           <input
-            {...register("zip", {
-              minLength: {
-                value: 3,
-                message: "Zip code must be at least 3 characters",
-              },
-              validate: (value) => {
-                if (
-                  value &&
-                  value.trim().length > 0 &&
-                  value.trim().length < 3
-                ) {
-                  return "Zip code must be at least 3 characters";
-                }
-                return true;
-              },
-            })}
+            {...register("zip")}
             className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
               errors.zip ? "border-red-400" : "border-transparent"
             } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
@@ -195,22 +138,7 @@ export const ShippingAddressForm = ({ user, onSuccess }) => {
             Country
           </label>
           <input
-            {...register("country", {
-              minLength: {
-                value: 2,
-                message: "Country must be at least 2 characters",
-              },
-              validate: (value) => {
-                if (
-                  value &&
-                  value.trim().length > 0 &&
-                  value.trim().length < 2
-                ) {
-                  return "Country must be at least 2 characters";
-                }
-                return true;
-              },
-            })}
+            {...register("country")}
             className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
               errors.country ? "border-red-400" : "border-transparent"
             } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}

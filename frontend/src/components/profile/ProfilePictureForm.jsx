@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { Upload, X } from "lucide-react";
 import { authService } from "../../services/AuthService";
 import { useAuth } from "../../context/auth/AuthContext";
+import { profilePictureSchema } from "../../validators/profile-picture-schema";
 
 export const ProfilePictureForm = ({ user, onSuccess }) => {
   const { updateUser } = useAuth();
@@ -15,15 +16,9 @@ export const ProfilePictureForm = ({ user, onSuccess }) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
-    if (!file.type.startsWith("image/")) {
-      setError("Please select an image file");
-      return;
-    }
-
-    // Validate file size (max 2MB)
-    if (file.size > 2 * 1024 * 1024) {
-      setError("Image must be under 2MB");
+    const validation = profilePictureSchema.safeParse(file);
+    if (!validation.success) {
+      setError(validation.error.issues[0]?.message || "Invalid image file");
       return;
     }
 
