@@ -1,7 +1,13 @@
-import { register, login } from "../services/auth/core.service.js";
-import { logout, refreshAccessToken } from "../services/auth/token.service.js";
-import { changePassword } from "../services/auth/password.service.js";
-import { updateProfile } from "../services/auth/profile.service.js";
+import {
+  register as registerUser,
+  login as loginUser,
+} from "../services/auth/core.service.js";
+import {
+  logout as logoutUser,
+  refreshAccessToken,
+} from "../services/auth/token.service.js";
+import { changePassword as changeUserPassword } from "../services/auth/password.service.js";
+import { updateProfile as updateUserProfile } from "../services/auth/profile.service.js";
 import { successResponse } from "../utils/response.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { refreshTokenInvalidError } from "../utils/error-factories.js";
@@ -18,14 +24,14 @@ const cookieOptions = {
 
 // Handle registration request.
 export const register = asyncHandler(async (req, res) => {
-  const { user } = await register(req.body);
+  const { user } = await registerUser(req.body);
   successResponse(res, { user }, "User registered successfully", 201);
 });
 
 // Handle login request and set refresh token cookie.
 export const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  const { user, accessToken, refreshToken } = await login(
+  const { user, accessToken, refreshToken } = await loginUser(
     email,
     password
   );
@@ -37,7 +43,7 @@ export const login = asyncHandler(async (req, res) => {
 // Handle logout request and clear refresh token cookie.
 export const logout = asyncHandler(async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
-  await logout(req.user.id, refreshToken);
+  await logoutUser(req.user.id, refreshToken);
 
   res.clearCookie("refreshToken", cookieOptions);
   successResponse(res, null, "Logout successful");
@@ -70,12 +76,12 @@ export const me = asyncHandler(async (req, res) => {
 // Handle password change request.
 export const changePassword = asyncHandler(async (req, res) => {
   const { currentPassword, newPassword } = req.body;
-  await changePassword(req.user.id, currentPassword, newPassword);
+  await changeUserPassword(req.user.id, currentPassword, newPassword);
   successResponse(res, null, "Password changed successfully");
 });
 
 // Handle profile update request.
 export const updateProfile = asyncHandler(async (req, res) => {
-  const user = await updateProfile(req.user.id, req.body);
+  const user = await updateUserProfile(req.user.id, req.body);
   successResponse(res, { user }, "Profile updated successfully");
 });
