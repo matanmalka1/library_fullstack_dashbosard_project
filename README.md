@@ -1,13 +1,35 @@
-# GEMINI_LIBRRARY
+# Library Full‑Stack App
 
-Full-stack bookstore project with a React + Vite frontend and an Express + MongoDB REST API backend.
+Full‑stack bookstore application with a React + Vite frontend and an Express + MongoDB REST API backend.
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Prerequisites](#prerequisites)
+- [Quick Start](#quick-start)
+- [Environment](#environment)
+- [Scripts](#scripts)
+- [Project Structure](#project-structure-full)
+- [API & Frontend Docs](#api--frontend-docs)
+- [Security](#security-features)
+- [Testing](#testing-with-curl-examples)
+- [Deployment](#deployment-notes)
+- [Contributing](#contributing)
 
 ## Overview
 
-- `frontend/` is the customer and admin UI (React, Tailwind).
-- `backend/` is the API server (Express, MongoDB, JWT auth).
-- Auth and user management run through the backend API.
-- Catalog and shopping data are loaded from the backend; the frontend uses `localStorage` only for lightweight client state (e.g., auth payload and small caches).
+Monorepo with two apps:
+
+- `frontend/` – React + Tailwind UI (customers, managers, admin)
+- `backend/` – Express + MongoDB API (auth, catalog, orders)
+
+Architecture follows layered patterns per [agents.md](agents.md):
+
+Routes → Controllers → Services → Models
+
+Frontend uses the backend API for all data. Client storage is limited to lightweight state (auth payload, small caches).
 
 ## Features
 
@@ -53,57 +75,48 @@ Backend:
 
 ## Quick Start
 
-Backend:
+Spin up backend and frontend locally:
 
 ```bash
+# Backend
 cd backend
 npm install
 npm run seed
 npm run dev
-```
 
-Frontend:
-
-```bash
-cd frontend
+# In a second terminal
+# Frontend
+cd ../frontend
 npm install
 npm run dev
 ```
 
-The frontend reads the API base URL from `frontend/.env`.
+Frontend reads API base URL from `.env.development` (see Configuration below).
 
-## Environment Variables
+## Environment
 
-Backend loads environment variables from:
+Backend env files:
 
-- `.env.development` (default when `NODE_ENV` is not set)
+- `.env.development` (default)
 - `.env.production` (when `NODE_ENV=production`)
-- `.env` (fallback)
 
-Required backend variables (set in `backend/.env.development` or `backend/.env.production`):
+Frontend env files:
 
-| Variable                       | Description                             | Example                                          |
-| ------------------------------ | --------------------------------------- | ------------------------------------------------ |
-| `NODE_ENV`                     | Environment                             | `development`                                    |
-| `PORT`                         | Server port                             | `3000`                                           |
-| `MONGODB_URI`                  | MongoDB connection string               | `mongodb://localhost:27017/myapp`                |
-| `JWT_ACCESS_SECRET`            | JWT access token secret (min 32 chars)  | Generated value                                  |
-| `JWT_REFRESH_SECRET`           | JWT refresh token secret (min 32 chars) | Generated value                                  |
-| `JWT_ACCESS_EXPIRES_IN`        | Access token expiry                     | `15m`                                            |
-| `JWT_REFRESH_EXPIRES_IN`       | Refresh token expiry                    | `7d`                                             |
-| `COOKIE_SECURE`                | Use secure cookies (https only)         | `false` (dev), `true` (prod)                     |
-| `COOKIE_SAME_SITE`             | Cookie same-site policy                 | `lax`                                            |
-| `CORS_ORIGIN`                  | Allowed CORS origins (comma-separated)  | `http://localhost:3000,http://localhost:5173`    |
-| `RATE_LIMIT_WINDOW_MS`         | Global rate limit window                | `900000`                                         |
-| `RATE_LIMIT_MAX_REQUESTS`      | Global rate limit max requests          | `100`                                            |
-| `AUTH_RATE_LIMIT_WINDOW_MS`    | Auth rate limit window                  | `900000`                                         |
-| `AUTH_RATE_LIMIT_MAX_REQUESTS` | Auth rate limit max requests            | `10`                                             |
-| `MAX_FILE_SIZE`                | Max upload size (bytes)                 | `5242880`                                        |
-| `ALLOWED_FILE_TYPES`           | Allowed MIME types                      | `image/jpeg,image/png,image/gif,application/pdf` |
+- `.env.development`
+- `.env.production`
 
-Frontend environment variables (`frontend/.env`):
+Key variables:
 
-- `VITE_API_BASE_URL` (default: `http://localhost:3000/api/v1`)
+Backend (set in backend env files):
+
+- `MONGODB_URI` – MongoDB connection string
+- `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET` – 32+ char secrets
+- `CORS_ORIGIN` – comma‑separated origins (include frontend URL)
+- See more in backend docs: `backend/readme.md`
+
+Frontend (set in frontend env files):
+
+- `VITE_API_BASE_URL` – defaults to `http://localhost:3000/api/v1`
 
 ## Scripts
 
@@ -140,68 +153,12 @@ All seeded users share password: `Password123!`
 
 ## API
 
-Base URL:
+For full endpoint documentation, examples, and error codes, see:
 
-```
-http://localhost:3000/api/v1
-```
+- Backend API docs: `backend/readme.md`
+- Frontend integration: `frontend/README.md`
 
-Authentication:
-
-- `POST /auth/register` - Register user.
-- `POST /auth/login` - Login user.
-- `POST /auth/refresh` - Refresh access token (uses httpOnly cookie).
-- `GET /auth/me` - Get current user.
-- `POST /auth/logout` - Logout user.
-
-Users (auth required):
-
-- `GET /users` - List users (pagination).
-- `GET /users/:id` - Get user by ID.
-- `POST /users` - Create user (Admin only).
-- `PUT /users/:id` - Update user.
-- `DELETE /users/:id` - Delete user (Admin only).
-
-Books:
-
-- `GET /books` - List books (pagination/filtering).
-- `GET /books/:id` - Get book by ID.
-- `POST /books` - Create book (Admin/Manager).
-- `PUT /books/:id` - Update book (Admin/Manager).
-- `DELETE /books/:id` - Delete book (Admin/Manager).
-
-Reviews:
-
-- `POST /books/:id/reviews` - Submit review (auth required).
-- `PATCH /books/:id/reviews/:reviewId/approve` - Approve review (Admin).
-- `DELETE /books/:id/reviews/:reviewId` - Delete review (Admin).
-
-Cart (auth required):
-
-- `GET /cart` - Get cart.
-- `PUT /cart` - Save cart (replace).
-- `DELETE /cart` - Clear cart.
-
-Wishlist (auth required):
-
-- `GET /wishlist` - Get wishlist.
-- `POST /wishlist/toggle` - Toggle wishlist item.
-- `DELETE /wishlist` - Clear wishlist.
-
-Orders (auth required):
-
-- `GET /orders` - List orders (Admin/Manager can filter by user).
-- `POST /orders` - Place order.
-- `PATCH /orders/:id/status` - Update order status (Admin/Manager).
-- `PATCH /orders/:id/cancel` - Cancel order.
-
-Upload (auth required):
-
-- `POST /upload` - File upload (JPEG/PNG/GIF/PDF, max 5MB).
-
-Health:
-
-- `GET /health` - Health check.
+Base API URL during development: `http://localhost:3000/api/v1`
 
 ## API Response Format
 

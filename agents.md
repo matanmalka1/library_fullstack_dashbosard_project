@@ -29,9 +29,6 @@ The domain includes:
 /backend → Express API, database, auth, business logic
 /frontend → React UI, pages, components, API clients
 
-markdown
-Copy code
-
 ### Backend (`/backend`)
 
 - `src/app.js` – Express app setup
@@ -87,9 +84,6 @@ Copy code
 
 Example flow:
 Route → Middleware → Controller → Service → Model
-
-yaml
-Copy code
 
 ### Error Handling
 
