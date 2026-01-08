@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { bookService } from "../../../services/BookService";
+import { bookFormSchema } from "../../../validators/book-form-schema";
 
 const getDefaults = (book, categories) => ({
   title: book?.title || "",
@@ -32,6 +34,7 @@ export const useBookFormModal = (
     formState: { errors, isSubmitting },
   } = useForm({
     mode: "onChange",
+    resolver: zodResolver(bookFormSchema),
     defaultValues: getDefaults(editingBook, categories),
   });
 

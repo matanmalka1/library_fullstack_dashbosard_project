@@ -38,9 +38,7 @@ export const BookFormMedia = ({
     />
     <input
       type="hidden"
-      {...register("coverImage", {
-        validate: (value) => (value ? true : "Cover image is required."),
-      })}
+      {...register("coverImage")}
     />
     {errors.coverImage ? (
       <div className="text-red-500 text-xs">{errors.coverImage.message}</div>

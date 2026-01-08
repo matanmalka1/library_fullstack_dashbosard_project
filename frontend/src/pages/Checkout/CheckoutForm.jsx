@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { CreditCard } from "lucide-react";
+import { cardPaymentSchema } from "../../validators/card-payment-schema";
+import { checkoutShippingSchema } from "../../validators/checkout-shipping-schema";
 
 export const CheckoutForm = ({
   userName,
@@ -27,6 +29,9 @@ export const CheckoutForm = ({
   const [numberTouched, setNumberTouched] = useState(false);
   const [expiryTouched, setExpiryTouched] = useState(false);
   const [cvcTouched, setCvcTouched] = useState(false);
+  const [addressTouched, setAddressTouched] = useState(false);
+  const [cityTouched, setCityTouched] = useState(false);
+  const [zipTouched, setZipTouched] = useState(false);
 
   const digitsOnly = (val) => val.replace(/\D/g, "");
   const formatCardNumber = (val) => {
@@ -51,24 +56,6 @@ export const CheckoutForm = ({
     onCardCvcChange(digits);
   };
 
-  // Luhn check for card number validity
-  const luhnCheck = (digitsStr) => {
-    if (!digitsStr) return false;
-    let sum = 0;
-    let shouldDouble = false;
-    for (let i = digitsStr.length - 1; i >= 0; i--) {
-      let d = parseInt(digitsStr[i], 10);
-      if (Number.isNaN(d)) return false;
-      if (shouldDouble) {
-        d *= 2;
-        if (d > 9) d -= 9;
-      }
-      sum += d;
-      shouldDouble = !shouldDouble;
-    }
-    return sum % 10 === 0;
-  };
-
   // Local display state for masking on blur
   const [displayCardNumber, setDisplayCardNumber] = useState(cardNumber || "");
   useEffect(() => {
@@ -82,11 +69,29 @@ export const CheckoutForm = ({
     return `•••• •••• •••• ${last4}`;
   };
 
-  const cardNumberDigitsLen = digitsOnly(cardNumber).length;
-  const expiryValid = /^(0[1-9]|1[0-2])\/(\d{2})$/.test(cardExpiry);
-  const cvcValid = /^\d{3,4}$/.test(cardCvc);
-  const luhnValid =
-    cardNumberDigitsLen === 16 && luhnCheck(digitsOnly(cardNumber));
+  const cardValidation =
+    paymentMethod === "card"
+      ? cardPaymentSchema.safeParse({
+          cardName,
+          cardNumber,
+          cardExpiry,
+          cardCvc,
+        })
+      : { success: true };
+  const cardErrors = cardValidation.success
+    ? {}
+    : cardValidation.error.flatten().fieldErrors;
+  const getCardError = (field) => cardErrors[field]?.[0];
+
+  const shippingValidation = checkoutShippingSchema.safeParse({
+    address,
+    city,
+    zip,
+  });
+  const shippingErrors = shippingValidation.success
+    ? {}
+    : shippingValidation.error.flatten().fieldErrors;
+  const getShippingError = (field) => shippingErrors[field]?.[0];
 
   return (
     <div className="flex-1">
@@ -142,7 +147,13 @@ export const CheckoutForm = ({
                 placeholder="123 Reading Lane"
                 value={address}
                 onChange={(e) => onAddressChange(e.target.value)}
+                onBlur={() => setAddressTouched(true)}
               />
+              {addressTouched && getShippingError("address") && (
+                <p className="text-xs text-red-500 mt-1">
+                  {getShippingError("address")}
+                </p>
+              )}
             </div>
             <div className="grid gap-2">
               <label className="text-[11px] uppercase tracking-[0.16em] font-bold text-slate-400">
@@ -155,7 +166,13 @@ export const CheckoutForm = ({
                 placeholder="New York"
                 value={city}
                 onChange={(e) => onCityChange(e.target.value)}
+                onBlur={() => setCityTouched(true)}
               />
+              {cityTouched && getShippingError("city") && (
+                <p className="text-xs text-red-500 mt-1">
+                  {getShippingError("city")}
+                </p>
+              )}
             </div>
             <div className="grid gap-2">
               <label className="text-[11px] uppercase tracking-[0.16em] font-bold text-slate-400">
@@ -168,7 +185,13 @@ export const CheckoutForm = ({
                 placeholder="10001"
                 value={zip}
                 onChange={(e) => onZipChange(e.target.value)}
+                onBlur={() => setZipTouched(true)}
               />
+              {zipTouched && getShippingError("zip") && (
+                <p className="text-xs text-red-500 mt-1">
+                  {getShippingError("zip")}
+                </p>
+              )}
             </div>
           </form>
         </section>
@@ -267,9 +290,11 @@ export const CheckoutForm = ({
                     onBlur={() => setNameTouched(true)}
                     required={paymentMethod === "card"}
                   />
-                  {nameTouched && !cardName && (
+                  {paymentMethod === "card" &&
+                    nameTouched &&
+                    getCardError("cardName") && (
                     <p className="text-xs text-red-500 mt-1">
-                      Name on card is required
+                      {getCardError("cardName")}
                     </p>
                   )}
                 </div>
@@ -294,24 +319,11 @@ export const CheckoutForm = ({
                     maxLength={19}
                     required={paymentMethod === "card"}
                   />
-                  {numberTouched && !cardNumber && (
-                    <p className="text-xs text-red-500 mt-1">
-                      Card number is required
-                    </p>
-                  )}
-                  {numberTouched &&
-                    cardNumber &&
-                    cardNumberDigitsLen !== 16 && (
+                  {paymentMethod === "card" &&
+                    numberTouched &&
+                    getCardError("cardNumber") && (
                       <p className="text-xs text-red-500 mt-1">
-                        Card number must be 16 digits
-                      </p>
-                    )}
-                  {numberTouched &&
-                    cardNumber &&
-                    cardNumberDigitsLen === 16 &&
-                    !luhnValid && (
-                      <p className="text-xs text-red-500 mt-1">
-                        Invalid card number
+                        {getCardError("cardNumber")}
                       </p>
                     )}
                 </div>
@@ -331,16 +343,13 @@ export const CheckoutForm = ({
                       maxLength={5}
                       required={paymentMethod === "card"}
                     />
-                    {expiryTouched && !cardExpiry && (
-                      <p className="text-xs text-red-500 mt-1">
-                        Expiration is required
-                      </p>
-                    )}
-                    {expiryTouched && cardExpiry && !expiryValid && (
-                      <p className="text-xs text-red-500 mt-1">
-                        Use MM/YY format
-                      </p>
-                    )}
+                    {paymentMethod === "card" &&
+                      expiryTouched &&
+                      getCardError("cardExpiry") && (
+                        <p className="text-xs text-red-500 mt-1">
+                          {getCardError("cardExpiry")}
+                        </p>
+                      )}
                   </div>
                   <div className="grid gap-2">
                     <label className="text-[11px] uppercase tracking-[0.16em] font-bold text-slate-400">
@@ -357,16 +366,13 @@ export const CheckoutForm = ({
                       maxLength={4}
                       required={paymentMethod === "card"}
                     />
-                    {cvcTouched && !cardCvc && (
-                      <p className="text-xs text-red-500 mt-1">
-                        CVC is required
-                      </p>
-                    )}
-                    {cvcTouched && cardCvc && !cvcValid && (
-                      <p className="text-xs text-red-500 mt-1">
-                        CVC must be 3-4 digits
-                      </p>
-                    )}
+                    {paymentMethod === "card" &&
+                      cvcTouched &&
+                      getCardError("cardCvc") && (
+                        <p className="text-xs text-red-500 mt-1">
+                          {getCardError("cardCvc")}
+                        </p>
+                      )}
                   </div>
                 </div>
               </div>

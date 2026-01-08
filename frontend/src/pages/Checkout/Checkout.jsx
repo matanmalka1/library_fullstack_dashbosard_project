@@ -9,6 +9,8 @@ import { CheckoutSuccess } from "./CheckoutSuccess";
 import { CheckoutForm } from "./CheckoutForm";
 import { CheckoutSummary } from "./CheckoutSummary";
 import { AlertBanner } from "../../components/ui/AlertBanner";
+import { cardPaymentSchema } from "../../validators/card-payment-schema";
+import { checkoutShippingSchema } from "../../validators/checkout-shipping-schema";
 
 export const Checkout = () => {
   const { items, totalPrice, clearCart } = useCart();
@@ -44,14 +46,30 @@ export const Checkout = () => {
     setLoading(true);
     setError("");
     try {
+      const shippingValidation = checkoutShippingSchema.safeParse({
+        address,
+        city,
+        zip,
+      });
+      if (!shippingValidation.success) {
+        throw new Error(
+          shippingValidation.error.issues[0]?.message ||
+            "Please enter a valid shipping address."
+        );
+      }
+
       if (paymentMethod === "card") {
-        // Basic client-side validation for card details
-        const num = cardNumber.replace(/\s+/g, "");
-        const numberOk = /^\d{13,19}$/.test(num);
-        const expiryOk = /^(0[1-9]|1[0-2])\/(\d{2})$/.test(cardExpiry);
-        const cvcOk = /^\d{3,4}$/.test(cardCvc);
-        if (!cardName || !numberOk || !expiryOk || !cvcOk) {
-          throw new Error("Please enter valid credit card details.");
+        const cardValidation = cardPaymentSchema.safeParse({
+          cardName,
+          cardNumber,
+          cardExpiry,
+          cardCvc,
+        });
+        if (!cardValidation.success) {
+          throw new Error(
+            cardValidation.error.issues[0]?.message ||
+              "Please enter valid credit card details."
+          );
         }
       }
       const fullAddress = `${address}, ${city}, ${zip}`;

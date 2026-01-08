@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { authService } from "../../services/AuthService";
 import { useAuth } from "../../context/auth/AuthContext";
+import { passwordChangeSchema } from "../../validators/password-change-schema";
 
 export const PasswordChangeForm = ({ onSuccess, user }) => {
   const { user: authUser } = useAuth();
@@ -27,13 +29,11 @@ export const PasswordChangeForm = ({ onSuccess, user }) => {
     register,
     handleSubmit,
     reset,
-    watch,
     formState: { errors },
   } = useForm({
     mode: "onChange",
+    resolver: zodResolver(passwordChangeSchema),
   });
-
-  const newPassword = watch("newPassword");
 
   const onSubmit = async (data) => {
     setFormError("");
@@ -69,13 +69,7 @@ export const PasswordChangeForm = ({ onSuccess, user }) => {
         </label>
         <input
           type="password"
-          {...register("currentPassword", {
-            required: "Current password is required",
-            minLength: {
-              value: 6,
-              message: "Password must be at least 6 characters",
-            },
-          })}
+          {...register("currentPassword")}
           className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
             errors.currentPassword ? "border-red-400" : "border-transparent"
           } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
@@ -94,13 +88,7 @@ export const PasswordChangeForm = ({ onSuccess, user }) => {
         </label>
         <input
           type="password"
-          {...register("newPassword", {
-            required: "New password is required",
-            minLength: {
-              value: 6,
-              message: "Password must be at least 6 characters",
-            },
-          })}
+          {...register("newPassword")}
           className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
             errors.newPassword ? "border-red-400" : "border-transparent"
           } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
@@ -119,11 +107,7 @@ export const PasswordChangeForm = ({ onSuccess, user }) => {
         </label>
         <input
           type="password"
-          {...register("confirmPassword", {
-            required: "Please confirm your password",
-            validate: (value) =>
-              value === newPassword || "Passwords do not match",
-          })}
+          {...register("confirmPassword")}
           className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
             errors.confirmPassword ? "border-red-400" : "border-transparent"
           } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}

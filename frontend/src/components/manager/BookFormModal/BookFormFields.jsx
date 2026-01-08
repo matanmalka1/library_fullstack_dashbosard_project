@@ -2,7 +2,7 @@ export const BookFormFields = ({ register, errors, categories }) => (
   <div className="flex-1 grid grid-cols-2 gap-4">
     <div className="col-span-2">
       <input
-        {...register("title", { required: "Title is required" })}
+        {...register("title")}
         className={`w-full px-4 py-3 bg-slate-50 rounded-2xl border ${
           errors.title ? "border-red-400" : "border-transparent"
         } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
@@ -15,7 +15,7 @@ export const BookFormFields = ({ register, errors, categories }) => (
 
     <div>
       <input
-        {...register("author", { required: "Author is required" })}
+        {...register("author")}
         className={`w-full px-4 py-3 bg-slate-50 rounded-2xl border ${
           errors.author ? "border-red-400" : "border-transparent"
         } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
@@ -28,7 +28,7 @@ export const BookFormFields = ({ register, errors, categories }) => (
 
     <div>
       <input
-        {...register("isbn", { required: "ISBN is required" })}
+        {...register("isbn")}
         className={`w-full px-4 py-3 bg-slate-50 rounded-2xl border ${
           errors.isbn ? "border-red-400" : "border-transparent"
         } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
@@ -42,10 +42,7 @@ export const BookFormFields = ({ register, errors, categories }) => (
     <div>
       <input
         type="number"
-        {...register("price", {
-          required: "Price is required",
-          min: { value: 1, message: "Price must be higher then $1" },
-        })}
+        {...register("price")}
         className={`w-full px-4 py-3 bg-slate-50 rounded-2xl border ${
           errors.price ? "border-red-400" : "border-transparent"
         } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
@@ -59,10 +56,7 @@ export const BookFormFields = ({ register, errors, categories }) => (
     <div>
       <input
         type="number"
-        {...register("stock", {
-          required: "Stock is required",
-          min: { value: 0, message: "Stock must be 0 or higher" },
-        })}
+        {...register("stock")}
         className={`w-full px-4 py-3 bg-slate-50 rounded-2xl border ${
           errors.stock ? "border-red-400" : "border-transparent"
         } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
@@ -75,7 +69,7 @@ export const BookFormFields = ({ register, errors, categories }) => (
 
     <div className="col-span-2">
       <select
-        {...register("category", { required: "Category is required" })}
+        {...register("category")}
         className={`w-full px-4 py-3 bg-slate-50 rounded-2xl border ${
           errors.category ? "border-red-400" : "border-transparent"
         } text-sm outline-none cursor-pointer focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
