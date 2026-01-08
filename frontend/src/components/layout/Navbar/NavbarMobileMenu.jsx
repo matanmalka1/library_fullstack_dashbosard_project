@@ -1,6 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { categoryService } from "../../../services/CategoryService";
+import * as Select from "@radix-ui/react-select";
+import { Check, ChevronDown } from "lucide-react";
 
 export const NavbarMobileMenu = ({
   isAuthenticated,
@@ -10,6 +12,7 @@ export const NavbarMobileMenu = ({
   onNavigate,
 }) => {
   const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,6 +31,7 @@ export const NavbarMobileMenu = ({
   }, []);
 
   const handleCategoryChange = (value) => {
+    setSelectedCategory(value);
     if (!value || value === "all") {
       navigate("/books");
     } else {
@@ -45,18 +49,41 @@ export const NavbarMobileMenu = ({
       >
         Browse Catalog
       </Link>
-      <select
-        onChange={(e) => handleCategoryChange(e.target.value)}
-        className="text-slate-700 text-lg font-medium bg-slate-50 border border-slate-200 rounded-[14px] px-4 py-3 outline-none"
-        defaultValue="all"
-      >
-        <option value="all">Browse by Category</option>
-        {categories.map((category) => (
-          <option key={category} value={category}>
-            {category}
-          </option>
-        ))}
-      </select>
+      <Select.Root value={selectedCategory} onValueChange={handleCategoryChange}>
+        <Select.Trigger className="inline-flex items-center justify-between gap-2 text-slate-700 text-lg font-medium bg-slate-50 border border-slate-200 rounded-[14px] px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300">
+          <Select.Value placeholder="Browse by Category" />
+          <Select.Icon>
+            <ChevronDown className="w-4 h-4 text-slate-400" />
+          </Select.Icon>
+        </Select.Trigger>
+        <Select.Portal>
+          <Select.Content className="z-50 bg-white border border-slate-200 rounded-xl shadow-[0_12px_30px_rgba(15,23,42,0.12)] overflow-hidden">
+            <Select.Viewport className="p-2">
+              <Select.Item
+                value="all"
+                className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-sm text-slate-700 cursor-pointer outline-none data-[highlighted]:bg-slate-50 data-[state=checked]:font-semibold"
+              >
+                <Select.ItemText>All Categories</Select.ItemText>
+                <Select.ItemIndicator>
+                  <Check className="w-4 h-4 text-indigo-600" />
+                </Select.ItemIndicator>
+              </Select.Item>
+              {categories.map((category) => (
+                <Select.Item
+                  key={category}
+                  value={category}
+                  className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-sm text-slate-700 cursor-pointer outline-none data-[highlighted]:bg-slate-50 data-[state=checked]:font-semibold"
+                >
+                  <Select.ItemText>{category}</Select.ItemText>
+                  <Select.ItemIndicator>
+                    <Check className="w-4 h-4 text-indigo-600" />
+                  </Select.ItemIndicator>
+                </Select.Item>
+              ))}
+            </Select.Viewport>
+          </Select.Content>
+        </Select.Portal>
+      </Select.Root>
       {isAuthenticated ? (
         <>
           <Link
