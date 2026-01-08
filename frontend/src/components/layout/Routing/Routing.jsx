@@ -7,21 +7,23 @@ import { Navbar } from "../Navbar/Navbar";
 import { Footer } from "../Footer/Footer";
 import { PrivateRoute } from "../../routes/PrivateRoute";
 
-import { Home } from "../../../pages/Home/Home";
-import { Books } from "../../../pages/Books/Books";
-import { DetailsPage } from "../../../pages/BookDetails/BookDetails";
-import { Login } from "../../../pages/Login/Login";
-import { Register } from "../../../pages/Register/Register";
-import { OAuthCallback } from "../../../pages/OAuthCallback/OAuthCallback";
-import { Cart } from "../../../pages/Cart/Cart";
-import { Wishlist } from "../../../pages/Wishlist/Wishlist";
-import { Checkout } from "../../../pages/Checkout/Checkout";
-import { Orders } from "../../../pages/Orders/Orders";
-import { Profile } from "../../../pages/Profile/Profile";
-import { AdminDashboard } from "../../../pages/AdminDashboard/AdminDashboard";
-import { AdminReviewsPage } from "../../../pages/AdminDashboard/AdminReviewsPage";
-import { AdminUsersPage } from "../../../pages/AdminDashboard/AdminUsersPage";
-import { ManagerDashboard } from "../../../pages/ManagerDashboard/ManagerDashboard";
+import { Home } from "../../../pages/sharedPages/Home/Home";
+import { Books } from "../../../pages/sharedPages/Books/Books";
+import { DetailsPage } from "../../../pages/sharedPages/BookDetails/BookDetails";
+import { About } from "../../../pages/sharedPages/About/About";
+import { Help } from "../../../pages/sharedPages/Help/Help";
+import { Login } from "../../../pages/sharedPages/Login/Login";
+import { Register } from "../../../pages/sharedPages/Register/Register";
+import { OAuthCallback } from "../../../pages/sharedPages/OAuthCallback/OAuthCallback";
+import { Cart } from "../../../pages/userPages/Cart/Cart";
+import { Wishlist } from "../../../pages/userPages/Wishlist/Wishlist";
+import { Checkout } from "../../../pages/userPages/Checkout/Checkout";
+import { Orders } from "../../../pages/userPages/Orders/Orders";
+import { Profile } from "../../../pages/userPages/Profile/Profile";
+import { AdminDashboard } from "../../../pages/adminPages/AdminDashboard";
+import { AdminReviewsPage } from "../../../pages/adminPages/AdminReviewsPage";
+import { AdminUsersPage } from "../../../pages/adminPages/AdminUsersPage";
+import { ManagerDashboard } from "../../../pages/managerPages/ManagerDashboard";
 
 export const App = () => (
   <AuthProvider>
@@ -31,6 +33,8 @@ export const App = () => (
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/help" element={<Help />} />
             <Route path="/books" element={<Books />} />
             <Route path="/books/:id" element={<DetailsPage />} />
             <Route path="/login" element={<Login />} />

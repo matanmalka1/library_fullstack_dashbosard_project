@@ -19,19 +19,20 @@ const buildSearchFilter = ({ search, category }) => {
   return filter;
 };
 
-const populateReviews = () => ({
+const populateReviews = (includePendingReviews) => ({
   path: "reviews",
-  match: { approved: true },
+  match: includePendingReviews ? {} : { approved: true },
   select: "user userName rating comment approved date createdAt",
   options: { sort: { createdAt: -1 } },
 });
 
-export const getAllBooks = async (query) => {
+export const getAllBooks = async (query, options = {}) => {
   const { page, limit, skip } = parsePaginationParams(query, {
     defaultLimit: 20,
     maxLimit: 200,
   });
   const includeReviews = query.includeReviews !== "false";
+  const includePendingReviews = !!options.includePendingReviews;
 
   const filter = buildSearchFilter(query);
 
@@ -41,7 +42,7 @@ export const getAllBooks = async (query) => {
     .limit(limit);
 
   if (includeReviews) {
-    booksQuery.populate(populateReviews());
+    booksQuery.populate(populateReviews(includePendingReviews));
   } else {
     booksQuery.select("-reviews");
   }

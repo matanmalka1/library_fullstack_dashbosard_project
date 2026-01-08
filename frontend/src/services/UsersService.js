@@ -10,7 +10,11 @@ class UsersServiceClass extends BaseService {
   getUsers() {
     return this.handleGetList("/users", {
       dataKey: "users",
-      normalize: (user) => normalizeUser(user),
+      normalize: (user) =>
+        normalizeUser(user, {
+          normalizeRole,
+          roleIdByName: this.roleIdByName,
+        }),
       fallback: "Unable to load users.",
     });
   }
@@ -52,6 +56,25 @@ class UsersServiceClass extends BaseService {
         }),
       fallback: "Unable to update profile.",
     });
+  }
+
+  updateUserRole(userId, roleName) {
+    const roleId = this.roleIdByName.get(roleName);
+    if (!roleId) {
+      return Promise.reject(new Error("Role mapping not found."));
+    }
+    return this.handlePut(
+      `/users/${userId}`,
+      { roleId },
+      {
+        normalize: (data) =>
+          normalizeUser(data?.user, {
+            normalizeRole,
+            roleIdByName: this.roleIdByName,
+          }),
+        fallback: "Unable to update user role.",
+      }
+    );
   }
 }
 

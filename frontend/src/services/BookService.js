@@ -6,8 +6,11 @@ class BookServiceClass extends BaseService {
     super();
   }
 
-  getBooks() {
-    return this.handleGetList("/books", {
+  getBooks(params = {}) {
+    const search = new URLSearchParams(params).toString();
+    const url = search ? `/books?${search}` : "/books";
+
+    return this.handleGetList(url, {
       dataKey: "books",
       normalize: normalizeBook,
       fallback: "Unable to load books."

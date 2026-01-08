@@ -17,6 +17,13 @@ export const NavbarMobileMenu = ({
     </Link>
     {isAuthenticated ? (
       <>
+        <Link
+          to="/orders"
+          className="text-slate-700 no-underline text-lg font-medium"
+          onClick={onNavigate}
+        >
+          Orders
+        </Link>
         {isManager && (
           <Link
             to="/manager"
@@ -33,7 +40,7 @@ export const NavbarMobileMenu = ({
               className="text-slate-700 no-underline text-lg font-medium"
               onClick={onNavigate}
             >
-              Pending Reviews
+              Pending
             </Link>
             <Link
               to="/admin/users"
@@ -44,13 +51,6 @@ export const NavbarMobileMenu = ({
             </Link>
           </>
         )}
-        <Link
-          to="/orders"
-          className="text-slate-700 no-underline text-lg font-medium"
-          onClick={onNavigate}
-        >
-          My Orders
-        </Link>
         <Link
           to="/wishlist"
           className="text-slate-700 no-underline text-lg font-medium"
@@ -75,5 +75,19 @@ export const NavbarMobileMenu = ({
         Sign In
       </Link>
     )}
+    <Link
+      to="/about"
+      className="text-slate-700 no-underline text-lg font-medium"
+      onClick={onNavigate}
+    >
+      About
+    </Link>
+    <Link
+      to="/help"
+      className="text-slate-700 no-underline text-lg font-medium"
+      onClick={onNavigate}
+    >
+      Help
+    </Link>
   </div>
 );

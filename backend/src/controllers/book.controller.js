@@ -1,6 +1,7 @@
 import * as bookService from "../services/book.service.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { successResponse } from "../utils/response.js";
+import { getUserFromToken } from "../utils/auth-helpers.js";
 
 // CREATE
 // Create a new book entry.
@@ -12,7 +13,15 @@ export const createBook = asyncHandler(async (req, res) => {
 // READ ALL
 // List books with pagination and filters.
 export const getAllBooks = asyncHandler(async (req, res) => {
-  const result = await bookService.getAllBooks(req.query);
+  let includePendingReviews = false;
+  if (req.query.includePendingReviews === "true") {
+    const user = await getUserFromToken(req.headers.authorization);
+    includePendingReviews = user?.role?.name === "admin";
+  }
+
+  const result = await bookService.getAllBooks(req.query, {
+    includePendingReviews,
+  });
   successResponse(res, result, "Books retrieved successfully");
 });
 

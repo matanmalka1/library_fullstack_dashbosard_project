@@ -4,6 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { authService } from "../../services/AuthService";
 import { useAuth } from "../../context/auth/AuthContext";
 import { shippingAddressSchema } from "../../validators/profile/shipping-address-schema";
+import { FormField } from "../ui/FormField";
+import { FormError } from "../ui/FormError";
+import { FormSubmitButton } from "../ui/FormSubmitButton";
 
 export const ShippingAddressForm = ({ user, onSuccess }) => {
   const { updateUser } = useAuth();
@@ -60,105 +63,45 @@ export const ShippingAddressForm = ({ user, onSuccess }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
-      {formError && (
-        <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg p-3">
-          {formError}
-        </div>
-      )}
+      <FormError message={formError} />
 
-      <div>
-        <label className="text-xs uppercase tracking-[0.12em] font-bold text-slate-600 mb-2 block">
-          Street Address
-        </label>
-        <input
-          {...register("street")}
-          className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
-            errors.street ? "border-red-400" : "border-transparent"
-          } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
-          placeholder="123 Main Street"
+      <FormField
+        label="Street Address"
+        error={errors.street?.message}
+        inputProps={{ ...register("street"), placeholder: "123 Main Street" }}
+      />
+
+      <div className="grid grid-cols-2 gap-4">
+        <FormField
+          label="City"
+          error={errors.city?.message}
+          inputProps={{ ...register("city"), placeholder: "New York" }}
         />
-        {errors.street && (
-          <p className="text-xs text-red-500 mt-1">{errors.street.message}</p>
-        )}
+
+        <FormField
+          label="State/Province"
+          error={errors.state?.message}
+          inputProps={{ ...register("state"), placeholder: "NY" }}
+        />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="text-xs uppercase tracking-[0.12em] font-bold text-slate-600 mb-2 block">
-            City
-          </label>
-          <input
-            {...register("city")}
-            className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
-              errors.city ? "border-red-400" : "border-transparent"
-            } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
-            placeholder="New York"
-          />
-          {errors.city && (
-            <p className="text-xs text-red-500 mt-1">{errors.city.message}</p>
-          )}
-        </div>
+        <FormField
+          label="ZIP/Postal Code"
+          error={errors.zip?.message}
+          inputProps={{ ...register("zip"), placeholder: "10001" }}
+        />
 
-        <div>
-          <label className="text-xs uppercase tracking-[0.12em] font-bold text-slate-600 mb-2 block">
-            State/Province
-          </label>
-          <input
-            {...register("state")}
-            className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
-              errors.state ? "border-red-400" : "border-transparent"
-            } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
-            placeholder="NY"
-          />
-          {errors.state && (
-            <p className="text-xs text-red-500 mt-1">{errors.state.message}</p>
-          )}
-        </div>
+        <FormField
+          label="Country"
+          error={errors.country?.message}
+          inputProps={{ ...register("country"), placeholder: "United States" }}
+        />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="text-xs uppercase tracking-[0.12em] font-bold text-slate-600 mb-2 block">
-            ZIP/Postal Code
-          </label>
-          <input
-            {...register("zip")}
-            className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
-              errors.zip ? "border-red-400" : "border-transparent"
-            } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
-            placeholder="10001"
-          />
-          {errors.zip && (
-            <p className="text-xs text-red-500 mt-1">{errors.zip.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label className="text-xs uppercase tracking-[0.12em] font-bold text-slate-600 mb-2 block">
-            Country
-          </label>
-          <input
-            {...register("country")}
-            className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
-              errors.country ? "border-red-400" : "border-transparent"
-            } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
-            placeholder="United States"
-          />
-          {errors.country && (
-            <p className="text-xs text-red-500 mt-1">
-              {errors.country.message}
-            </p>
-          )}
-        </div>
-      </div>
-
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="border-0 rounded-[14px] px-4 py-3 bg-indigo-600 text-white font-bold cursor-pointer shadow-[0_8px_16px_rgba(79,70,229,0.2)] transition-colors hover:bg-indigo-700 disabled:bg-slate-300 disabled:cursor-not-allowed mt-4"
-      >
+      <FormSubmitButton type="submit" disabled={isSubmitting}>
         {isSubmitting ? "Saving..." : "Save Address"}
-      </button>
+      </FormSubmitButton>
       {saved && <p className="text-sm text-emerald-600 mt-2">Saved</p>}
     </form>
   );
