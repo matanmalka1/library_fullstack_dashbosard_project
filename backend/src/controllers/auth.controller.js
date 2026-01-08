@@ -1,4 +1,7 @@
-import * as authService from "../services/auth.service.js";
+import { register, login } from "../services/auth/core.service.js";
+import { logout, refreshAccessToken } from "../services/auth/token.service.js";
+import { changePassword } from "../services/auth/password.service.js";
+import { updateProfile } from "../services/auth/profile.service.js";
 import { successResponse } from "../utils/response.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { refreshTokenInvalidError } from "../utils/error-factories.js";
@@ -15,14 +18,14 @@ const cookieOptions = {
 
 // Handle registration request.
 export const register = asyncHandler(async (req, res) => {
-  const { user } = await authService.register(req.body);
+  const { user } = await register(req.body);
   successResponse(res, { user }, "User registered successfully", 201);
 });
 
 // Handle login request and set refresh token cookie.
 export const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  const { user, accessToken, refreshToken } = await authService.login(
+  const { user, accessToken, refreshToken } = await login(
     email,
     password
   );
@@ -34,7 +37,7 @@ export const login = asyncHandler(async (req, res) => {
 // Handle logout request and clear refresh token cookie.
 export const logout = asyncHandler(async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
-  await authService.logout(req.user.id, refreshToken);
+  await logout(req.user.id, refreshToken);
 
   res.clearCookie("refreshToken", cookieOptions);
   successResponse(res, null, "Logout successful");
@@ -47,7 +50,7 @@ export const refresh = asyncHandler(async (req, res) => {
   if (!oldRefreshToken) {
     throw refreshTokenInvalidError("Refresh token not found");
   }
-  const { accessToken, refreshToken } = await authService.refreshAccessToken(
+  const { accessToken, refreshToken } = await refreshAccessToken(
     oldRefreshToken
   );
 
@@ -67,12 +70,12 @@ export const me = asyncHandler(async (req, res) => {
 // Handle password change request.
 export const changePassword = asyncHandler(async (req, res) => {
   const { currentPassword, newPassword } = req.body;
-  await authService.changePassword(req.user.id, currentPassword, newPassword);
+  await changePassword(req.user.id, currentPassword, newPassword);
   successResponse(res, null, "Password changed successfully");
 });
 
 // Handle profile update request.
 export const updateProfile = asyncHandler(async (req, res) => {
-  const user = await authService.updateProfile(req.user.id, req.body);
+  const user = await updateProfile(req.user.id, req.body);
   successResponse(res, { user }, "Profile updated successfully");
 });

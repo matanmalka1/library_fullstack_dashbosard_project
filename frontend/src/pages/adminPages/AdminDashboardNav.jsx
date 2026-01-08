@@ -20,7 +20,7 @@ export const AdminDashboardNav = ({ activeTab }) => (
           to="/admin/users"
           className="w-full border-0 bg-transparent px-4 py-3 rounded-2xl font-bold text-sm text-black flex items-center justify-center gap-3 cursor-pointer transition no-underline bg-indigo-600 shadow-[0_12px_20px_rgba(79,70,229,0.2)]"
         >
-          <Shield className="w-4 h-4" /> User Controls
+          <Shield className="w-4 h-4" /> Controls
         </Link>
       )}
     </div>

@@ -2,16 +2,19 @@ import { useEffect, useState } from "react";
 import { Package } from "lucide-react";
 import { ordersService } from "../../../services/OrdersService";
 import { useAuth } from "../../../context/auth/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { OrderCard } from "./OrderCard";
 import { useCart } from "../../../context/cart/CartContext";
 import { EmptyState } from "../../../components/ui/EmptyState";
+import { OrderStatus } from "../../../types";
 
 export const Orders = () => {
   const [orders, setOrders] = useState([]);
+  const [statusFilter, setStatusFilter] = useState("ALL");
   const { user } = useAuth();
   const { addToCart } = useCart();
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
   const navigate = useNavigate();
 
   const fetchOrders = async () => {
@@ -30,6 +33,17 @@ export const Orders = () => {
       fetchOrders();
     }
   }, [user]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const status = params.get("status");
+    if (!status) {
+      setStatusFilter("ALL");
+      return;
+    }
+    const allowed = new Set(Object.values(OrderStatus));
+    setStatusFilter(allowed.has(status) ? status : "ALL");
+  }, [location.search]);
 
   const handleCancelOrder = async (orderId) => {
     if (!confirm("Cancel this order and request a refund?")) return;
@@ -79,20 +93,45 @@ export const Orders = () => {
 
   return (
     <div className="max-w-[960px] mx-auto px-4 py-12">
-      <h1 className="font-serif text-4xl text-slate-900 mb-10">
-        Purchase History
-      </h1>
+      <div className="flex items-center justify-between gap-4 mb-10 flex-wrap">
+        <h1 className="font-serif text-4xl text-slate-900 m-0">
+          Purchase History
+        </h1>
+        <select
+          value={statusFilter}
+          onChange={(e) => {
+            const value = e.target.value;
+            setStatusFilter(value);
+            if (value === "ALL") {
+              navigate("/orders");
+            } else {
+              navigate(`/orders?status=${encodeURIComponent(value)}`);
+            }
+          }}
+          className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300"
+        >
+          <option value="ALL">All</option>
+          <option value={OrderStatus.PENDING}>Pending</option>
+          <option value={OrderStatus.SHIPPED}>Shipped</option>
+          <option value={OrderStatus.DELIVERED}>Delivered</option>
+          <option value={OrderStatus.CANCELLED}>Cancelled</option>
+        </select>
+      </div>
 
       <div className="grid gap-8">
-        {orders.map((order) => (
-          <OrderCard
-            key={order.id}
-            order={order}
-            user={user}
-            onCancel={handleCancelOrder}
-            onReorder={handleReorder}
-          />
-        ))}
+        {orders
+          .filter((order) =>
+            statusFilter === "ALL" ? true : order.status === statusFilter
+          )
+          .map((order) => (
+            <OrderCard
+              key={order.id}
+              order={order}
+              user={user}
+              onCancel={handleCancelOrder}
+              onReorder={handleReorder}
+            />
+          ))}
       </div>
     </div>
   );

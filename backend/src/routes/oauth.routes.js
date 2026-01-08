@@ -1,7 +1,7 @@
 import express from "express";
 import passport from "passport";
 import { logger } from "../utils/logger.js";
-import * as authService from "../services/auth.service.js";
+import { handleOAuthLogin } from "../services/auth/core.service.js";
 
 export const router = express.Router();
 
@@ -15,7 +15,7 @@ const handleOAuthCallback = async (req, res) => {
     }
 
     // Use service to handle token generation and storage
-    const { accessToken, refreshToken } = await authService.handleOAuthLogin(user);
+    const { accessToken, refreshToken } = await handleOAuthLogin(user);
 
     const isProduction = process.env.NODE_ENV === "production";
     res.cookie("refreshToken", refreshToken, {
