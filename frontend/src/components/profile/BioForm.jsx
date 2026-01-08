@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { usersService } from "../../services/UsersService";
+import { authService } from "../../services/AuthService";
 import { useAuth } from "../../context/auth/AuthContext";
 
 export const BioForm = ({ user, onSuccess }) => {
@@ -30,8 +30,8 @@ export const BioForm = ({ user, onSuccess }) => {
     setIsSubmitting(true);
 
     try {
-      const updatedUser = await usersService.updateProfile(user.id, {
-        bio: data.bio || null,
+      const updatedUser = await authService.updateProfile({
+        bio: data.bio?.trim() || null,
       });
 
       updateUser(updatedUser);
@@ -65,7 +65,10 @@ export const BioForm = ({ user, onSuccess }) => {
         </div>
         <textarea
           {...register("bio", {
-            maxLength: { value: 500, message: "Bio cannot exceed 500 characters" },
+            maxLength: {
+              value: 500,
+              message: "Bio cannot exceed 500 characters",
+            },
           })}
           className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
             errors.bio ? "border-red-400" : "border-transparent"
@@ -88,9 +91,7 @@ export const BioForm = ({ user, onSuccess }) => {
       >
         {isSubmitting ? "Saving..." : "Save Bio"}
       </button>
-      {saved && (
-        <p className="text-sm text-emerald-600 mt-2">Saved</p>
-      )}
+      {saved && <p className="text-sm text-emerald-600 mt-2">Saved</p>}
     </form>
   );
 };

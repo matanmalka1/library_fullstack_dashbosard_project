@@ -134,7 +134,9 @@ export const refreshAccessToken = async (oldRefreshToken) => {
   );
 
   if (!tokenRecord) {
-    throw refreshTokenInvalidError("Invalid or already used/expired refresh token");
+    throw refreshTokenInvalidError(
+      "Invalid or already used/expired refresh token"
+    );
   }
 
   const user = await User.findById(decoded.userId);
@@ -190,7 +192,9 @@ export const changePassword = async (userId, currentPassword, newPassword) => {
   // Check if user authenticated via OAuth
   const hasOAuth = user.oauth?.google?.id || user.oauth?.github?.id;
   if (hasOAuth) {
-    throw authenticationError("OAuth users cannot change password. Please use your social account login.");
+    throw authenticationError(
+      "OAuth users cannot change password. Please use your social account login."
+    );
   }
 
   const isPasswordValid = await comparePassword(currentPassword, user.password);
@@ -202,4 +206,46 @@ export const changePassword = async (userId, currentPassword, newPassword) => {
   await user.save();
 
   logger.info("Password changed successfully", { userId });
+};
+
+// Update authenticated user's profile.
+export const updateProfile = async (userId, profileData) => {
+  const user = await User.findById(userId).populate({
+    path: "role",
+    populate: { path: "permissions" },
+  });
+
+  if (!user) {
+    throw resourceNotFoundError("User");
+  }
+
+  // Only allow updating specific profile fields (not role, email, password, etc.)
+  const allowedFields = [
+    "firstName",
+    "lastName",
+    "phoneNumber",
+    "bio",
+    "profilePicture",
+  ];
+  const updates = {};
+
+  for (const field of allowedFields) {
+    if (profileData[field] !== undefined) {
+      updates[field] = profileData[field];
+    }
+  }
+
+  // Handle shippingAddress specially - map to defaultShippingAddress
+  if (profileData.shippingAddress !== undefined) {
+    updates.defaultShippingAddress = profileData.shippingAddress;
+  }
+
+  Object.assign(user, updates);
+  await user.save();
+
+  const userObject = sanitizeUser(user);
+
+  logger.info("Profile updated successfully", { userId });
+
+  return userObject;
 };

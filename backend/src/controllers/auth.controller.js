@@ -57,7 +57,11 @@ export const refresh = asyncHandler(async (req, res) => {
 
 // Return the authenticated user's profile.
 export const me = asyncHandler(async (req, res) => {
-  successResponse(res,{ user: req.user },"User profile retrieved successfully");
+  successResponse(
+    res,
+    { user: req.user },
+    "User profile retrieved successfully"
+  );
 });
 
 // Handle password change request.
@@ -65,4 +69,10 @@ export const changePassword = asyncHandler(async (req, res) => {
   const { currentPassword, newPassword } = req.body;
   await authService.changePassword(req.user.id, currentPassword, newPassword);
   successResponse(res, null, "Password changed successfully");
+});
+
+// Handle profile update request.
+export const updateProfile = asyncHandler(async (req, res) => {
+  const user = await authService.updateProfile(req.user.id, req.body);
+  successResponse(res, { user }, "Profile updated successfully");
 });

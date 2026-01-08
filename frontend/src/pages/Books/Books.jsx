@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 export const Books = () => {
   const [books, setBooks] = useState([]);
   const [filtered, setFiltered] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [cat, setCat] = useState("All");
   const [categories, setCategories] = useState([]);
@@ -23,6 +24,7 @@ export const Books = () => {
     bookService.getBooks().then((b) => {
       setBooks(b);
       setFiltered(b);
+      setLoading(false);
     });
   }, []);
 
@@ -82,6 +84,14 @@ export const Books = () => {
     const next = await wishlistService.toggleWishlist(user.id, bookId);
     setWishlistIds(next);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="w-12 h-12 rounded-full border-4 border-indigo-600 border-t-transparent animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-[1120px] mx-auto px-4 lg:px-8 py-12 flex flex-col gap-8 md:flex-row">

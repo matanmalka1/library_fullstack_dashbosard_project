@@ -1,11 +1,15 @@
-import React from "react";
 import { BookFormHeader } from "./BookFormHeader";
 import { BookFormMedia } from "./BookFormMedia";
 import { BookFormFields } from "./BookFormFields";
 import { useBookFormModal } from "./useBookFormModal";
 import { AlertBanner } from "../../ui/AlertBanner";
 
-export const BookFormModal = ({ editingBook, categories, onClose, onSaved }) => {
+export const BookFormModal = ({
+  editingBook,
+  categories,
+  onClose,
+  onSaved,
+}) => {
   const {
     register,
     handleSubmit,
@@ -24,10 +28,7 @@ export const BookFormModal = ({ editingBook, categories, onClose, onSaved }) => 
       <div className="bg-white rounded-[32px] w-full max-w-[720px] overflow-hidden shadow-[0_30px_60px_rgba(15,23,42,0.25)] animate-[modal-in_0.2s_ease]">
         <BookFormHeader editingBook={editingBook} onClose={onClose} />
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="p-8 grid gap-6"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="p-8 grid gap-6">
           <AlertBanner message={formError} />
           <div className="flex flex-col gap-6 md:flex-row md:gap-8">
             <BookFormMedia

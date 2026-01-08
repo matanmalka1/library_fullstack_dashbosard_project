@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { usersService } from "../../services/UsersService";
+import { authService } from "../../services/AuthService";
 import { useAuth } from "../../context/auth/AuthContext";
 
 export const ShippingAddressForm = ({ user, onSuccess }) => {
@@ -14,6 +14,7 @@ export const ShippingAddressForm = ({ user, onSuccess }) => {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm({
     mode: "onChange",
@@ -26,16 +27,24 @@ export const ShippingAddressForm = ({ user, onSuccess }) => {
     },
   });
 
+  // Watch all fields to check if address is partially filled
+  const watchAllFields = watch();
+
   const onSubmit = async (data) => {
     setFormError("");
     setIsSubmitting(true);
 
     try {
-      // Check if all fields are empty
-      const isEmpty = !data.street && !data.city && !data.state && !data.zip && !data.country;
+      // Check if all fields are empty or whitespace
+      const isEmpty =
+        !data.street?.trim() &&
+        !data.city?.trim() &&
+        !data.state?.trim() &&
+        !data.zip?.trim() &&
+        !data.country?.trim();
 
-      const updatedUser = await usersService.updateProfile(user.id, {
-        defaultShippingAddress: isEmpty ? null : data,
+      const updatedUser = await authService.updateProfile({
+        shippingAddress: isEmpty ? null : data,
       });
 
       updateUser(updatedUser);
@@ -63,7 +72,18 @@ export const ShippingAddressForm = ({ user, onSuccess }) => {
           Street Address
         </label>
         <input
-          {...register("street")}
+          {...register("street", {
+            minLength: {
+              value: 3,
+              message: "Street must be at least 3 characters",
+            },
+            validate: (value) => {
+              if (value && value.trim().length > 0 && value.trim().length < 3) {
+                return "Street must be at least 3 characters";
+              }
+              return true;
+            },
+          })}
           className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
             errors.street ? "border-red-400" : "border-transparent"
           } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
@@ -80,7 +100,22 @@ export const ShippingAddressForm = ({ user, onSuccess }) => {
             City
           </label>
           <input
-            {...register("city")}
+            {...register("city", {
+              minLength: {
+                value: 2,
+                message: "City must be at least 2 characters",
+              },
+              validate: (value) => {
+                if (
+                  value &&
+                  value.trim().length > 0 &&
+                  value.trim().length < 2
+                ) {
+                  return "City must be at least 2 characters";
+                }
+                return true;
+              },
+            })}
             className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
               errors.city ? "border-red-400" : "border-transparent"
             } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
@@ -96,7 +131,22 @@ export const ShippingAddressForm = ({ user, onSuccess }) => {
             State/Province
           </label>
           <input
-            {...register("state")}
+            {...register("state", {
+              minLength: {
+                value: 2,
+                message: "State must be at least 2 characters",
+              },
+              validate: (value) => {
+                if (
+                  value &&
+                  value.trim().length > 0 &&
+                  value.trim().length < 2
+                ) {
+                  return "State must be at least 2 characters";
+                }
+                return true;
+              },
+            })}
             className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
               errors.state ? "border-red-400" : "border-transparent"
             } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
@@ -114,7 +164,22 @@ export const ShippingAddressForm = ({ user, onSuccess }) => {
             ZIP/Postal Code
           </label>
           <input
-            {...register("zip")}
+            {...register("zip", {
+              minLength: {
+                value: 3,
+                message: "Zip code must be at least 3 characters",
+              },
+              validate: (value) => {
+                if (
+                  value &&
+                  value.trim().length > 0 &&
+                  value.trim().length < 3
+                ) {
+                  return "Zip code must be at least 3 characters";
+                }
+                return true;
+              },
+            })}
             className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
               errors.zip ? "border-red-400" : "border-transparent"
             } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
@@ -130,14 +195,31 @@ export const ShippingAddressForm = ({ user, onSuccess }) => {
             Country
           </label>
           <input
-            {...register("country")}
+            {...register("country", {
+              minLength: {
+                value: 2,
+                message: "Country must be at least 2 characters",
+              },
+              validate: (value) => {
+                if (
+                  value &&
+                  value.trim().length > 0 &&
+                  value.trim().length < 2
+                ) {
+                  return "Country must be at least 2 characters";
+                }
+                return true;
+              },
+            })}
             className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
               errors.country ? "border-red-400" : "border-transparent"
             } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
             placeholder="United States"
           />
           {errors.country && (
-            <p className="text-xs text-red-500 mt-1">{errors.country.message}</p>
+            <p className="text-xs text-red-500 mt-1">
+              {errors.country.message}
+            </p>
           )}
         </div>
       </div>
@@ -149,9 +231,7 @@ export const ShippingAddressForm = ({ user, onSuccess }) => {
       >
         {isSubmitting ? "Saving..." : "Save Address"}
       </button>
-      {saved && (
-        <p className="text-sm text-emerald-600 mt-2">Saved</p>
-      )}
+      {saved && <p className="text-sm text-emerald-600 mt-2">Saved</p>}
     </form>
   );
 };

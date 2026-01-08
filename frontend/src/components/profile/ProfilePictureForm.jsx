@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { Upload, X } from "lucide-react";
-import { usersService } from "../../services/UsersService";
+import { authService } from "../../services/AuthService";
 import { useAuth } from "../../context/auth/AuthContext";
 
 export const ProfilePictureForm = ({ user, onSuccess }) => {
@@ -36,7 +36,7 @@ export const ProfilePictureForm = ({ user, onSuccess }) => {
       // Auto-save on file select
       setIsSubmitting(true);
       try {
-        const updatedUser = await usersService.updateProfile(user.id, {
+        const updatedUser = await authService.updateProfile({
           profilePicture: base64,
         });
         updateUser(updatedUser);
@@ -61,7 +61,7 @@ export const ProfilePictureForm = ({ user, onSuccess }) => {
   const handleRemove = async () => {
     setIsSubmitting(true);
     try {
-      const updatedUser = await usersService.updateProfile(user.id, {
+      const updatedUser = await authService.updateProfile({
         profilePicture: null,
       });
       updateUser(updatedUser);
@@ -134,9 +134,7 @@ export const ProfilePictureForm = ({ user, onSuccess }) => {
         </button>
       )}
 
-      {saved && (
-        <p className="text-sm text-emerald-600">Updated</p>
-      )}
+      {saved && <p className="text-sm text-emerald-600">Updated</p>}
 
       <p className="text-xs text-slate-500 text-center">
         JPG, PNG or GIF (max 2MB)

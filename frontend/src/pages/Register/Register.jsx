@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/auth/AuthContext";
 import { RegisterFormPanel } from "./RegisterFormPanel";
 import { RegisterVisual } from "./RegisterVisual";
+import { validateFirstName,validateLastName,validateEmail,validatePasswordStrength } from "../../utils/validation";
 
 export const Register = () => {
   const [firstName, setFirstName] = useState("");
@@ -10,13 +11,30 @@ export const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [validationErrors, setValidationErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
 
+  const validateForm = () => {
+    const errors = {
+      firstName: validateFirstName(firstName),
+      lastName: validateLastName(lastName),
+      email: validateEmail(email),
+      password: validatePasswordStrength(password),
+    };
+    setValidationErrors(errors);
+    return !Object.values(errors).some((err) => err !== null);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    if (!validateForm()) {
+      return;
+    }
+
     setLoading(true);
     try {
       await register(firstName, lastName, email, password);
@@ -36,6 +54,7 @@ export const Register = () => {
         email={email}
         password={password}
         error={error}
+        validationErrors={validationErrors}
         loading={loading}
         onFirstNameChange={setFirstName}
         onLastNameChange={setLastName}

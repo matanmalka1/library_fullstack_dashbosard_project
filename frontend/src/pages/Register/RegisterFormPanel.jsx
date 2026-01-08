@@ -8,6 +8,7 @@ export const RegisterFormPanel = ({
   email,
   password,
   error,
+  validationErrors = {},
   loading,
   onFirstNameChange,
   onLastNameChange,
@@ -17,11 +18,18 @@ export const RegisterFormPanel = ({
 }) => (
   <div className="w-full max-w-[450px] p-8 lg:p-16 bg-white shadow-[0_24px_50px_rgba(15,23,42,0.12)] z-10 flex flex-col justify-center order-2">
     <div className="mb-10 text-center lg:text-left">
-      <Link to="/" className="inline-flex items-center gap-2 mb-8 no-underline lg:hidden">
+      <Link
+        to="/"
+        className="inline-flex items-center gap-2 mb-8 no-underline lg:hidden"
+      >
         <BookOpen className="w-8 h-8 text-indigo-600" />
-        <span className="text-xl font-bold font-serif text-slate-800">Books</span>
+        <span className="text-xl font-bold font-serif text-slate-800">
+          Books
+        </span>
       </Link>
-      <h1 className="font-serif text-3xl font-bold text-slate-900 mb-2">Create Account</h1>
+      <h1 className="font-serif text-3xl font-bold text-slate-900 mb-2">
+        Create Account
+      </h1>
       <p className="text-slate-500 m-0">Join our community of readers today.</p>
     </div>
 
@@ -41,12 +49,21 @@ export const RegisterFormPanel = ({
             <input
               type="text"
               required
-              className="w-full pl-12 pr-4 py-3.5 rounded-[20px] border border-slate-200 bg-slate-50 text-sm outline-none transition focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200 focus:bg-white"
+              className={`w-full pl-12 pr-4 py-3.5 rounded-[20px] border ${
+                validationErrors.firstName
+                  ? "border-red-400"
+                  : "border-slate-200"
+              } bg-slate-50 text-sm outline-none transition focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200 focus:bg-white`}
               placeholder="Jane"
               value={firstName}
               onChange={(e) => onFirstNameChange(e.target.value)}
             />
           </div>
+          {validationErrors.firstName && (
+            <p className="text-xs text-red-500 px-1">
+              {validationErrors.firstName}
+            </p>
+          )}
         </div>
         <div className="grid gap-2">
           <label className="text-[11px] uppercase tracking-[0.16em] font-bold text-slate-400">
@@ -57,12 +74,21 @@ export const RegisterFormPanel = ({
             <input
               type="text"
               required
-              className="w-full pl-12 pr-4 py-3.5 rounded-[20px] border border-slate-200 bg-slate-50 text-sm outline-none transition focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200 focus:bg-white"
+              className={`w-full pl-12 pr-4 py-3.5 rounded-[20px] border ${
+                validationErrors.lastName
+                  ? "border-red-400"
+                  : "border-slate-200"
+              } bg-slate-50 text-sm outline-none transition focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200 focus:bg-white`}
               placeholder="Doe"
               value={lastName}
               onChange={(e) => onLastNameChange(e.target.value)}
             />
           </div>
+          {validationErrors.lastName && (
+            <p className="text-xs text-red-500 px-1">
+              {validationErrors.lastName}
+            </p>
+          )}
         </div>
       </div>
 
@@ -75,12 +101,17 @@ export const RegisterFormPanel = ({
           <input
             type="email"
             required
-            className="w-full pl-12 pr-4 py-3.5 rounded-[20px] border border-slate-200 bg-slate-50 text-sm outline-none transition focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200 focus:bg-white"
+            className={`w-full pl-12 pr-4 py-3.5 rounded-[20px] border ${
+              validationErrors.email ? "border-red-400" : "border-slate-200"
+            } bg-slate-50 text-sm outline-none transition focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200 focus:bg-white`}
             placeholder="name@example.com"
             value={email}
             onChange={(e) => onEmailChange(e.target.value)}
           />
         </div>
+        {validationErrors.email && (
+          <p className="text-xs text-red-500 px-1">{validationErrors.email}</p>
+        )}
       </div>
 
       <div className="grid gap-2">
@@ -92,17 +123,25 @@ export const RegisterFormPanel = ({
           <input
             type="password"
             required
-            className="w-full pl-12 pr-4 py-3.5 rounded-[20px] border border-slate-200 bg-slate-50 text-sm outline-none transition focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200 focus:bg-white"
+            className={`w-full pl-12 pr-4 py-3.5 rounded-[20px] border ${
+              validationErrors.password ? "border-red-400" : "border-slate-200"
+            } bg-slate-50 text-sm outline-none transition focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200 focus:bg-white`}
             placeholder="Min. 8 characters"
             value={password}
             onChange={(e) => onPasswordChange(e.target.value)}
           />
         </div>
+        {validationErrors.password && (
+          <p className="text-xs text-red-500 px-1">
+            {validationErrors.password}
+          </p>
+        )}
       </div>
 
       <p className="text-[10px] text-slate-400 leading-6 px-1 m-0">
-        By creating an account, you agree to our <strong>Terms of Service</strong>
-        {" "}and <strong>Privacy Policy</strong>. We will never share your data.
+        By creating an account, you agree to our{" "}
+        <strong>Terms of Service</strong> and <strong>Privacy Policy</strong>.
+        We will never share your data.
       </p>
 
       <button
@@ -117,7 +156,10 @@ export const RegisterFormPanel = ({
 
     <p className="mt-8 text-center text-slate-500 text-sm">
       Already have an account?{" "}
-      <Link to="/login" className="text-indigo-600 font-bold no-underline hover:underline">
+      <Link
+        to="/login"
+        className="text-indigo-600 font-bold no-underline hover:underline"
+      >
         Sign in
       </Link>
     </p>

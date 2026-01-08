@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Heart, Search, ArrowRight } from "lucide-react";
 import { bookService } from "../../services/BookService";
 import { wishlistService } from "../../services/WishlistService";

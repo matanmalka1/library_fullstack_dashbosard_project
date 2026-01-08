@@ -13,12 +13,14 @@ export const ManagerDashboard = () => {
   const [books, setBooks] = useState([]);
   const [orders, setOrders] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingBook, setEditingBook] = useState(null);
   const [error, setError] = useState("");
 
   const fetchData = async () => {
     setError("");
+    setLoading(true);
     try {
       const [b, o] = await Promise.all([
         bookService.getBooks(),
@@ -35,6 +37,7 @@ export const ManagerDashboard = () => {
     } catch {
       setCategories([]);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -56,6 +59,14 @@ export const ManagerDashboard = () => {
       }
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="w-12 h-12 rounded-full border-4 border-indigo-600 border-t-transparent animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-[1120px] mx-auto px-4 lg:px-8 py-12">

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { usersService } from "../../services/UsersService";
+import { authService } from "../../services/AuthService";
 import { useAuth } from "../../context/auth/AuthContext";
 
 export const PersonalInfoForm = ({ user, onSuccess }) => {
@@ -28,10 +28,9 @@ export const PersonalInfoForm = ({ user, onSuccess }) => {
     setIsSubmitting(true);
 
     try {
-      const updatedUser = await usersService.updateProfile(user.id, {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
+      const updatedUser = await authService.updateProfile({
+        firstName: data.firstName.trim(),
+        lastName: data.lastName.trim(),
       });
 
       updateUser(updatedUser);
@@ -59,7 +58,17 @@ export const PersonalInfoForm = ({ user, onSuccess }) => {
           First Name
         </label>
         <input
-          {...register("firstName", { required: "First name is required" })}
+          {...register("firstName", {
+            required: "First name is required",
+            validate: (value) => {
+              const trimmed = value?.trim();
+              if (!trimmed) return "First name is required";
+              if (!/^[A-Za-z]{2,15}$/.test(trimmed)) {
+                return "First name must be 2-15 letters with no spaces";
+              }
+              return true;
+            },
+          })}
           className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
             errors.firstName ? "border-red-400" : "border-transparent"
           } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
@@ -77,7 +86,17 @@ export const PersonalInfoForm = ({ user, onSuccess }) => {
           Last Name
         </label>
         <input
-          {...register("lastName", { required: "Last name is required" })}
+          {...register("lastName", {
+            required: "Last name is required",
+            validate: (value) => {
+              const trimmed = value?.trim();
+              if (!trimmed) return "Last name is required";
+              if (!/^[A-Za-z]{2,15}$/.test(trimmed)) {
+                return "Last name must be 2-15 letters with no spaces";
+              }
+              return true;
+            },
+          })}
           className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
             errors.lastName ? "border-red-400" : "border-transparent"
           } text-sm outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-200`}
@@ -118,9 +137,7 @@ export const PersonalInfoForm = ({ user, onSuccess }) => {
       >
         {isSubmitting ? "Saving..." : "Save Changes"}
       </button>
-      {saved && (
-        <p className="text-sm text-emerald-600 mt-2">Saved</p>
-      )}
+      {saved && <p className="text-sm text-emerald-600 mt-2">Saved</p>}
     </form>
   );
 };

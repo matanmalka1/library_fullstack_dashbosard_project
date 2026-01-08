@@ -82,6 +82,17 @@ class AuthServiceClass extends BaseService {
       }
     );
   }
+
+  updateProfile(payload) {
+    return this.handlePut("/auth/profile", payload, {
+      normalize: (data) =>
+        normalizeUser(data?.user, {
+          normalizeRole,
+          roleIdByName: this.roleIdByName,
+        }),
+      fallback: "Failed to update profile.",
+    });
+  }
 }
 
 export const authService = new AuthServiceClass();

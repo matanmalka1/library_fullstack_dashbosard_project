@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { usersService } from "../../services/UsersService";
+import { authService } from "../../services/AuthService";
 import { useAuth } from "../../context/auth/AuthContext";
 
 export const PhoneNumberForm = ({ user, onSuccess }) => {
@@ -26,8 +26,8 @@ export const PhoneNumberForm = ({ user, onSuccess }) => {
     setIsSubmitting(true);
 
     try {
-      const updatedUser = await usersService.updateProfile(user.id, {
-        phoneNumber: data.phoneNumber || null,
+      const updatedUser = await authService.updateProfile({
+        phoneNumber: data.phoneNumber?.trim() || null,
       });
 
       updateUser(updatedUser);
@@ -57,9 +57,24 @@ export const PhoneNumberForm = ({ user, onSuccess }) => {
         <input
           type="tel"
           {...register("phoneNumber", {
+            minLength: {
+              value: 10,
+              message: "Phone number must be at least 10 characters",
+            },
             pattern: {
-              value: /^[\d\s\-\+\(\)]*$/,
-              message: "Please enter a valid phone number",
+              value: /^[\d\s()+-]+$/,
+              message:
+                "Phone number can only contain digits, spaces, and +-() characters",
+            },
+            validate: (value) => {
+              if (
+                value &&
+                value.trim().length > 0 &&
+                value.trim().length < 10
+              ) {
+                return "Phone number must be at least 10 characters";
+              }
+              return true;
             },
           })}
           className={`w-full px-4 py-3 bg-slate-50 rounded-[14px] border ${
@@ -68,9 +83,13 @@ export const PhoneNumberForm = ({ user, onSuccess }) => {
           placeholder="+1 (555) 123-4567"
         />
         {errors.phoneNumber && (
-          <p className="text-xs text-red-500 mt-1">{errors.phoneNumber.message}</p>
+          <p className="text-xs text-red-500 mt-1">
+            {errors.phoneNumber.message}
+          </p>
         )}
-        <p className="text-xs text-slate-500 mt-1">Optional - helps for order updates</p>
+        <p className="text-xs text-slate-500 mt-1">
+          Optional - helps for order updates
+        </p>
       </div>
 
       <button
@@ -80,9 +99,7 @@ export const PhoneNumberForm = ({ user, onSuccess }) => {
       >
         {isSubmitting ? "Saving..." : "Save Phone Number"}
       </button>
-      {saved && (
-        <p className="text-sm text-emerald-600 mt-2">Saved</p>
-      )}
+      {saved && <p className="text-sm text-emerald-600 mt-2">Saved</p>}
     </form>
   );
 };
