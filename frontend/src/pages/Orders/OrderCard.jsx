@@ -4,7 +4,7 @@ import { OrderCardHeader } from './OrderCardHeader';
 import { OrderCardItems } from './OrderCardItems';
 import { OrderCardFooter } from './OrderCardFooter';
 
-export const OrderCard = ({ order, user, onCancel }) => {
+export const OrderCard = ({ order, user, onCancel, onReorder }) => {
   const getStatusStyle = (status) => {
     if (status === OrderStatus.DELIVERED) {
       return {
@@ -87,8 +87,10 @@ export const OrderCard = ({ order, user, onCancel }) => {
           onDownloadInvoice={handleDownloadInvoice}
           statusHistory={order.statusHistory}
           status={order.status}
+          orderDate={order.date}
           canCancel={canCancel}
           onCancel={() => onCancel?.(order.id)}
+          onReorder={onReorder ? () => onReorder(order) : undefined}
         />
       </div>
     </div>

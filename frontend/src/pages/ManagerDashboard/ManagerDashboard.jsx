@@ -17,6 +17,10 @@ export const ManagerDashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingBook, setEditingBook] = useState(null);
   const [error, setError] = useState("");
+  const [page, setPage] = useState(1);
+  const pageSize = 8;
+  const totalPages = Math.max(1, Math.ceil(books.length / pageSize));
+  const pagedBooks = books.slice((page - 1) * pageSize, page * pageSize);
 
   const fetchData = async () => {
     setError("");
@@ -43,6 +47,11 @@ export const ManagerDashboard = () => {
   useEffect(() => {
     fetchData();
   }, []);
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
 
   const handleEdit = (book) => {
     setEditingBook(book);
@@ -93,9 +102,14 @@ export const ManagerDashboard = () => {
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-[2fr_1fr]">
         <div>
           <InventoryTable
-            books={books}
+            books={pagedBooks}
             onEdit={handleEdit}
             onDelete={handleDelete}
+            page={page}
+            totalPages={totalPages}
+            totalItems={books.length}
+            pageSize={pageSize}
+            onPageChange={setPage}
           />
         </div>
         <div className="bg-slate-900 text-white rounded-[32px] p-8 shadow-[0_20px_40px_rgba(15,23,42,0.3)] h-fit">

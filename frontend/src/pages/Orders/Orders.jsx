@@ -2,13 +2,16 @@ import { useEffect, useState } from "react";
 import { Package } from "lucide-react";
 import { ordersService } from "../../services/OrdersService";
 import { useAuth } from "../../context/auth/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { OrderCard } from "./OrderCard";
+import { useCart } from "../../context/cart/CartContext";
 
 export const Orders = () => {
   const [orders, setOrders] = useState([]);
   const { user } = useAuth();
+  const { addToCart } = useCart();
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const fetchOrders = async () => {
     if (!user) return;
@@ -31,6 +34,15 @@ export const Orders = () => {
     if (!confirm("Cancel this order and request a refund?")) return;
     await ordersService.cancelOrder(orderId);
     fetchOrders();
+  };
+
+  const handleReorder = (order) => {
+    order.items.forEach((item) => {
+      if (item?.book) {
+        addToCart(item.book, item.quantity);
+      }
+    });
+    navigate("/cart");
   };
 
   if (loading)
@@ -75,6 +87,7 @@ export const Orders = () => {
             order={order}
             user={user}
             onCancel={handleCancelOrder}
+            onReorder={handleReorder}
           />
         ))}
       </div>

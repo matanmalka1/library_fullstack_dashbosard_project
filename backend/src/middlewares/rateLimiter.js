@@ -7,8 +7,10 @@ export const globalRateLimiter = rateLimit({
   windowMs: +process.env.RATE_LIMIT_WINDOW_MS || 15 * 60 * 1000,
   max: async (req) => {
     const user = await getUserFromToken(req.headers.authorization);
-    if (user?.role?.name === "ADMIN") return 800;
-    return 200;
+    if (user?.role?.name === "ADMIN" || user?.role?.name === "MANAGER") {
+      return 1300;
+    }
+    return 400;
   },
   message: {
     success: false,
