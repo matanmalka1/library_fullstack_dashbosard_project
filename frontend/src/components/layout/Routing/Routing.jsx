@@ -19,6 +19,8 @@ import { Checkout } from "../../../pages/Checkout/Checkout";
 import { Orders } from "../../../pages/Orders/Orders";
 import { Profile } from "../../../pages/Profile/Profile";
 import { AdminDashboard } from "../../../pages/AdminDashboard/AdminDashboard";
+import { AdminReviewsPage } from "../../../pages/AdminDashboard/AdminReviewsPage";
+import { AdminUsersPage } from "../../../pages/AdminDashboard/AdminUsersPage";
 import { ManagerDashboard } from "../../../pages/ManagerDashboard/ManagerDashboard";
 
 export const App = () => (
@@ -65,6 +67,22 @@ export const App = () => (
               element={
                 <PrivateRoute role={UserRole.ADMIN}>
                   <AdminDashboard />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin/reviews"
+              element={
+                <PrivateRoute role={UserRole.ADMIN}>
+                  <AdminReviewsPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin/users"
+              element={
+                <PrivateRoute role={UserRole.ADMIN}>
+                  <AdminUsersPage />
                 </PrivateRoute>
               }
             />

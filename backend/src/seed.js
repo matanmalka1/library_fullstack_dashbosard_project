@@ -92,7 +92,6 @@ const seed = async () => {
   ].map((name) => permissionMap[name]._id);
   await roleMap.manager.save();
 
-
   roleMap.user.permissions = ["health.read", "auth.refresh", "auth.logout"].map(
     (name) => permissionMap[name]._id
   );
@@ -102,22 +101,22 @@ const seed = async () => {
 
   // Create Users
   const usersToSeed = [
-    { email: "admin@example.com", first: "Admin", last: "User", role: "admin" },
+    { email: "matan@gmail.com", first: "Matan", last: "Malka", role: "admin" },
     {
-      email: "manager@example.com",
+      email: "manager@gmail.com",
       first: "Manager",
       last: "User",
       role: "manager",
     },
-    { email: "user1@example.com", first: "User", last: "One", role: "user" },
-    { email: "user2@example.com", first: "User", last: "Two", role: "user" },
-    { email: "user3@example.com", first: "User", last: "Three", role: "user" },
-    { email: "user4@example.com", first: "User", last: "Four", role: "user" },
-    { email: "user5@example.com", first: "User", last: "Five", role: "user" },
-    { email: "user6@example.com", first: "User", last: "Six", role: "user" },
+    { email: "user1@gmail.com", first: "User", last: "One", role: "user" },
+    { email: "user2@gmail.com", first: "User", last: "Two", role: "user" },
+    { email: "user3@gmail.com", first: "User", last: "Three", role: "user" },
+    { email: "user4@gmail.com", first: "User", last: "Four", role: "user" },
+    { email: "user5@gmail.com", first: "User", last: "Five", role: "user" },
+    { email: "user6@gmail.com", first: "User", last: "Six", role: "user" },
   ];
 
-  const hashedPassword = await bcrypt.hash("Password123!", 10);
+  const hashedPassword = await bcrypt.hash("Aa100100!!", 10);
 
   for (const user of usersToSeed) {
     const existing = await User.findOne({ email: user.email });
@@ -178,7 +177,8 @@ const seed = async () => {
       author: "Harper Lee",
       isbn: "978-0061120084",
       price: 14.99,
-      description: "A powerful story about justice and empathy in the Deep South.",
+      description:
+        "A powerful story about justice and empathy in the Deep South.",
       coverImage: "https://picsum.photos/seed/mockingbird/400/600",
       stockQuantity: 11,
       categories: ["Fiction", "History"],
@@ -204,7 +204,8 @@ const seed = async () => {
       author: "Andrew Hunt & David Thomas",
       isbn: "978-0135957059",
       price: 49.99,
-      description: "Timeless principles and practices for better software development.",
+      description:
+        "Timeless principles and practices for better software development.",
       coverImage: "https://picsum.photos/seed/pragmatic/400/600",
       stockQuantity: 6,
       categories: ["Technology", "Science"],
@@ -243,7 +244,8 @@ const seed = async () => {
       author: "Frank Herbert",
       isbn: "978-0441172719",
       price: 15.49,
-      description: "Epic science fiction about power, prophecy, and a desert planet.",
+      description:
+        "Epic science fiction about power, prophecy, and a desert planet.",
       coverImage: "https://picsum.photos/seed/dune/400/600",
       stockQuantity: 13,
       categories: ["Science", "Fiction"],
@@ -256,7 +258,8 @@ const seed = async () => {
       author: "Andy Weir",
       isbn: "978-0804139021",
       price: 14.25,
-      description: "A stranded astronaut uses science and humor to survive on Mars.",
+      description:
+        "A stranded astronaut uses science and humor to survive on Mars.",
       coverImage: "https://picsum.photos/seed/martian/400/600",
       stockQuantity: 10,
       categories: ["Science", "Fiction"],
@@ -281,7 +284,7 @@ const seed = async () => {
       title: "The Psychology of Money",
       author: "Morgan Housel",
       isbn: "978-0857197689",
-      price: 17.50,
+      price: 17.5,
       description: "Timeless lessons on wealth, greed, and happiness.",
       coverImage: "https://picsum.photos/seed/psychmoney/400/600",
       stockQuantity: 22,
@@ -308,7 +311,8 @@ const seed = async () => {
       author: "Michelle Obama",
       isbn: "978-1524763138",
       price: 18.99,
-      description: "An inspiring memoir about identity, family, and public life.",
+      description:
+        "An inspiring memoir about identity, family, and public life.",
       coverImage: "https://picsum.photos/seed/becoming/400/600",
       stockQuantity: 15,
       categories: ["Biography", "Non-Fiction"],
@@ -320,7 +324,7 @@ const seed = async () => {
       title: "The Silent Patient",
       author: "Alex Michaelides",
       isbn: "978-1250301697",
-      price: 16.00,
+      price: 16.0,
       description: "A twisted psychological thriller with a shocking reveal.",
       coverImage: "https://picsum.photos/seed/silentpatient/400/600",
       stockQuantity: 7,
@@ -347,7 +351,8 @@ const seed = async () => {
       author: "Jane Austen",
       isbn: "978-1503290563",
       price: 9.99,
-      description: "A witty romance about manners, class, and misunderstandings.",
+      description:
+        "A witty romance about manners, class, and misunderstandings.",
       coverImage: "https://picsum.photos/seed/prideprejudice/400/600",
       stockQuantity: 19,
       categories: ["Romance", "Fiction"],
@@ -359,8 +364,9 @@ const seed = async () => {
       title: "Me Before You",
       author: "Jojo Moyes",
       isbn: "978-0143124542",
-      price: 13.50,
-      description: "A heartfelt romance that challenges what it means to live fully.",
+      price: 13.5,
+      description:
+        "A heartfelt romance that challenges what it means to live fully.",
       coverImage: "https://picsum.photos/seed/mebeforeyou/400/600",
       stockQuantity: 8,
       categories: ["Romance", "Fiction"],
@@ -398,8 +404,9 @@ const seed = async () => {
       title: "The Lean Startup",
       author: "Eric Ries",
       isbn: "978-0307887894",
-      price: 18.00,
-      description: "Build products smarter with rapid experiments and learning.",
+      price: 18.0,
+      description:
+        "Build products smarter with rapid experiments and learning.",
       coverImage: "https://picsum.photos/seed/leanstartup/400/600",
       stockQuantity: 10,
       categories: ["Technology", "Non-Fiction"],
@@ -425,7 +432,8 @@ const seed = async () => {
       author: "Walter Isaacson",
       isbn: "978-1476708690",
       price: 20.99,
-      description: "A history of the pioneers who created the digital revolution.",
+      description:
+        "A history of the pioneers who created the digital revolution.",
       coverImage: "https://picsum.photos/seed/innovators/400/600",
       stockQuantity: 9,
       categories: ["Technology", "Biography"],
@@ -477,7 +485,8 @@ const seed = async () => {
       author: "Rebecca Skloot",
       isbn: "978-1400052189",
       price: 16.99,
-      description: "A true story at the intersection of science, ethics, and family.",
+      description:
+        "A true story at the intersection of science, ethics, and family.",
       coverImage: "https://picsum.photos/seed/henrietta/400/600",
       stockQuantity: 9,
       categories: ["Science", "Biography"],
@@ -503,7 +512,8 @@ const seed = async () => {
       author: "Stieg Larsson",
       isbn: "978-0307949486",
       price: 14.99,
-      description: "A gripping mystery involving secrets, corruption, and revenge.",
+      description:
+        "A gripping mystery involving secrets, corruption, and revenge.",
       coverImage: "https://picsum.photos/seed/dragontattoo/400/600",
       stockQuantity: 11,
       categories: ["Mystery", "Fiction"],
@@ -594,7 +604,8 @@ const seed = async () => {
       author: "J.R.R. Tolkien",
       isbn: "978-0547928210",
       price: 14.99,
-      description: "The first chapter of an epic quest to destroy the One Ring.",
+      description:
+        "The first chapter of an epic quest to destroy the One Ring.",
       coverImage: "https://picsum.photos/seed/lotr1/400/600",
       stockQuantity: 16,
       categories: ["Fantasy", "Fiction"],
@@ -607,7 +618,8 @@ const seed = async () => {
       author: "Brandon Sanderson",
       isbn: "978-0765311788",
       price: 16.49,
-      description: "A heist-like fantasy in a world of ash and metal-based magic.",
+      description:
+        "A heist-like fantasy in a world of ash and metal-based magic.",
       coverImage: "https://picsum.photos/seed/mistborn/400/600",
       stockQuantity: 12,
       categories: ["Fantasy", "Fiction"],
@@ -658,7 +670,7 @@ const seed = async () => {
       title: "The Notebook",
       author: "Nicholas Sparks",
       isbn: "978-0446605236",
-      price: 12.50,
+      price: 12.5,
       description: "A romantic story about love that endures over time.",
       coverImage: "https://picsum.photos/seed/notebook/400/600",
       stockQuantity: 13,
@@ -685,7 +697,8 @@ const seed = async () => {
       author: "Stephen R. Covey",
       isbn: "978-1982137274",
       price: 18.99,
-      description: "A classic framework for personal and professional effectiveness.",
+      description:
+        "A classic framework for personal and professional effectiveness.",
       coverImage: "https://picsum.photos/seed/7habits/400/600",
       stockQuantity: 18,
       categories: ["Self-Help", "Non-Fiction"],
@@ -711,7 +724,8 @@ const seed = async () => {
       author: "Sun Tzu",
       isbn: "978-1599869773",
       price: 8.99,
-      description: "Strategic principles that influenced leadership for centuries.",
+      description:
+        "Strategic principles that influenced leadership for centuries.",
       coverImage: "https://picsum.photos/seed/artofwar/400/600",
       stockQuantity: 25,
       categories: ["History", "Non-Fiction"],
@@ -776,7 +790,8 @@ const seed = async () => {
       author: "Martin Fowler",
       isbn: "978-0134757599",
       price: 49.99,
-      description: "Improving the design of existing code with practical techniques.",
+      description:
+        "Improving the design of existing code with practical techniques.",
       coverImage: "https://picsum.photos/seed/refactoring/400/600",
       stockQuantity: 5,
       categories: ["Technology", "Science"],
@@ -815,7 +830,8 @@ const seed = async () => {
       author: "Bill Bryson",
       isbn: "978-0767908184",
       price: 18.99,
-      description: "A fun tour through science and the universe’s big questions.",
+      description:
+        "A fun tour through science and the universe’s big questions.",
       coverImage: "https://picsum.photos/seed/nearlyeverything/400/600",
       stockQuantity: 12,
       categories: ["Science", "Non-Fiction"],
@@ -932,7 +948,8 @@ const seed = async () => {
       author: "George R.R. Martin",
       isbn: "978-0553593716",
       price: 17.99,
-      description: "Noble houses clash in a brutal and political fantasy world.",
+      description:
+        "Noble houses clash in a brutal and political fantasy world.",
       coverImage: "https://picsum.photos/seed/got1/400/600",
       stockQuantity: 9,
       categories: ["Fantasy", "Fiction"],

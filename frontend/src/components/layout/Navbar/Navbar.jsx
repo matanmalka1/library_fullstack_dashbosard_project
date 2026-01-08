@@ -1,10 +1,6 @@
 import  { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  Menu,
-  X,
-  BookOpen,
-} from "lucide-react";
+import { Menu, X, BookOpen } from "lucide-react";
 import { useAuth } from "../../../context/auth/AuthContext";
 import { useCart } from "../../../context/cart/CartContext";
 import { NavbarLinks } from "./NavbarLinks";

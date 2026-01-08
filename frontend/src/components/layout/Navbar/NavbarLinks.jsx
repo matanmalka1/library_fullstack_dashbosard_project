@@ -13,9 +13,14 @@ export const NavbarLinks = ({ isAuthenticated, isManager, isAdmin }) => (
           </Link>
         )}
         {isAdmin && (
-          <Link to="/admin" className="text-slate-600 font-medium no-underline transition-colors hover:text-indigo-600">
-            Admin
-          </Link>
+          <>
+            <Link to="/admin/reviews" className="text-slate-600 font-medium no-underline transition-colors hover:text-indigo-600">
+              Pending Reviews
+            </Link>
+            <Link to="/admin/users" className="text-slate-600 font-medium no-underline transition-colors hover:text-indigo-600">
+              User Controls
+            </Link>
+          </>
         )}
         <Link to="/orders" className="text-slate-600 font-medium no-underline transition-colors hover:text-indigo-600">
           Orders

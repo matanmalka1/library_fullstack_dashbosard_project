@@ -27,13 +27,22 @@ export const NavbarMobileMenu = ({
           </Link>
         )}
         {isAdmin && (
-          <Link
-            to="/admin"
-            className="text-slate-700 no-underline text-lg font-medium"
-            onClick={onNavigate}
-          >
-            Admin Panel
-          </Link>
+          <>
+            <Link
+              to="/admin/reviews"
+              className="text-slate-700 no-underline text-lg font-medium"
+              onClick={onNavigate}
+            >
+              Pending Reviews
+            </Link>
+            <Link
+              to="/admin/users"
+              className="text-slate-700 no-underline text-lg font-medium"
+              onClick={onNavigate}
+            >
+              User Controls
+            </Link>
+          </>
         )}
         <Link
           to="/orders"
